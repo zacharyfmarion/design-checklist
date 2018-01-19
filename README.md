@@ -1,6 +1,6 @@
 # Frontend Repo
 
-![Repo image](https://github.com/zacharyfmarion/sonarqube-web-frontend/raw/master/src/assets/screenshot.png "Repo Image")
+![Repo image](https://github.com/zacharyfmarion/sonarqube-web-frontend/raw/master/src/assets/Browser.png "Repo Image")
 
 ## Setting Up
 
