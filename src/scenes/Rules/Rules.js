@@ -1,37 +1,17 @@
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { inject, observer } from 'mobx-react';
-import { Card, Spin } from 'antd';
+import { Spin } from 'antd';
 import styled from 'styled-components';
 import UiStore from 'stores/UiStore';
-import { Flex, Box } from 'reflexbox';
+import { Flex } from 'reflexbox';
 import RulesList from './components/RulesList';
 import RulesStore from './RulesStore';
+import PercentageCard from './components/PercentageCard';
 
 type Props = {
-  ui: UiStore,
+  ui: UiStore
 };
-
-const Percent = ({ percent }) =>
-  <div>
-    <BigNumber>
-      {percent}
-    </BigNumber>
-    <SuperScript>%</SuperScript>
-  </div>;
-
-const RatingBox = ({ className, percent, title }) =>
-  <Box
-    w={[1, 1 / 3, 1 / 3]}
-    m={1}
-    align="center"
-    justify="center"
-    className={className}
-  >
-    <RatingCard title={title} percent={percent}>
-      <Percent percent={percent} />
-    </RatingCard>
-  </Box>;
 
 class Rules extends React.Component<Props> {
   store: RulesStore;
@@ -50,40 +30,24 @@ class Rules extends React.Component<Props> {
       <PaddedLayout>
         <Flex>
           {this.store.data
-            ? Object.keys(this.store.data).map((key, i) =>
-                <StyledRatingBox
-                  title={`${key} (${this.store.data[key].rules.length} errors)`}
+            ? Object.keys(this.store.data.error).map((key, i) =>
+                <StyledPercentageCard
+                  title={`${key} (${this.store.data.error[key].length} errors)`}
                   key={i}
-                  percent={this.store.data[key].percent}
+                  percent={this.store.data.percentage[key]}
                 />
               )
             : <Spin size="large" />}
         </Flex>
-        {this.store.data && <StyledRulesList rules={this.store.data} />}
+        {this.store.data && <StyledRulesList rules={this.store.data.error} />}
       </PaddedLayout>
     );
   }
 }
 
-const SuperScript = styled.span`
-  vertical-align: top;
-  line-height: 2em;
-  font-size: 6em;
-  color: #fff;
-`;
-
-const BigNumber = styled.span`
-  font-size: 10em;
-  color: #fff;
-`;
-
-const StyledRatingBox = styled(RatingBox)`
+const StyledPercentageCard = styled(PercentageCard)`
   border-radius: 5px;
   text-align: center;
-`;
-
-const RatingCard = styled(Card)`
-  background: ${({ percent }) => (percent < 100 ? 'red' : 'green')};
 `;
 
 const PaddedLayout = styled(Layout)`

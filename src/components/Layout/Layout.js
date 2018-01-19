@@ -11,7 +11,7 @@ type Props = {
   children: React.Node,
   subheader?: React.Node,
   className?: string,
-  ui: UiStore,
+  ui: UiStore
 };
 
 const Layout = ({ children, subheader, ui, className }: Props) =>
@@ -24,14 +24,32 @@ const Layout = ({ children, subheader, ui, className }: Props) =>
   </Background>;
 
 const Background = styled(Flex)`
-  background: #f0f2f5;
+  // background: #f0f2f5;
   min-height: 100vh;
 `;
 
 const Panel = styled(Flex)`
-  ${({ mobile }) => (mobile ? `margin: 0px;` : `margin: 20px 35px;`)}
+  margin: 75px 0 0;
   background: #fff;
   border-radius: 5px;
+  position: relative;
+  z-index: 1;
+  
+  &:before {
+    background: #25b47d;
+    content: '';
+    display: block;
+    height: 550px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    z-index: -1;
+    -webkit-backface-visibility: hidden; // for Chrome Windows
+    top: -315px;
+    transform: skewY(-5.5deg);
+    transform-origin: 100% 0;
+  }
+
 `;
 
 export { Layout };

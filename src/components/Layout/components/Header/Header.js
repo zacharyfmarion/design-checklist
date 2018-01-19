@@ -3,7 +3,7 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { withRouter } from 'react-router';
 import { Link, type RouterHistory } from 'react-router-dom';
-import { Menu, Icon } from 'antd';
+import { Menu } from 'antd';
 import { Flex } from 'reflexbox';
 import UiStore from 'stores/UiStore';
 import styled from 'styled-components';
@@ -14,33 +14,53 @@ type Props = {
   history: RouterHistory,
   location: Object,
   subheader?: React.Node,
-  ui: UiStore,
+  ui: UiStore
 };
 
 type State = {
   menuOpen: boolean,
+  topAligned: boolean
 };
 
 @observer
 class Header extends React.Component<Props> {
   state: State;
+  header: ?HTMLDivElement;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       menuOpen: false,
+      topAligned: true // whether we are at the top of the page
     };
   }
 
-  closeMenu = (): void => {
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll = () => {
+    // $FlowIssue
     this.setState({
-      menuOpen: false,
+      topAligned: window.scrollY === 0
+    });
+  };
+
+  closeMenu = (): void => {
+    // $FlowIssue
+    this.setState({
+      menuOpen: false
     });
   };
 
   toggleMenu = (): void => {
+    // $FlowIssue
     this.setState({
-      menuOpen: !this.state.menuOpen,
+      menuOpen: !this.state.menuOpen
     });
   };
 
@@ -70,16 +90,15 @@ class Header extends React.Component<Props> {
       >
         {scenes.map(scene =>
           <HeaderItem key={scene.path} mobile={ui.isMobile}>
-            <Icon type={scene.icon} />
-            <Link to={scene.path}>
+            <HeaderLink to={scene.path}>
               {scene.name}
-            </Link>
+            </HeaderLink>
           </HeaderItem>
         )}
       </StyledMenu>
     );
     return (
-      <HeaderWrapper justify="space-between">
+      <HeaderWrapper justify="space-between" topAligned={this.state.topAligned}>
         <Flex align="center">
           <StyledLink to="/" onClick={this.closeMenu}>
             <MFSLogo src={logo} />
@@ -102,6 +121,11 @@ class Header extends React.Component<Props> {
     );
   }
 }
+
+const HeaderLink = styled(Link)`
+  font-size: 14px;
+  text-transform: uppercase;
+`;
 
 const MenuButtonContainer = styled(Flex)`
   height: 100%;
@@ -132,8 +156,9 @@ const StyledLink = styled(Link)`
 `;
 
 const StyledMenu = styled(Menu)`
-  background: #333333 !important;
   height: 100%;
+  display: flex;
+  align-items: center;
   .ant-menu-item {
     height: 100%;
     align-items: center;
@@ -142,10 +167,13 @@ const StyledMenu = styled(Menu)`
     ${({ mobile }) =>
       !mobile &&
       `
-      background-color: inherit !important;
-      border-bottom: 3px solid #108ee9 !important;
-      color: #108ee9 !important;
+      border-radius: 5px;
+      height: 50px;
+      background: #baf4bc;
     `}
+    a {
+      color: black;
+    }
   }
   ${({ mobile }) =>
     mobile &&
@@ -161,15 +189,33 @@ const StyledMenu = styled(Menu)`
     left: 0;
     border-top: 1px solid #525252;
   `}
+  border: none;
+  background: none;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 `;
 
-const Title = styled.h2`color: #fff;`;
+const Title = styled.h2`
+  color: black;
+  font-size: 2em;
+  text-transform: uppercase;
+`;
 
 const HeaderWrapper = styled(Flex)`
-  background: #333333;
-  color: #fff;
+  position: fixed;
+  width: 100%;
+  background: #25b47c;
+  color: black;
   padding: 0 30px;
   height: 75px;
+  z-index: 2;
+  ${({ topAligned }) =>
+    !topAligned &&
+    `
+    box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07) !important;
+  `}
+  transition: box-shadow 0.3s ease-in-out;
 `;
 
 const MFSLogo = styled.img`
@@ -187,6 +233,8 @@ const SubHeader = styled(Flex)`
 const HeaderItem = styled(Menu.Item)`
   display: flex;
   flex-direction: row;
+  border-radius: 5px;
+  height: 50px;
   ${({ mobile }) =>
     mobile
       ? `
