@@ -5,12 +5,27 @@ import { Spin } from 'antd';
 import styled from 'styled-components';
 import UiStore from 'stores/UiStore';
 import { Flex } from 'reflexbox';
+import { Transition } from 'react-transition-group';
+
+// local components
 import RulesList from './components/RulesList';
 import RulesStore from './RulesStore';
 import PercentageCard from './components/PercentageCard';
 
 type Props = {
   ui: UiStore
+};
+
+const duration = 300;
+
+const defaultStyle = {
+  transition: `opacity ${duration}ms ease-in-out`,
+  opacity: 0
+};
+
+const transitionStyles = {
+  entering: { opacity: 0 },
+  entered: { opacity: 1 }
 };
 
 class Rules extends React.Component<Props> {
@@ -33,9 +48,14 @@ class Rules extends React.Component<Props> {
     );
   };
 
-  renderErrors = () => {
+  renderErrors = state => {
     return (
-      <div>
+      <div
+        style={{
+          ...defaultStyle,
+          ...transitionStyles[state]
+        }}
+      >
         <Flex>
           {this.store.data
             ? Object.keys(this.store.data.error).map((key, i) =>
@@ -55,7 +75,10 @@ class Rules extends React.Component<Props> {
   render() {
     return (
       <PaddedLayout>
-        {this.store.loading ? this.renderLoading() : this.renderErrors()}
+        {this.store.loading && this.renderLoading()}
+        <Transition in={!this.store.loading} timeout={duration}>
+          {state => this.renderErrors(state)}
+        </Transition>
       </PaddedLayout>
     );
   }
