@@ -56,7 +56,7 @@ class Rules extends React.Component<Props> {
           ...transitionStyles[state]
         }}
       >
-        <Flex>
+        <Flex wrap>
           {this.store.data
             ? Object.keys(this.store.data.error).map((key, i) =>
                 <StyledPercentageCard
