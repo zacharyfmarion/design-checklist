@@ -22,12 +22,20 @@ class Rules extends React.Component<Props> {
   }
 
   componentDidMount() {
-    // this.store.getRules();
+    this.store.getRules();
   }
 
-  render() {
+  renderLoading = () => {
     return (
-      <PaddedLayout>
+      <LoadingWrapper justify="center" align="center">
+        <GreenSpin size="large" />
+      </LoadingWrapper>
+    );
+  };
+
+  renderErrors = () => {
+    return (
+      <div>
         <Flex>
           {this.store.data
             ? Object.keys(this.store.data.error).map((key, i) =>
@@ -40,10 +48,34 @@ class Rules extends React.Component<Props> {
             : <Spin size="large" />}
         </Flex>
         {this.store.data && <StyledRulesList rules={this.store.data.error} />}
+      </div>
+    );
+  };
+
+  render() {
+    return (
+      <PaddedLayout>
+        {this.store.loading ? this.renderLoading() : this.renderErrors()}
       </PaddedLayout>
     );
   }
 }
+
+const LoadingWrapper = styled(Flex)`
+  height: 150px;
+`;
+
+const GreenSpin = styled(Spin)`
+  .ant-spin-dot {
+    width: 50px;
+    height: 50px;
+    i {
+      background: #baf4bc;
+      width: 23px;
+      height: 23px;
+    }
+  }
+`;
 
 const StyledPercentageCard = styled(PercentageCard)`
   border-radius: 5px;

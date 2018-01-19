@@ -16,12 +16,15 @@ const encodeUrl = (url, params) => {
   return url + '?' + ret.join('&');
 };
 
-export const getRequest = (url, params, options): Promise<*> => {
-  const path = baseUrl + encodeUrl(url, params);
+export const getRequest = (url, params = {}, options = {}): Promise<*> => {
+  const path =
+    Object.keys(params).length === 0 && params.constructor === Object
+      ? baseUrl + url
+      : baseUrl + encodeUrl(url, params);
   return new Promise((resolve, reject) => {
     fetch(path, {
       method: 'GET',
-      ...options,
+      ...options
     })
       .then(res => res.json())
       .then(json => resolve(json))
@@ -35,10 +38,10 @@ export const postRequest = (url, params, options): Promise<*> => {
     fetch(path, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(params),
-      ...options,
+      ...options
     })
       .then(res => res.json())
       .then(json => resolve(json))
