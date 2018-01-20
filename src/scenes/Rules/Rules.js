@@ -28,6 +28,7 @@ const transitionStyles = {
   entered: { opacity: 1 }
 };
 
+@observer
 class Rules extends React.Component<Props> {
   store: RulesStore;
 
@@ -49,6 +50,7 @@ class Rules extends React.Component<Props> {
   };
 
   renderErrors = state => {
+    const { ui } = this.props;
     return (
       <div
         style={{
@@ -56,7 +58,7 @@ class Rules extends React.Component<Props> {
           ...transitionStyles[state]
         }}
       >
-        <Flex wrap>
+        <Flex wrap={ui.isMobile}>
           {this.store.data
             ? Object.keys(this.store.data.error).map((key, i) =>
                 <StyledPercentageCard
