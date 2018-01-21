@@ -8,6 +8,7 @@ type Props = {
   value: string,
   icon?: string,
   size?: 'normal' | 'large',
+  onEnter?: Function,
   placeholder?: string,
   className?: string
 };
@@ -22,6 +23,12 @@ class Input extends React.Component<Props> {
     this.props.onChange(event.target.value);
   };
 
+  handleKeyPress = e => {
+    if (e.key === 'Enter' && !!this.props.onEnter) {
+      this.props.onEnter();
+    }
+  };
+
   render() {
     const { value, icon, placeholder, size = 'normal', className } = this.props;
     return (
@@ -34,6 +41,7 @@ class Input extends React.Component<Props> {
           type="text"
           hasIcon={!!icon}
           size={size}
+          onKeyPress={this.handleKeyPress}
           value={value}
           placeholder={placeholder}
           onChange={this.handleChange}

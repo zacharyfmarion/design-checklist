@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import UiStore from 'stores/UiStore';
 import { Flex } from 'reflexbox';
 import { Transition } from 'react-transition-group';
+import Input from 'components/Input';
 
 // local components
 import RulesList from './components/RulesList';
@@ -35,10 +36,6 @@ class Rules extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     this.store = new RulesStore();
-  }
-
-  componentDidMount() {
-    this.store.getRules();
   }
 
   renderLoading = () => {
@@ -75,6 +72,22 @@ class Rules extends React.Component<Props> {
   };
 
   render() {
+    if (!this.store.projectConfirmed) {
+      return (
+        <PaddedLayout>
+          <Flex align="center" justify="center">
+            <SearchInput
+              onChange={this.store.setProjectName}
+              value={this.store.projectName}
+              placeholder="Enter Project Name..."
+              onEnter={this.store.confirmProject}
+              icon="search"
+              size="large"
+            />
+          </Flex>
+        </PaddedLayout>
+      );
+    }
     return (
       <PaddedLayout>
         {this.store.loading && this.renderLoading()}
@@ -85,6 +98,13 @@ class Rules extends React.Component<Props> {
     );
   }
 }
+
+const SearchInput = styled(Input)`
+  width: 350px;
+  .input-instance {
+    width: 350px;
+  }
+`;
 
 const LoadingWrapper = styled(Flex)`
   height: 150px;
