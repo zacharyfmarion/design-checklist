@@ -6,6 +6,7 @@ import Graphs from 'scenes/Graphs';
 
 export const title = 'SonarQube App';
 export const shortTitle = 'SonarQube';
+export const sessionStoragePrefix = 'sonarqube';
 export const scenes = [
   {
     path: '/',

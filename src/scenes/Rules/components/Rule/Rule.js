@@ -1,22 +1,15 @@
 import * as React from 'react';
 import AceEditor from 'react-ace';
 import { Collapse } from 'antd';
+import { observer } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
+import RuleStore from './RuleStore';
 
 import 'brace/mode/java';
 import 'brace/theme/github';
 
 const Panel = Collapse.Panel;
-
-const code = `public class HelloWorld {
-
-  public static void main(String[] args) {
-      // Prints "Hello, World" to the terminal window.
-      System.out.println("Hello, World");
-  }
-
-}`;
 
 const RuleHeader = ({ path, message, className }) =>
   <Flex column className={className}>
@@ -28,24 +21,49 @@ const RuleHeader = ({ path, message, className }) =>
     </span>
   </Flex>;
 
-const Rule = ({ path, message, key, className }) => {
-  return (
-    <StyledCollapse defaultActiveKey={[0]} className={className}>
-      <Panel header={<RuleHeader path={path} message={message} />} key={0}>
-        <StyledEditor
-          mode="java"
-          theme="github"
-          width="100%"
-          height="100px"
-          readOnly
-          name={`rule_${JSON.stringify(key)}`}
-          value={code}
-          editorProps={{ $blockScrolling: true }}
-        />
-      </Panel>
-    </StyledCollapse>
-  );
-};
+type Props = {};
+
+@observer
+class Rule extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    this.store = new RuleStore({
+      projectId: '8902',
+      fileName: 'REFLECT.txt'
+    });
+  }
+
+  handleCollapseChange = () => {
+    console.log('collapse changed');
+    if (!this.store.loaded) {
+      this.store.getCode();
+    }
+  };
+
+  render() {
+    const { path, message, key, className } = this.props;
+    return (
+      <StyledCollapse
+        defaultActiveKey={[0]}
+        className={className}
+        onChange={this.handleCollapseChange}
+      >
+        <Panel header={<RuleHeader path={path} message={message} />} key={0}>
+          <StyledEditor
+            mode="java"
+            theme="github"
+            width="100%"
+            height="100px"
+            readOnly
+            name={`rule_${JSON.stringify(key)}`}
+            value={this.store.data}
+            editorProps={{ $blockScrolling: true }}
+          />
+        </Panel>
+      </StyledCollapse>
+    );
+  }
+}
 
 const StyledCollapse = styled(Collapse)`
   &:hover {

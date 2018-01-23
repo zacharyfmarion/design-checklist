@@ -7,6 +7,7 @@ import UiStore from 'stores/UiStore';
 import { Flex } from 'reflexbox';
 import { Transition } from 'react-transition-group';
 import Input from 'components/Input';
+import Button from 'components/Button';
 
 // local components
 import RulesList from './components/RulesList';
@@ -94,10 +95,21 @@ class Rules extends React.Component<Props> {
         <Transition in={!this.store.loading} timeout={duration}>
           {state => this.renderErrors(state)}
         </Transition>
+        {!this.store.loading &&
+          <FloatingButton primary onClick={this.store.clearProject}>
+            Analyze New Project
+          </FloatingButton>}
       </PaddedLayout>
     );
   }
 }
+
+const FloatingButton = styled(Button)`
+  position: fixed;
+  right: 30px;
+  bottom: 70px;
+  z-index: 10;
+`;
 
 const SearchInput = styled(Input)`
   width: 350px;

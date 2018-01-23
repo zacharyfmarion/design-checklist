@@ -47,12 +47,13 @@ const RatingCard = styled(Card)`
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     font-size: 4em;
+    text-align: center;
     height: none;
     background: inherit;
     border: none;
     text-align: left;
     .ant-card-head-title {
-      font-size: 2rem;
+      font-size: 1.5rem;
       text-transform: uppercase;
       color: inherit;
       margin-top: 10px;
