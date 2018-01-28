@@ -16,14 +16,7 @@ const RulesList = ({ rules, className }) => {
             disabled={categoryRules.length === 0}
           >
             {categoryRules.map((rule, j) => {
-              return (
-                <StyledRule
-                  message={rule.message}
-                  path={rule.path}
-                  type="error"
-                  key={[i, j]}
-                />
-              );
+              return <StyledRule rule={rule} type="error" key={[i, j]} />;
             })}
           </Panel>
         );

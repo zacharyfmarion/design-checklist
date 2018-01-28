@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import RuleStore from './RuleStore';
+import striptags from 'striptags';
 
 import 'brace/mode/java';
 import 'brace/theme/github';
@@ -34,14 +35,14 @@ class Rule extends React.Component<Props> {
   }
 
   handleCollapseChange = () => {
-    console.log('collapse changed');
     if (!this.store.loaded) {
-      this.store.getCode();
+      // this.store.getCode();
     }
   };
 
   render() {
-    const { path, message, key, className } = this.props;
+    const { rule: { path, message, code }, key, className } = this.props;
+    const codeText = striptags(code.join('\n'));
     return (
       <StyledCollapse
         defaultActiveKey={[0]}
@@ -56,8 +57,9 @@ class Rule extends React.Component<Props> {
             height="100px"
             readOnly
             name={`rule_${JSON.stringify(key)}`}
-            value={this.store.data}
+            value={codeText}
             editorProps={{ $blockScrolling: true }}
+            setOptions={{ firstLineNumber: 1 }}
           />
         </Panel>
       </StyledCollapse>

@@ -57,15 +57,14 @@ class Rules extends React.Component<Props> {
         }}
       >
         <Flex wrap={ui.isMobile}>
-          {this.store.data
-            ? Object.keys(this.store.data.error).map((key, i) =>
-                <StyledPercentageCard
-                  title={`${key} (${this.store.data.error[key].length} errors)`}
-                  key={i}
-                  percent={this.store.data.percentage[key]}
-                />
-              )
-            : <Spin size="large" />}
+          {this.store.data &&
+            Object.keys(this.store.data.error).map((key, i) =>
+              <StyledPercentageCard
+                title={`${key} (${this.store.data.error[key].length} errors)`}
+                key={i}
+                percent={this.store.data.percentage[key]}
+              />
+            )}
         </Flex>
         {this.store.data && <StyledRulesList rules={this.store.data.error} />}
       </div>

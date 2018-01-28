@@ -9,7 +9,7 @@ const REDIRECT_URI = 'http://localhost:3000/login';
 const OAUTH_URL = `${GITLAB_HOST}/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
 class UserStore {
-  @observable loggedIn: boolean = false;
+  @observable loggedIn: boolean = true;
   @observable code: string;
 
   @action

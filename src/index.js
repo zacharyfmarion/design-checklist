@@ -14,7 +14,7 @@ const App = inject('user')(
   observer(() =>
     <Router>
       <div>
-        <Route exact path="/login" component={Login} />
+        {/* <Route exact path="/login" component={Login} /> */}
         {scenes.map(scene =>
           <PrivateRoute
             exact
