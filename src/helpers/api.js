@@ -3,28 +3,25 @@
  * API specific things
  */
 
-const baseUrl = 'http://localhost:8000';
+const baseUrl = 'http://localhost:5000';
 
 // https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
-const encodeUrl = (url, params) => {
-  if (Object.keys(params).length === 0 && params.constructor === Object) {
-    return url;
-  }
-  let ret = [];
-  for (let d in params)
-    ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(params[d]));
-  return url + '?' + ret.join('&');
+const encodeParams = params => {
+  return Object.keys(params)
+    .map(key => {
+      return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+    })
+    .join('&');
 };
 
 export const getRequest = (url, params = {}, options = {}): Promise<*> => {
-  const path =
-    Object.keys(params).length === 0 && params.constructor === Object
-      ? baseUrl + url
-      : baseUrl + encodeUrl(url, params);
+  const opts = options || {};
+  const base = opts.externalBase || baseUrl;
+  const path = base + url + '?' + encodeParams(params);
   return new Promise((resolve, reject) => {
     fetch(path, {
       method: 'GET',
-      ...options
+      headers: opts.additionalHeaders || {}
     })
       .then(res => res.json())
       .then(json => resolve(json))
@@ -33,18 +30,28 @@ export const getRequest = (url, params = {}, options = {}): Promise<*> => {
 };
 
 export const postRequest = (url, params, options): Promise<*> => {
-  const path = baseUrl + url;
+  const opts = options || {};
+  const base = opts.externalBase || baseUrl;
+  const path = base + url;
   return new Promise((resolve, reject) => {
     fetch(path, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        ...opts.additionalHeaders
       },
-      body: JSON.stringify(params),
-      ...options
+      body: encodeParams(params)
     })
       .then(res => res.json())
       .then(json => resolve(json))
       .catch(err => reject(err));
   });
 };
+
+export const gitlabGetRequest = (url, params) =>
+  getRequest(url, params, {
+    externalBase: 'https://coursework.cs.duke.edu/api/v4',
+    additionalHeaders: {
+      Authorization: `Bearer ${window.auth.accessToken || ''}`
+    }
+  });

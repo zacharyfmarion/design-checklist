@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { getRequest } from 'helpers/api';
+import { postRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
 
 class RulesStore {
@@ -30,11 +30,13 @@ class RulesStore {
   @action
   getRules = async (): Promise<*> => {
     try {
-      const data = await getRequest(`/${this.projectName}`, {});
-      this.data = data;
+      const res = await postRequest(`/overview`, {
+        project: this.projectName
+      });
+      this.data = res.data;
       sessionStorage.setItem(
         `${sessionStoragePrefix}_overview`,
-        JSON.stringify({ data, projectName: this.projectName })
+        JSON.stringify({ data: res.data, projectName: this.projectName })
       );
       this.loading = false;
     } catch (err) {

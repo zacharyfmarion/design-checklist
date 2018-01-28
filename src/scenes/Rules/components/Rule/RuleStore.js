@@ -1,4 +1,5 @@
 import { action, observable } from 'mobx';
+import { gitlabGetRequest } from 'helpers/api';
 
 type Options = {
   projectId: string,
@@ -13,26 +14,16 @@ class RuleStore {
   @observable data: string = '';
 
   @action
-  getCode = () => {
+  getCode = async (): Promise<*> => {
     // TODO: get rid of this and use auth correctly
-    const token = '?????';
-    const url = `https://coursework.cs.duke.edu/api/v4/projects/${this
-      .projectId}/repository/files/${encodeURIComponent(
-      this.fileName
-    )}/raw?ref=master`;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        'Private-Token': token
-      }
-    })
-      .then(res => res.text())
-      .then(res => {
-        console.log(res);
-        this.data = res;
-        this.loaded = true;
-      })
-      .catch(err => console.log(err));
+    const url = `/projects/${this
+      .projectId}/repository/files/${encodeURIComponent(this.fileName)}`;
+    try {
+      const res = await gitlabGetRequest(url, { ref: 'master' });
+      this.data = atob(res.content);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   constructor(options: Options) {
