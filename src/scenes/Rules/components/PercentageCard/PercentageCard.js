@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const Percent = ({ percent }) =>
   <div>
     <BigNumber>
-      {percent}
+      {Math.round(percent, 1)}
     </BigNumber>
     <SuperScript>%</SuperScript>
   </div>;
@@ -38,7 +38,7 @@ const RatingCard = styled(Card)`
   background: ${({ percent }) =>
     percent > 90 ? 'rgb(185, 244, 188)' : percent > 75 ? '#fdd75f' : '#e63e3e'};
   color: ${({ percent }) =>
-    percent > 90 ? '#24b47e' : percent > 75 ? '#b37e35' : '#e63e3e'} !important;
+    percent > 90 ? '#24b47e' : percent > 75 ? '#b37e35' : '#771515'} !important;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
   &:hover {
     box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07) !important;

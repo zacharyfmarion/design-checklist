@@ -40,8 +40,12 @@ class Rule extends React.Component<Props> {
   };
 
   render() {
-    const { rule: { path, message, code }, key, className } = this.props;
-    const codeText = code.join('\n');
+    const {
+      rule: { path, message, code, textRange },
+      key,
+      className
+    } = this.props;
+    const codeText = code ? code.join('\n') : '';
     return (
       <StyledCollapse
         defaultActiveKey={[0]}
@@ -53,13 +57,13 @@ class Rule extends React.Component<Props> {
             mode="java"
             theme="github"
             width="100%"
-            height={`${code.length * 16}px`}
+            height={`${(code ? code.length : 0) * 16}px`}
             wrapEnabled
             readOnly
             name={`rule_${JSON.stringify(key)}`}
             value={codeText}
             editorProps={{ $blockScrolling: true }}
-            setOptions={{ firstLineNumber: 1 }}
+            setOptions={{ firstLineNumber: textRange.startLine }}
           />
         </Panel>
       </StyledCollapse>
