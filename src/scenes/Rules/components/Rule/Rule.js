@@ -5,7 +5,6 @@ import { observer } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import RuleStore from './RuleStore';
-import striptags from 'striptags';
 
 import 'brace/mode/java';
 import 'brace/theme/github';
@@ -42,7 +41,7 @@ class Rule extends React.Component<Props> {
 
   render() {
     const { rule: { path, message, code }, key, className } = this.props;
-    const codeText = striptags(code.join('\n'));
+    const codeText = code.join('\n');
     return (
       <StyledCollapse
         defaultActiveKey={[0]}
@@ -54,7 +53,8 @@ class Rule extends React.Component<Props> {
             mode="java"
             theme="github"
             width="100%"
-            height="100px"
+            height={`${code.length * 16}px`}
+            wrapEnabled
             readOnly
             name={`rule_${JSON.stringify(key)}`}
             value={codeText}
