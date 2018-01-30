@@ -164,12 +164,12 @@ const StyledMenu = styled(Menu)`
     align-items: center;
   }
   .ant-menu-item.ant-menu-item-selected {
+    background: #baf4bc;
     ${({ mobile }) =>
       !mobile &&
       `
       border-radius: 5px;
       height: 50px;
-      background: #baf4bc;
     `}
     a {
       color: black;
@@ -178,7 +178,7 @@ const StyledMenu = styled(Menu)`
   ${({ mobile }) =>
     mobile &&
     `
-    height: 170px;
+    height: auto;
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -188,6 +188,12 @@ const StyledMenu = styled(Menu)`
     top: 75px; 
     left: 0;
     border-top: 1px solid #525252;
+    .ant-menu-item {
+      width: 100%;
+      border-radius: 0;
+      height: 70px !important;
+      background: #25b47d;
+    }
   `}
   border: none;
   background: none;

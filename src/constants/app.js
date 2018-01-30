@@ -18,6 +18,6 @@ export const scenes = [
   //   path: '/graphs',
   //   icon: 'graph',
   //   name: 'Graphs',
-  //   component: Graphs
-  // }
+  //   component: Graphs,
+  // },
 ];

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { inject, observer } from 'mobx-react';
-import { Spin } from 'antd';
+import { Spin, Progress } from 'antd';
 import styled from 'styled-components';
 import UiStore from 'stores/UiStore';
 import { Flex } from 'reflexbox';
@@ -56,16 +56,26 @@ class Rules extends React.Component<Props> {
           ...transitionStyles[state]
         }}
       >
-        <Flex wrap={ui.isMobile}>
+        <PercentageRow column={!ui.isDesktop}>
           {this.store.data &&
             Object.keys(this.store.data.error).map((key, i) =>
-              <StyledPercentageCard
-                title={`${key} (${this.store.data.error[key].length} errors)`}
-                key={i}
-                percent={this.store.data.percentage[key]}
-              />
+              <PercentContainer
+                auto
+                column
+                mobile={ui.isMobile}
+                justify="center"
+                align="center"
+              >
+                <StyledProgress
+                  type={ui.isMobile ? 'line' : 'circle'}
+                  percent={Math.round(this.store.data.percentage[key], 1)}
+                />
+                <CategoryTitle>
+                  {key}
+                </CategoryTitle>
+              </PercentContainer>
             )}
-        </Flex>
+        </PercentageRow>
         {this.store.data && <StyledRulesList rules={this.store.data.error} />}
       </div>
     );
@@ -103,6 +113,27 @@ class Rules extends React.Component<Props> {
   }
 }
 
+const StyledProgress = styled(Progress)`
+  .ant-progress-circle-path {
+    stroke: ${({ percent }) =>
+      percent > 90 ? '#25b47d' : percent > 75 ? '#fdd75f' : '#e63e3e'}
+  }
+`;
+
+const CategoryTitle = styled.h2`margin-top: 5px;`;
+
+const PercentageRow = styled(Flex)`
+  margin-bottom: 25px;
+  ${({ column }) =>
+    column &&
+    `
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+    padding: 10px;
+  `}
+`;
+
 const FloatingButton = styled(Button)`
   position: fixed;
   right: 30px;
@@ -131,6 +162,19 @@ const GreenSpin = styled(Spin)`
       height: 23px;
     }
   }
+`;
+
+const PercentContainer = styled(Flex)`
+  ${({ mobile }) =>
+    !mobile &&
+    `
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  margin: 0 10px;
+  padding: 15px 0;
+  
+  `}
 `;
 
 const StyledPercentageCard = styled(PercentageCard)`

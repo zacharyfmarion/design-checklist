@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Card } from 'antd';
-import { Box } from 'reflexbox';
 import styled from 'styled-components';
 
 const Percent = ({ percent }) =>
@@ -12,17 +11,9 @@ const Percent = ({ percent }) =>
   </div>;
 
 const PercentageCard = ({ className, percent, title }) =>
-  <Box
-    w={[1, 1 / 3, 1 / 3]}
-    m={1}
-    align="center"
-    justify="center"
-    className={className}
-  >
-    <RatingCard title={title} percent={percent}>
-      <Percent percent={percent} />
-    </RatingCard>
-  </Box>;
+  <RatingCard title={title} percent={percent}>
+    <Percent percent={percent} />
+  </RatingCard>;
 
 const SuperScript = styled.span`
   vertical-align: top;

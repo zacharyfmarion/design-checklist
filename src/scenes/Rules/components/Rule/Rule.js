@@ -40,12 +40,7 @@ class Rule extends React.Component<Props> {
   };
 
   render() {
-    const {
-      rule: { path, message, code, textRange },
-      key,
-      className
-    } = this.props;
-    const codeText = code ? code.join('\n') : '';
+    const { rule: { path, message, code, textRange }, className } = this.props;
     return (
       <StyledCollapse
         defaultActiveKey={['0']}
@@ -53,36 +48,50 @@ class Rule extends React.Component<Props> {
         onChange={this.handleCollapseChange}
       >
         <Panel header={<RuleHeader path={path} message={message} />} key="0">
-          <StyledEditor
-            mode="java"
-            theme="github"
-            width="100%"
-            height={`${(code ? code.length : 0) * 16}px`}
-            wrapEnabled
-            readOnly
-            name={`rule_${JSON.stringify(key)}`}
-            value={codeText}
-            editorProps={{ $blockScrolling: true }}
-            setOptions={{ firstLineNumber: textRange.startLine }}
-          />
+          {code &&
+            code.map((line, i) =>
+              <Flex>
+                <LineNumber align="center" justify="center">
+                  {textRange.startLine + i}
+                </LineNumber>
+                <Line auto key={i} dangerouslySetInnerHTML={{ __html: line }} />
+              </Flex>
+            )}
         </Panel>
       </StyledCollapse>
     );
   }
 }
 
-const StyledCollapse = styled(Collapse)`
-  &:hover {
-    box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07) !important;
+const LineNumber = styled(Flex)`
+  font-family: monospace;
+  background: #baf4bc;
+  padding: 0 3px;
+  width: 35px;
+  text-align: center;
+  margin-right: 3px;
+`;
+
+const Line = styled(Flex)`
+  font-family: monospace;
+  font-size: 12px;
+  display: inline;
+  overflow-x: scroll;
+  color: #000;
+  .s {
+    color: #d14;
   }
-  .ant-collapse-content-box, .ant-collapse-content {
-    padding: 0;
+  .k {
+    color: #0086b3;
+  }
+  .c {
+    color: #099;
   }
 `;
 
-const StyledEditor = styled(AceEditor)`
-  .ace_active-line {
-    background: #fff !important;
+const StyledCollapse = styled(Collapse)`
+  .ant-collapse-content-box, .ant-collapse-content {
+    padding: 0;
   }
 `;
 
