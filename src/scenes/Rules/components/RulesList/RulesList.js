@@ -6,13 +6,13 @@ const Panel = Collapse.Panel;
 
 const RulesList = ({ rules, className }) => {
   return (
-    <StyledCollapse defaultActiveKey={[0]} className={className}>
+    <StyledCollapse defaultActiveKey={['0', '1', '2']} className={className}>
       {Object.keys(rules).map((key, i) => {
         const categoryRules = rules[key];
         return (
           <Panel
             header={`${key} (${categoryRules.length} errors)`}
-            key={i}
+            key={`${i}`}
             disabled={categoryRules.length === 0}
           >
             {categoryRules.map((rule, j) => {

@@ -13,11 +13,11 @@ export const scenes = [
     icon: 'exclamation',
     name: 'Rules',
     component: Rules
-  },
-  {
-    path: '/graphs',
-    icon: 'graph',
-    name: 'Graphs',
-    component: Graphs
   }
+  // {
+  //   path: '/graphs',
+  //   icon: 'graph',
+  //   name: 'Graphs',
+  //   component: Graphs
+  // }
 ];

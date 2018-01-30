@@ -48,11 +48,11 @@ class Rule extends React.Component<Props> {
     const codeText = code ? code.join('\n') : '';
     return (
       <StyledCollapse
-        defaultActiveKey={[0]}
+        defaultActiveKey={['0']}
         className={className}
         onChange={this.handleCollapseChange}
       >
-        <Panel header={<RuleHeader path={path} message={message} />} key={0}>
+        <Panel header={<RuleHeader path={path} message={message} />} key="0">
           <StyledEditor
             mode="java"
             theme="github"
@@ -81,6 +81,9 @@ const StyledCollapse = styled(Collapse)`
 `;
 
 const StyledEditor = styled(AceEditor)`
+  .ace_active-line {
+    background: #fff !important;
+  }
 `;
 
 const Pathname = styled.span`font-family: monospace;`;

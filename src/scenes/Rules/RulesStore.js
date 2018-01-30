@@ -1,6 +1,7 @@
 import { observable, action } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
+import { notification } from 'antd';
 
 class RulesStore {
   @observable data: Object;
@@ -34,6 +35,20 @@ class RulesStore {
     }
     try {
       const res = await getRequest(`/${this.projectName}`, {});
+      if (res['err']) {
+        console.log('ERROR', res['err']);
+        notification.open({
+          message: 'Project Error',
+          description: res['err'],
+          style: {
+            background: '#e63e3e',
+            color: '#771515'
+          }
+        });
+        this.projectName = '';
+        this.projectConfirmed = false;
+        return;
+      }
       this.data = res;
       sessionStorage.setItem(
         `${sessionStoragePrefix}_overview`,
