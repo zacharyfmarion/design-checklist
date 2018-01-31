@@ -3,7 +3,7 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { withRouter } from 'react-router';
 import { Link, type RouterHistory } from 'react-router-dom';
-import { Menu } from 'antd';
+import { Menu, Icon } from 'antd';
 import { Flex } from 'reflexbox';
 import UiStore from 'stores/UiStore';
 import styled from 'styled-components';
@@ -14,6 +14,7 @@ type Props = {
   history: RouterHistory,
   location: Object,
   subheader?: React.Node,
+  onTabClick?: Function,
   ui: UiStore
 };
 
@@ -88,13 +89,18 @@ class Header extends React.Component<Props> {
         theme="dark"
         mobile={ui.isMobile}
       >
-        {scenes.map(scene =>
-          <HeaderItem key={scene.path} mobile={ui.isMobile}>
-            <HeaderLink to={scene.path}>
-              {scene.name}
-            </HeaderLink>
-          </HeaderItem>
-        )}
+        {scenes.map(scene => {
+          const handleClick = () =>
+            this.props.onTabClick && this.props.onTabClick(scene.name);
+          return (
+            <HeaderItem key={scene.path} mobile={ui.isMobile}>
+              <HeaderLink to={scene.path} onClick={handleClick}>
+                <Icon type={scene.icon} />
+                {scene.name}
+              </HeaderLink>
+            </HeaderItem>
+          );
+        })}
       </StyledMenu>
     );
     return (

@@ -1,13 +1,9 @@
 import * as React from 'react';
-import AceEditor from 'react-ace';
 import { Collapse } from 'antd';
 import { observer } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import RuleStore from './RuleStore';
-
-import 'brace/mode/java';
-import 'brace/theme/github';
 
 const Panel = Collapse.Panel;
 
@@ -66,8 +62,7 @@ class Rule extends React.Component<Props> {
 const LineNumber = styled(Flex)`
   font-family: monospace;
   background: #baf4bc;
-  padding: 0 3px;
-  width: 35px;
+  padding: 0 7px;
   text-align: center;
   margin-right: 3px;
 `;
@@ -87,6 +82,7 @@ const Line = styled(Flex)`
   .c {
     color: #099;
   }
+  .sym { }
 `;
 
 const StyledCollapse = styled(Collapse)`

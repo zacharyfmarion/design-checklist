@@ -10,8 +10,8 @@ export const sessionStoragePrefix = 'sonarqube';
 export const scenes = [
   {
     path: '/',
-    icon: 'exclamation',
-    name: 'Analysis',
+    icon: 'check-circle-o',
+    name: 'Checklist',
     component: Rules
   }
   // {

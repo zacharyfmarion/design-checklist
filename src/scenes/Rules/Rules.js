@@ -39,6 +39,13 @@ class Rules extends React.Component<Props> {
     this.store = new RulesStore();
   }
 
+  handleTabClick = (tab: string) => {
+    console.log('A tab was clicked');
+    if (tab === 'Checklist') {
+      console.log('clicked');
+    }
+  };
+
   renderLoading = () => {
     return (
       <LoadingWrapper justify="center" align="center">
@@ -97,7 +104,7 @@ class Rules extends React.Component<Props> {
   render() {
     if (!this.store.projectConfirmed) {
       return (
-        <PaddedLayout>
+        <PaddedLayout onTabClick={this.handleTabClick}>
           <Flex align="center" justify="center">
             <SearchInput
               onChange={this.store.setProjectName}
@@ -112,14 +119,14 @@ class Rules extends React.Component<Props> {
       );
     }
     return (
-      <PaddedLayout>
+      <PaddedLayout onTabClick={this.handleTabClick}>
         {this.store.loading && this.renderLoading()}
         <Transition in={!this.store.loading} timeout={duration}>
           {state => this.renderErrors(state)}
         </Transition>
         {!this.store.loading &&
           <FloatingButton primary onClick={this.store.clearProject}>
-            Analyze New Project
+            View Another Project
           </FloatingButton>}
       </PaddedLayout>
     );
