@@ -8,18 +8,24 @@ const Panel = Collapse.Panel;
 const RulesList = ({ rules, className }) => {
   return (
     <StyledCollapse defaultActiveKey={['0', '1', '2']} className={className}>
-      {Object.keys(rules).map((key, i) => {
-        const categoryRules = rules[key];
+      {Object.keys(rules).map((category, i) => {
         return (
-          <Panel
-            header={`${key} (${categoryRules.length} errors)`}
-            key={`${i}`}
-            disabled={categoryRules.length === 0}
-          >
-            <Element name={key}>
-              {categoryRules.map((rule, j) => {
-                return <StyledRule rule={rule} type="error" key={[i, j]} />;
-              })}
+          <Panel header={category} key={`${i}`}>
+            <Element name={category}>
+              {rules[category] instanceof Array
+                ? rules[category].map((rule, j) =>
+                    <StyledRule rule={rule} type="error" key={[i, j]} />
+                  )
+                : Object.keys(rules[category]).map((subcategory, j) =>
+                    <div>
+                      <SubHeader>
+                        {rules[category][subcategory]['category description']}
+                      </SubHeader>
+                      {rules[category][subcategory].detail.map((rule, j) =>
+                        <StyledRule rule={rule} type="error" key={[i, j]} />
+                      )}
+                    </div>
+                  )}
             </Element>
           </Panel>
         );
@@ -27,6 +33,12 @@ const RulesList = ({ rules, className }) => {
     </StyledCollapse>
   );
 };
+
+const SubHeader = styled.h2`
+  padding: 5px;
+  margin: 10px 0;
+  border-left: 5px solid #26b47b;
+`;
 
 const StyledCollapse = styled(Collapse)`
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07) !important;

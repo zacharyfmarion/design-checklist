@@ -61,7 +61,7 @@ class Rule extends React.Component<Props> {
 
 const LineNumber = styled(Flex)`
   font-family: monospace;
-  background: #baf4bc;
+  background: #f7f7f7;
   padding: 0 7px;
   text-align: center;
   margin-right: 3px;
@@ -86,6 +86,13 @@ const Line = styled(Flex)`
 `;
 
 const StyledCollapse = styled(Collapse)`
+  margin-left: 10px;
+  .ant-collapse-header {
+    border-bottom: 1px solid #bbbbbb;
+  }
+  .ant-collapse-item:last-child > .ant-collapse-header {
+    border-radius: 0 !important;
+  }
   .ant-collapse-content-box, .ant-collapse-content {
     padding: 0;
   }

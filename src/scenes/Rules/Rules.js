@@ -74,7 +74,7 @@ class Rules extends React.Component<Props> {
       >
         <PercentageRow column={!ui.isDesktop}>
           {this.store.data &&
-            Object.keys(this.store.data.error).map((key, i) => {
+            Object.keys(this.store.data.percentage).map((key, i) => {
               const handleScroll = () => this.handleScroll(key);
               return (
                 <PercentContainer
