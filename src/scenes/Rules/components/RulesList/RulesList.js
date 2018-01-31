@@ -40,6 +40,7 @@ const SubHeader = styled.h2`
   padding: 5px;
   margin: 10px 0;
   border-left: 5px solid #26b47b;
+  background: #baf4bc;
 `;
 
 const StyledPanel = styled(Panel)`
