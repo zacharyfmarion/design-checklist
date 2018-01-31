@@ -11,7 +11,7 @@ export const scenes = [
   {
     path: '/',
     icon: 'exclamation',
-    name: 'Rules',
+    name: 'Analysis',
     component: Rules
   }
   // {

@@ -8,11 +8,11 @@ import { Flex } from 'reflexbox';
 import { Transition } from 'react-transition-group';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import { scroller } from 'react-scroll';
 
 // local components
 import RulesList from './components/RulesList';
 import RulesStore from './RulesStore';
-import PercentageCard from './components/PercentageCard';
 
 type Props = {
   ui: UiStore
@@ -47,6 +47,15 @@ class Rules extends React.Component<Props> {
     );
   };
 
+  handleScroll = (key: string) => {
+    scroller.scrollTo(key, {
+      duration: 1500,
+      delay: 100,
+      smooth: true,
+      offset: -130
+    });
+  };
+
   renderErrors = state => {
     const { ui } = this.props;
     return (
@@ -58,23 +67,27 @@ class Rules extends React.Component<Props> {
       >
         <PercentageRow column={!ui.isDesktop}>
           {this.store.data &&
-            Object.keys(this.store.data.error).map((key, i) =>
-              <PercentContainer
-                auto
-                column
-                mobile={ui.isMobile}
-                justify="center"
-                align="center"
-              >
-                <StyledProgress
-                  type={ui.isMobile ? 'line' : 'circle'}
-                  percent={Math.round(this.store.data.percentage[key], 1)}
-                />
-                <CategoryTitle>
-                  {key}
-                </CategoryTitle>
-              </PercentContainer>
-            )}
+            Object.keys(this.store.data.error).map((key, i) => {
+              const handleScroll = () => this.handleScroll(key);
+              return (
+                <PercentContainer
+                  auto
+                  column
+                  mobile={ui.isMobile}
+                  justify="center"
+                  align="center"
+                  onClick={handleScroll}
+                >
+                  <StyledProgress
+                    type={ui.isMobile ? 'line' : 'circle'}
+                    percent={Math.round(this.store.data.percentage[key], 1)}
+                  />
+                  <CategoryTitle>
+                    {key}
+                  </CategoryTitle>
+                </PercentContainer>
+              );
+            })}
         </PercentageRow>
         {this.store.data && <StyledRulesList rules={this.store.data.error} />}
       </div>
@@ -168,6 +181,7 @@ const PercentContainer = styled(Flex)`
   ${({ mobile }) =>
     !mobile &&
     `
+  cursor: pointer;
   background: #fff;
   border-radius: 5px;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
@@ -175,11 +189,6 @@ const PercentContainer = styled(Flex)`
   padding: 15px 0;
   
   `}
-`;
-
-const StyledPercentageCard = styled(PercentageCard)`
-  border-radius: 5px;
-  text-align: center;
 `;
 
 const PaddedLayout = styled(Layout)`

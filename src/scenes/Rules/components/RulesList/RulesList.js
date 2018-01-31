@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Collapse } from 'antd';
 import styled from 'styled-components';
+import { Element } from 'react-scroll';
 import Rule from '../Rule';
 const Panel = Collapse.Panel;
 
@@ -15,9 +16,11 @@ const RulesList = ({ rules, className }) => {
             key={`${i}`}
             disabled={categoryRules.length === 0}
           >
-            {categoryRules.map((rule, j) => {
-              return <StyledRule rule={rule} type="error" key={[i, j]} />;
-            })}
+            <Element name={key}>
+              {categoryRules.map((rule, j) => {
+                return <StyledRule rule={rule} type="error" key={[i, j]} />;
+              })}
+            </Element>
           </Panel>
         );
       })}
