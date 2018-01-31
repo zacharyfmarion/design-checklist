@@ -12,12 +12,20 @@ type Props = {
   subheader?: React.Node,
   className?: string,
   onTabClick?: Function,
+  actions?: React.Node,
   ui: UiStore
 };
 
-const Layout = ({ children, subheader, ui, onTabClick, className }: Props) =>
+const Layout = ({
+  children,
+  subheader,
+  ui,
+  onTabClick,
+  actions,
+  className
+}: Props) =>
   <Background column>
-    <Header subheader={subheader} onTabClick={onTabClick} />
+    <Header subheader={subheader} onTabClick={onTabClick} actions={actions} />
     <Panel auto justify="center" mobile={ui.isMobile} className={className}>
       {children}
     </Panel>

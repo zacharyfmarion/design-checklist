@@ -15,6 +15,7 @@ type Props = {
   location: Object,
   subheader?: React.Node,
   onTabClick?: Function,
+  actions?: React.Node,
   ui: UiStore
 };
 
@@ -113,7 +114,10 @@ class Header extends React.Component<Props> {
             </Title>
           </StyledLink>
         </Flex>
-        {ui.isMobile
+        <Flex align="center" justify="center">
+          {this.props.actions}
+        </Flex>
+        {/* {ui.isMobile
           ? <MenuButtonContainer onClick={this.toggleMenu}>
               <MenuButton class="box-shadow-menu" />
             </MenuButtonContainer>
@@ -122,7 +126,7 @@ class Header extends React.Component<Props> {
         {subheader &&
           <SubHeader auto>
             {subheader}
-          </SubHeader>}
+          </SubHeader>} */}
       </HeaderWrapper>
     );
   }

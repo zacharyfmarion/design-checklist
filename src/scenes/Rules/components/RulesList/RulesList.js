@@ -6,11 +6,13 @@ import Rule from '../Rule';
 const Panel = Collapse.Panel;
 
 const RulesList = ({ rules, className }) => {
+  const keys = Object.keys(rules).map((_, i) => `${i}`);
   return (
-    <StyledCollapse defaultActiveKey={['0', '1', '2']} className={className}>
+    <StyledCollapse defaultActiveKey={keys} className={className}>
       {Object.keys(rules).map((category, i) => {
+        console.log(category);
         return (
-          <Panel header={category} key={`${i}`}>
+          <StyledPanel header={category} key={`${i}`}>
             <Element name={category}>
               {rules[category] instanceof Array
                 ? rules[category].map((rule, j) =>
@@ -27,7 +29,7 @@ const RulesList = ({ rules, className }) => {
                     </div>
                   )}
             </Element>
-          </Panel>
+          </StyledPanel>
         );
       })}
     </StyledCollapse>
@@ -38,6 +40,16 @@ const SubHeader = styled.h2`
   padding: 5px;
   margin: 10px 0;
   border-left: 5px solid #26b47b;
+`;
+
+const StyledPanel = styled(Panel)`
+  .ant-collapse-content {
+    padding-left: 0 !important;
+  }
+  .ant-collapse-content-box {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
 `;
 
 const StyledCollapse = styled(Collapse)`

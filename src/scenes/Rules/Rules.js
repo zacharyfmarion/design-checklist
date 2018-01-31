@@ -54,7 +54,17 @@ class Rules extends React.Component<Props> {
     );
   };
 
+  renderHeaderActions = () => {
+    return (
+      !this.store.loading &&
+      <Button primary onClick={this.store.clearProject} icon="rollback">
+        Back
+      </Button>
+    );
+  };
+
   handleScroll = (key: string) => {
+    console.log(key);
     scroller.scrollTo(key, {
       duration: 1500,
       delay: 100,
@@ -104,7 +114,7 @@ class Rules extends React.Component<Props> {
   render() {
     if (!this.store.projectConfirmed) {
       return (
-        <PaddedLayout onTabClick={this.handleTabClick}>
+        <PaddedLayout>
           <Flex align="center" justify="center">
             <SearchInput
               onChange={this.store.setProjectName}
@@ -119,15 +129,11 @@ class Rules extends React.Component<Props> {
       );
     }
     return (
-      <PaddedLayout onTabClick={this.handleTabClick}>
+      <PaddedLayout actions={this.renderHeaderActions()}>
         {this.store.loading && this.renderLoading()}
         <Transition in={!this.store.loading} timeout={duration}>
           {state => this.renderErrors(state)}
         </Transition>
-        {!this.store.loading &&
-          <FloatingButton primary onClick={this.store.clearProject}>
-            View Another Project
-          </FloatingButton>}
       </PaddedLayout>
     );
   }
@@ -152,13 +158,6 @@ const PercentageRow = styled(Flex)`
     box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
     padding: 10px;
   `}
-`;
-
-const FloatingButton = styled(Button)`
-  position: fixed;
-  right: 30px;
-  bottom: 70px;
-  z-index: 10;
 `;
 
 const SearchInput = styled(Input)`

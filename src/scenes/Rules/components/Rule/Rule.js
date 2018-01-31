@@ -86,7 +86,7 @@ const Line = styled(Flex)`
 `;
 
 const StyledCollapse = styled(Collapse)`
-  margin-left: 10px;
+  margin: 15px 0 15px 10px !important;
   .ant-collapse-header {
     border-bottom: 1px solid #bbbbbb;
   }
