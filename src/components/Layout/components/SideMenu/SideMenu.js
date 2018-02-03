@@ -157,6 +157,7 @@ const StyledMenu = styled(Menu)`
 const SidebarContainer = styled(Flex)`
   width: ${({ collapsed, isDesktop }) =>
     isDesktop ? (collapsed ? '63px' : '256px') : '300px;'};
+  overflow: hidden;
   z-index: 100;
   position: fixed;
   left: 0;
