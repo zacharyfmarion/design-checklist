@@ -1,60 +1,99 @@
 import * as React from 'react';
-import { Collapse } from 'antd';
+import { Collapse, Tag, Icon } from 'antd';
 import styled from 'styled-components';
-import { Element } from 'react-scroll';
+import { Flex } from 'reflexbox';
 import Rule from '../Rule';
+import { shadow } from 'constants/styles';
 const Panel = Collapse.Panel;
 
-const RulesList = ({ rules, className }) => {
-  const keys = Object.keys(rules).map((_, i) => `${i}`);
-  return (
-    <StyledCollapse defaultActiveKey={keys} className={className}>
-      {Object.keys(rules).map((category, i) => {
-        console.log(category);
-        return (
-          <StyledPanel header={category} key={`${i}`}>
-            <Element name={category}>
-              {rules[category] instanceof Array
-                ? rules[category].map((rule, j) =>
-                    <StyledRule rule={rule} type="error" key={[i, j]} />
-                  )
-                : Object.keys(rules[category]).map((subcategory, j) =>
-                    <div>
-                      <SubHeader>
-                        {rules[category][subcategory]['category description']}
-                      </SubHeader>
-                      {rules[category][subcategory].detail.map((rule, j) =>
-                        <StyledRule rule={rule} type="error" key={[i, j]} />
-                      )}
-                    </div>
-                  )}
-            </Element>
-          </StyledPanel>
-        );
-      })}
-    </StyledCollapse>
-  );
-};
+class RulesList extends React.Component<{}> {
+  renderSubcategories = (subcategory: string, i: number) => {
+    const { rules, active } = this.props;
+    const errors = rules[active][subcategory].detail;
+    return (
+      <Panel
+        header={
+          <div>
+            <span>
+              {rules[active][subcategory]['category description']}
+            </span>
+            <HeaderTag color={errors.length > 0 ? 'red' : 'green'}>
+              {errors.length} {errors.length === 1 ? 'error' : 'errors'}
+            </HeaderTag>
+          </div>
+        }
+        key={`${active}_${i}`}
+      >
+        {errors.length > 0
+          ? errors.map((rule, j) =>
+              <StyledRule rule={rule} type="error" key={j} />
+            )
+          : <Flex>
+              <CheckIcon type="check-circle-o" />All done!
+            </Flex>}
+      </Panel>
+    );
+  };
 
-const SubHeader = styled.h2`
-  padding: 5px;
-  margin: 10px 0;
-  border-left: 5px solid #26b47b;
-  background: #baf4bc;
+  renderCategory = () => {
+    const { rules, active } = this.props;
+    const errors = rules[active];
+    return (
+      <Panel
+        header={
+          <div>
+            <span>All Errors</span>
+            <HeaderTag color={errors.length > 0 ? 'red' : 'green'}>
+              {errors.length} {errors.length === 1 ? 'error' : 'errors'}
+            </HeaderTag>
+          </div>
+        }
+        key={`${active}_0`}
+      >
+        {errors.length > 0
+          ? errors.map((rule, i) =>
+              <StyledRule rule={rule} type="error" key={i} />
+            )
+          : <Flex>
+              <CheckIcon type="check-circle-o" />All done!
+            </Flex>}
+      </Panel>
+    );
+  };
+
+  render() {
+    const { active, rules } = this.props;
+    const keys = Object.keys(rules[active]).map((_, i) => `${active}_${i}`);
+    return (
+      <ListContainer column>
+        {rules[active] instanceof Array
+          ? <StyledCollapse defaultActiveKey="0">
+              {this.renderCategory()}
+            </StyledCollapse>
+          : <StyledCollapse defaultActiveKey={keys}>
+              {Object.keys(rules[active]).map(this.renderSubcategories)}
+            </StyledCollapse>}
+      </ListContainer>
+    );
+  }
+}
+
+const CheckIcon = styled(Icon)`
+  color: green;
+  font-size: 15px;
+  margin-right: 5px;
 `;
 
-const StyledPanel = styled(Panel)`
-  .ant-collapse-content {
-    padding-left: 0 !important;
-  }
-  .ant-collapse-content-box {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
+const HeaderTag = styled(Tag)`
+  margin-left: 7px;
 `;
 
 const StyledCollapse = styled(Collapse)`
-  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07) !important;
+  box-shadow: ${shadow} !important;
+  margin: 0 10px;
+`;
+
+const ListContainer = styled(Flex)`
 `;
 
 const StyledRule = styled(Rule)`

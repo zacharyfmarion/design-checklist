@@ -1,21 +1,8 @@
 import * as React from 'react';
-import { Collapse } from 'antd';
 import { observer } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import RuleStore from './RuleStore';
-
-const Panel = Collapse.Panel;
-
-const RuleHeader = ({ path, message, className }) =>
-  <Flex column className={className}>
-    <Pathname>
-      {path}
-    </Pathname>
-    <span>
-      {message}
-    </span>
-  </Flex>;
 
 type Props = {};
 
@@ -38,26 +25,42 @@ class Rule extends React.Component<Props> {
   render() {
     const { rule: { path, message, code, textRange }, className } = this.props;
     return (
-      <StyledCollapse
-        defaultActiveKey={['0']}
-        className={className}
-        onChange={this.handleCollapseChange}
-      >
-        <Panel header={<RuleHeader path={path} message={message} />} key="0">
-          {code &&
-            code.map((line, i) =>
-              <Flex>
-                <LineNumber align="center" justify="center">
-                  {textRange.startLine + i}
-                </LineNumber>
-                <Line auto key={i} dangerouslySetInnerHTML={{ __html: line }} />
-              </Flex>
-            )}
-        </Panel>
-      </StyledCollapse>
+      <RuleContainer column className={className}>
+        <RuleHeader column>
+          <Pathname>
+            {path}
+          </Pathname>
+          <Error>
+            {message}
+          </Error>
+        </RuleHeader>
+        {code &&
+          code.map((line, i) =>
+            <Flex>
+              <LineNumber align="center" justify="center">
+                {textRange.startLine + i}
+              </LineNumber>
+              <Line auto key={i} dangerouslySetInnerHTML={{ __html: line }} />
+            </Flex>
+          )}
+      </RuleContainer>
     );
   }
 }
+
+const Error = styled.span`color: #f4766e;`;
+
+const RuleHeader = styled(Flex)`
+  padding: 5px;
+  border-bottom: 1px solid #bfbfbf;
+  background: #f4f4f6;
+`;
+
+const RuleContainer = styled(Flex)`
+  border: 1px solid #bfbfbf;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+`;
 
 const LineNumber = styled(Flex)`
   font-family: monospace;
@@ -85,19 +88,11 @@ const Line = styled(Flex)`
   .sym { }
 `;
 
-const StyledCollapse = styled(Collapse)`
-  margin: 15px 0 15px 10px !important;
-  .ant-collapse-header {
-    border-bottom: 1px solid #bbbbbb;
-  }
-  .ant-collapse-item:last-child > .ant-collapse-header {
-    border-radius: 0 !important;
-  }
-  .ant-collapse-content-box, .ant-collapse-content {
-    padding: 0;
-  }
+const Pathname = styled.span`
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: monospace;
 `;
-
-const Pathname = styled.span`font-family: monospace;`;
 
 export default Rule;

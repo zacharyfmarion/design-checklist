@@ -3,16 +3,19 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { withRouter } from 'react-router';
 import { Link, type RouterHistory } from 'react-router-dom';
-import { Menu, Icon } from 'antd';
 import { Flex } from 'reflexbox';
 import UiStore from 'stores/UiStore';
 import styled from 'styled-components';
-import { title, shortTitle, scenes } from 'constants/app';
+import { shadow, colors } from 'constants/styles';
+import { title, shortTitle } from 'constants/app';
 import logo from 'assets/logo.png';
 
 type Props = {
   history: RouterHistory,
   location: Object,
+  sidebarCollapsed: boolean,
+  sidebarVisible: boolean,
+  toggleSidebar: Function,
   subheader?: React.Node,
   onTabClick?: Function,
   actions?: React.Node,
@@ -20,7 +23,6 @@ type Props = {
 };
 
 type State = {
-  menuOpen: boolean,
   topAligned: boolean
 };
 
@@ -32,7 +34,6 @@ class Header extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      menuOpen: false,
       topAligned: true // whether we are at the top of the page
     };
   }
@@ -52,20 +53,6 @@ class Header extends React.Component<Props> {
     });
   };
 
-  closeMenu = (): void => {
-    // $FlowIssue
-    this.setState({
-      menuOpen: false
-    });
-  };
-
-  toggleMenu = (): void => {
-    // $FlowIssue
-    this.setState({
-      menuOpen: !this.state.menuOpen
-    });
-  };
-
   getBasePath = () => {
     const pathname = this.props.location.pathname;
     let slashCount = 0,
@@ -82,33 +69,23 @@ class Header extends React.Component<Props> {
   };
 
   render() {
-    const { subheader, ui } = this.props;
-    const menu = (
-      <StyledMenu
-        selectedKeys={[this.getBasePath()]}
-        mode="horizontal"
-        theme="dark"
-        mobile={ui.isMobile}
-      >
-        {scenes.map(scene => {
-          const handleClick = () =>
-            this.props.onTabClick && this.props.onTabClick(scene.name);
-          return (
-            <HeaderItem key={scene.path} mobile={ui.isMobile}>
-              <HeaderLink to={scene.path} onClick={handleClick}>
-                <Icon type={scene.icon} />
-                {scene.name}
-              </HeaderLink>
-            </HeaderItem>
-          );
-        })}
-      </StyledMenu>
-    );
+    const { ui, sidebarCollapsed, toggleSidebar, sidebarVisible } = this.props;
     return (
-      <HeaderWrapper justify="space-between" topAligned={this.state.topAligned}>
+      <HeaderWrapper
+        auto
+        justify="space-between"
+        topAligned={this.state.topAligned}
+        collapsed={sidebarCollapsed}
+        isDesktop={ui.isDesktop}
+        sidebarVisible={sidebarVisible}
+      >
         <Flex align="center">
-          <StyledLink to="/" onClick={this.closeMenu}>
-            <MFSLogo src={logo} />
+          <StyledLink to="/">
+            {ui.isDesktop || !sidebarVisible
+              ? <MFSLogo src={logo} />
+              : <MenuButtonContainer onClick={toggleSidebar}>
+                  <MenuButton class="box-shadow-menu" />
+                </MenuButtonContainer>}
             <Title>
               {ui.isMobile ? shortTitle : title}
             </Title>
@@ -117,28 +94,14 @@ class Header extends React.Component<Props> {
         <Flex align="center" justify="center">
           {this.props.actions}
         </Flex>
-        {/* {ui.isMobile
-          ? <MenuButtonContainer onClick={this.toggleMenu}>
-              <MenuButton class="box-shadow-menu" />
-            </MenuButtonContainer>
-          : menu}
-        {ui.isMobile && this.state.menuOpen && menu}
-        {subheader &&
-          <SubHeader auto>
-            {subheader}
-          </SubHeader>} */}
       </HeaderWrapper>
     );
   }
 }
 
-const HeaderLink = styled(Link)`
-  font-size: 14px;
-  text-transform: uppercase;
-`;
-
 const MenuButtonContainer = styled(Flex)`
   height: 100%;
+  padding-right: 5px;
 `;
 
 const MenuButton = styled.a`
@@ -147,15 +110,14 @@ const MenuButton = styled.a`
   align-self: center;
   font-size: 25px;
   top: -8px;
-
   &:before {
     content: "";
     position: absolute;
     left: 0;
     width: 1em;
     height: 0.1em;
-    background: white;
-    box-shadow: 0 0.25em 0 0 white, 0 0.5em 0 0 white;
+    background: black;
+    box-shadow: 0 0.25em 0 0 black, 0 0.5em 0 0 black;
   }
 `;
 
@@ -163,53 +125,6 @@ const StyledLink = styled(Link)`
   display: flex;
   flex-direction: row;
   align-items: center;
-`;
-
-const StyledMenu = styled(Menu)`
-  height: 100%;
-  display: flex;
-  align-items: center;
-  .ant-menu-item {
-    height: 100%;
-    align-items: center;
-  }
-  .ant-menu-item.ant-menu-item-selected {
-    background: #baf4bc;
-    ${({ mobile }) =>
-      !mobile &&
-      `
-      border-radius: 5px;
-      height: 50px;
-    `}
-    a {
-      color: black;
-    }
-  }
-  ${({ mobile }) =>
-    mobile &&
-    `
-    height: auto;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: center;
-    z-index: 100;
-    top: 75px; 
-    left: 0;
-    border-top: 1px solid #525252;
-    .ant-menu-item {
-      width: 100%;
-      border-radius: 0;
-      height: 70px !important;
-      background: #25b47d;
-    }
-  `}
-  border: none;
-  background: none;
-  justify-content: center;
-  align-items: center;
-  display: flex;
 `;
 
 const Title = styled.h2`
@@ -220,8 +135,10 @@ const Title = styled.h2`
 
 const HeaderWrapper = styled(Flex)`
   position: fixed;
-  width: 100%;
-  background: #25b47c;
+  left: ${({ sidebarVisible, collapsed, isDesktop }) =>
+    sidebarVisible && isDesktop ? (collapsed ? '63px' : '256px') : '0'};
+  right: 0;
+  background: ${colors.primary};
   color: black;
   padding: 0 30px;
   height: 75px;
@@ -229,7 +146,7 @@ const HeaderWrapper = styled(Flex)`
   ${({ topAligned }) =>
     !topAligned &&
     `
-    box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07) !important;
+    box-shadow: ${shadow} !important;
   `}
   transition: box-shadow 0.3s ease-in-out;
 `;
@@ -238,32 +155,6 @@ const MFSLogo = styled.img`
   width: 40px;
   height: 40px;
   margin-right: 10px;
-`;
-
-const SubHeader = styled(Flex)`
-  background: #404040;
-  padding: 10px 50px;
-  color: #fff;
-`;
-
-const HeaderItem = styled(Menu.Item)`
-  display: flex;
-  flex-direction: row;
-  border-radius: 5px;
-  height: 50px;
-  ${({ mobile }) =>
-    mobile
-      ? `
-      justify-content: flex-start;
-    `
-      : `
-    justify-content: center;
-    align-items: center;
-  `}
-
-  i.anticon {
-    padding-right: 10px;
-  }
 `;
 
 export { Header };

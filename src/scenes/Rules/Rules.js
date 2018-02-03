@@ -4,18 +4,20 @@ import { inject, observer } from 'mobx-react';
 import { Spin, Progress } from 'antd';
 import styled from 'styled-components';
 import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
 import { Flex } from 'reflexbox';
+import { colors, shadow } from 'constants/styles';
 import { Transition } from 'react-transition-group';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { scroller } from 'react-scroll';
 
 // local components
 import RulesList from './components/RulesList';
 import RulesStore from './RulesStore';
 
 type Props = {
-  ui: UiStore
+  ui: UiStore,
+  app: AppStore
 };
 
 const duration = 300;
@@ -36,7 +38,7 @@ class Rules extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props);
-    this.store = new RulesStore();
+    this.store = new RulesStore(this.props.app);
   }
 
   handleTabClick = (tab: string) => {
@@ -63,16 +65,6 @@ class Rules extends React.Component<Props> {
     );
   };
 
-  handleScroll = (key: string) => {
-    console.log(key);
-    scroller.scrollTo(key, {
-      duration: 1500,
-      delay: 100,
-      smooth: true,
-      offset: -130
-    });
-  };
-
   renderErrors = state => {
     const { ui } = this.props;
     return (
@@ -82,43 +74,55 @@ class Rules extends React.Component<Props> {
           ...transitionStyles[state]
         }}
       >
-        <PercentageRow column={!ui.isDesktop}>
+        <PercentageRow column={!ui.isDesktop} isDesktop={ui.isDesktop}>
           {this.store.data &&
             Object.keys(this.store.data.percentage).map((key, i) => {
-              const handleScroll = () => this.handleScroll(key);
+              const handleCategoryChange = () => this.store.changeCategory(key);
               return (
                 <PercentContainer
                   auto
                   column
-                  mobile={ui.isMobile}
+                  active={this.store.activeCategory === key}
+                  isDesktop={ui.isDesktop}
                   justify="center"
-                  align="center"
-                  onClick={handleScroll}
+                  align={ui.isDesktop ? 'center' : 'flex-start'}
+                  onClick={handleCategoryChange}
                 >
+                  {!ui.isDesktop &&
+                    <CategoryTitle>
+                      {key}
+                    </CategoryTitle>}
                   <StyledProgress
                     type={ui.isMobile ? 'line' : 'circle'}
                     percent={Math.round(this.store.data.percentage[key], 1)}
                   />
-                  <CategoryTitle>
-                    {key}
-                  </CategoryTitle>
+                  {ui.isDesktop &&
+                    <CategoryTitle>
+                      {key}
+                    </CategoryTitle>}
                 </PercentContainer>
               );
             })}
         </PercentageRow>
-        {this.store.data && <StyledRulesList rules={this.store.data.error} />}
+        {this.store.data &&
+          <StyledRulesList
+            active={this.store.activeCategory}
+            rules={this.store.data.error}
+          />}
       </div>
     );
   };
 
   render() {
+    const { app } = this.props;
+    console.log(this.store.activeCategory);
     if (!this.store.projectConfirmed) {
       return (
-        <PaddedLayout>
+        <PaddedLayout showSidebar={this.store.projectConfirmed}>
           <Flex align="center" justify="center">
             <SearchInput
-              onChange={this.store.setProjectName}
-              value={this.store.projectName}
+              onChange={app.setProjectName}
+              value={app.projectName}
               placeholder="Enter Project Name..."
               onEnter={this.store.confirmProject}
               icon="search"
@@ -129,7 +133,10 @@ class Rules extends React.Component<Props> {
       );
     }
     return (
-      <PaddedLayout actions={this.renderHeaderActions()}>
+      <PaddedLayout
+        actions={this.renderHeaderActions()}
+        showSidebar={this.store.projectConfirmed}
+      >
         {this.store.loading && this.renderLoading()}
         <Transition in={!this.store.loading} timeout={duration}>
           {state => this.renderErrors(state)}
@@ -142,7 +149,11 @@ class Rules extends React.Component<Props> {
 const StyledProgress = styled(Progress)`
   .ant-progress-circle-path {
     stroke: ${({ percent }) =>
-      percent > 90 ? '#25b47d' : percent > 75 ? '#fdd75f' : '#e63e3e'}
+      percent > 90 ? colors.primary : percent > 75 ? '#fdd75f' : '#e63e3e'}
+  }
+  .ant-progress-bg {
+    background: ${({ percent }) =>
+      percent > 90 ? colors.primary : percent > 75 ? '#fdd75f' : '#e63e3e'};
   }
 `;
 
@@ -150,13 +161,14 @@ const CategoryTitle = styled.h2`margin-top: 5px;`;
 
 const PercentageRow = styled(Flex)`
   margin-bottom: 25px;
-  ${({ column }) =>
-    column &&
+  ${({ isDesktop }) =>
+    !isDesktop &&
     `
     background: #fff;
     border-radius: 5px;
-    box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
-    padding: 10px;
+    box-shadow: ${shadow};
+    margin: 0 10px 20px 10px;
+    padding: 8px 0;
   `}
 `;
 
@@ -184,16 +196,28 @@ const GreenSpin = styled(Spin)`
 `;
 
 const PercentContainer = styled(Flex)`
-  ${({ mobile }) =>
-    !mobile &&
-    `
   cursor: pointer;
+  ${({ isDesktop, active }) =>
+    isDesktop
+      ? `
   background: #fff;
   border-radius: 5px;
-  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  box-shadow: ${shadow};
   margin: 0 10px;
   padding: 15px 0;
-  
+  ${active &&
+    `
+    border: 2px solid #108ee9;
+    transform: scale(1.06);
+    transition: all .2s ease-in;
+  `} 
+  `
+      : `
+    padding: 0 10px 5px 10px;
+    ${active &&
+      `
+      background: #e8e8e8;
+    `}
   `}
 `;
 
@@ -207,4 +231,4 @@ const StyledRulesList = styled(RulesList)`
   margin: 8px;
 `;
 
-export default inject('ui')(observer(Rules));
+export default inject('ui', 'app')(observer(Rules));

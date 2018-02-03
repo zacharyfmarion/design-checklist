@@ -2,17 +2,15 @@ import { observable, action } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
 import { notification } from 'antd';
+import AppStore from 'stores/AppStore';
 
 class RulesStore {
+  app: AppStore;
+
   @observable data: Object;
   @observable loading = true;
-  @observable projectName = '';
   @observable projectConfirmed = false;
-
-  @action
-  setProjectName = (name: string) => {
-    this.projectName = name;
-  };
+  @observable activeCategory: string;
 
   @action
   confirmProject = () => {
@@ -22,37 +20,43 @@ class RulesStore {
 
   @action
   clearProject = () => {
-    this.projectName = '';
+    this.app.setProjectName(undefined);
     this.projectConfirmed = false;
     this.loading = true;
     sessionStorage.setItem(`${sessionStoragePrefix}_overview`, '');
   };
 
   @action
+  changeCategory = (category: string) => {
+    this.activeCategory = category;
+  };
+
+  @action
   getRules = async (): Promise<*> => {
-    if (this.projectName === '') {
+    if (!this.app.projectName || this.app.projectName === '') {
       throw new Error('Project name not defined');
     }
     try {
-      const res = await getRequest(`/${this.projectName}`, {});
+      const res = await getRequest(`/show`, { project: this.app.projectName });
       if (res['err']) {
-        console.log('ERROR', res['err']);
         notification.open({
           message: 'Project Error',
-          description: res['err'],
-          style: {
-            background: '#e63e3e',
-            color: '#771515'
-          }
+          description: 'Project not found',
+          style: {}
         });
-        this.projectName = '';
+        this.app.setProjectName(undefined);
         this.projectConfirmed = false;
         return;
       }
       this.data = res;
+      this.activeCategory = Object.keys(res.error)[0];
       sessionStorage.setItem(
         `${sessionStoragePrefix}_overview`,
-        JSON.stringify({ data: res, projectName: this.projectName })
+        JSON.stringify({
+          data: res,
+          projectName: this.app.projectName,
+          activeCategory: this.activeCategory
+        })
       );
       this.loading = false;
     } catch (err) {
@@ -60,12 +64,14 @@ class RulesStore {
     }
   };
 
-  constructor() {
+  constructor(app: AppStore) {
+    this.app = app;
     const cached = sessionStorage.getItem(`${sessionStoragePrefix}_overview`);
     if (cached) {
-      const { data, projectName } = JSON.parse(cached);
+      const { data, projectName, activeCategory } = JSON.parse(cached);
       this.data = data;
-      this.projectName = projectName;
+      this.app.setProjectName(projectName);
+      this.activeCategory = activeCategory;
       this.loading = false;
       this.projectConfirmed = true;
     }

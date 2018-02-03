@@ -4,8 +4,8 @@
 import Rules from 'scenes/Rules';
 import Graphs from 'scenes/Graphs';
 
-export const title = 'SonarQube App';
-export const shortTitle = 'SonarQube';
+export const title = 'Design Checklist';
+export const shortTitle = 'Checklist';
 export const sessionStoragePrefix = 'sonarqube';
 export const scenes = [
   {
@@ -13,11 +13,23 @@ export const scenes = [
     icon: 'check-circle-o',
     name: 'Checklist',
     component: Rules
+  },
+  {
+    path: '/duplication',
+    icon: 'switcher',
+    name: 'Code Duplication',
+    component: null
+  },
+  {
+    path: '/graphs',
+    icon: 'area-chart',
+    name: 'Graphs',
+    component: Graphs
+  },
+  {
+    path: '/statistics',
+    icon: 'share-alt',
+    name: 'Statistics',
+    component: null
   }
-  // {
-  //   path: '/graphs',
-  //   icon: 'graph',
-  //   name: 'Graphs',
-  //   component: Graphs,
-  // },
 ];

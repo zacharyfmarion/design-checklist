@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Card } from 'antd';
 import styled from 'styled-components';
+import { shadow } from 'constants/styles';
 
 const Percent = ({ percent }) =>
   <div>
@@ -30,9 +31,9 @@ const RatingCard = styled(Card)`
     percent > 90 ? 'rgb(185, 244, 188)' : percent > 75 ? '#fdd75f' : '#e63e3e'};
   color: ${({ percent }) =>
     percent > 90 ? '#24b47e' : percent > 75 ? '#b37e35' : '#771515'} !important;
-  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  box-shadow: ${shadow};
   &:hover {
-    box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07) !important;
+    box-shadow: ${shadow} !important;
   }
   .ant-card-head {
     border-top-left-radius: 4px;

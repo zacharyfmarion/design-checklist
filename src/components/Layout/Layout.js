@@ -3,8 +3,11 @@ import * as React from 'react';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
 import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
+import { colors } from 'constants/styles';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import SideMenu from './components/SideMenu';
 import styled from 'styled-components';
 
 type Props = {
@@ -13,24 +16,80 @@ type Props = {
   className?: string,
   onTabClick?: Function,
   actions?: React.Node,
-  ui: UiStore
+  showSidebar?: boolean,
+  ui: UiStore,
+  app: AppStore
 };
 
-const Layout = ({
-  children,
-  subheader,
-  ui,
-  onTabClick,
-  actions,
-  className
-}: Props) =>
-  <Background column>
-    <Header subheader={subheader} onTabClick={onTabClick} actions={actions} />
-    <Panel auto justify="center" mobile={ui.isMobile} className={className}>
-      {children}
-    </Panel>
-    <Footer />
-  </Background>;
+@observer
+class Layout extends React.Component<Props> {
+  render() {
+    const {
+      ui,
+      app,
+      children,
+      subheader,
+      onTabClick,
+      actions,
+      showSidebar = true,
+      className
+    } = this.props;
+    return (
+      <Background>
+        {showSidebar &&
+          (ui.isDesktop || app.sidebarVisible) &&
+          <SideMenu
+            collapsed={app.sidebarCollapsed}
+            toggleCollapsed={app.toggleSidebar}
+            title={app.projectName || 'not_found'}
+          />}
+        {!ui.isDesktop &&
+          app.sidebarVisible &&
+          <Overlay onClick={app.toggleSidebarVisibility} />}
+        <Content
+          auto
+          column
+          collapsed={app.sidebarCollapsed}
+          showSidebar={showSidebar}
+          isDesktop={ui.isDesktop}
+        >
+          <Header
+            subheader={subheader}
+            onTabClick={onTabClick}
+            actions={actions}
+            sidebarCollapsed={app.sidebarCollapsed}
+            sidebarVisible={showSidebar}
+            toggleSidebar={app.toggleSidebarVisibility}
+          />
+          <Panel
+            auto
+            justify="center"
+            mobile={ui.isMobile}
+            className={className}
+          >
+            {children}
+          </Panel>
+          <Footer />
+        </Content>
+      </Background>
+    );
+  }
+}
+
+const Overlay = styled.div`
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(200, 200, 200, 0.6);
+`;
+
+const Content = styled(Flex)`
+  padding-left: ${({ collapsed, showSidebar, isDesktop }) =>
+    showSidebar && isDesktop ? (collapsed ? '63px' : '256px') : '0'};
+`;
 
 const Background = styled(Flex)`
   // background: #f0f2f5;
@@ -45,7 +104,7 @@ const Panel = styled(Flex)`
   z-index: 1;
   
   &:before {
-    background: #25b47d;
+    background: ${colors.primary};
     content: '';
     display: block;
     height: 550px;
@@ -62,4 +121,4 @@ const Panel = styled(Flex)`
 `;
 
 export { Layout };
-export default inject('ui')(observer(Layout));
+export default inject('ui', 'app')(Layout);

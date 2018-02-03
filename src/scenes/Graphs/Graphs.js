@@ -2,6 +2,7 @@ import * as React from 'react';
 import Layout from 'components/Layout';
 import styled from 'styled-components';
 import { Flex } from 'reflexbox';
+import { shadow } from 'constants/styles';
 import {
   ResponsiveContainer,
   LineChart,
@@ -67,7 +68,7 @@ const Container = styled(Flex)`
   padding: 20px;
   background: #fff;
   border-radius: 2px;
-  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08); 
+  box-shadow: ${shadow}; 
 `;
 
 export default Graphs;

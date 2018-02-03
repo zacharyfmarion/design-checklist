@@ -3,7 +3,7 @@
  * API specific things
  */
 
-const baseUrl = 'http://localhost:5000';
+const baseUrl = 'http://localhost:5000/api';
 
 // https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
 const encodeParams = params => {

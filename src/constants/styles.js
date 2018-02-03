@@ -13,12 +13,10 @@ const fontSizes = {
 };
 
 const colors = {
-  teal: '#00b5ad',
-  yellow: '#fbbd08',
-  lightgray: '#d4d4d5',
-  white: '#ffffff',
-  black: '#000000'
+  primary: '#25b47d'
 };
+
+const shadow = '0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07)';
 
 const breakpoints = {
   desktop: 992,
@@ -26,4 +24,4 @@ const breakpoints = {
   mobile: 0
 };
 
-export { colors, fontSizes, breakpoints };
+export { colors, fontSizes, shadow, breakpoints };
