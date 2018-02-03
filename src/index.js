@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
 import { Switch } from 'react-router';
 import { inject, observer } from 'mobx-react';
 import StoreProvider, { user } from 'stores';
@@ -16,7 +16,11 @@ const App = inject('user')(
     <Router>
       <div>
         <Switch>
-          {/* <Route exact path="/login" component={Login} /> */}
+          <Route
+            exact
+            path="/"
+            component={() => <Redirect to="/checklist" />}
+          />
           {scenes.map(scene =>
             <PrivateRoute
               exact

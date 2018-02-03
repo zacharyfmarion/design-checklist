@@ -9,7 +9,7 @@ export const shortTitle = 'Checklist';
 export const sessionStoragePrefix = 'sonarqube';
 export const scenes = [
   {
-    path: '/',
+    path: '/checklist',
     icon: 'check-circle-o',
     name: 'Checklist',
     component: Rules

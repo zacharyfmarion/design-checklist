@@ -67,7 +67,7 @@ class RulesList extends React.Component<{}> {
     return (
       <ListContainer column>
         {rules[active] instanceof Array
-          ? <StyledCollapse defaultActiveKey="0">
+          ? <StyledCollapse defaultActiveKey={['0']}>
               {this.renderCategory()}
             </StyledCollapse>
           : <StyledCollapse defaultActiveKey={keys}>
