@@ -88,7 +88,7 @@ const Overlay = styled.div`
 
 const Content = styled(Flex)`
   padding-left: ${({ collapsed, showSidebar, isDesktop }) =>
-    showSidebar && isDesktop ? (collapsed ? '63px' : '256px') : '0'};
+    showSidebar && isDesktop ? (collapsed ? '64px' : '256px') : '0'};
 `;
 
 const Background = styled(Flex)`

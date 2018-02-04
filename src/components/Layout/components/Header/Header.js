@@ -136,7 +136,7 @@ const Title = styled.h2`
 const HeaderWrapper = styled(Flex)`
   position: fixed;
   left: ${({ sidebarVisible, collapsed, isDesktop }) =>
-    sidebarVisible && isDesktop ? (collapsed ? '63px' : '256px') : '0'};
+    sidebarVisible && isDesktop ? (collapsed ? '64px' : '256px') : '0'};
   right: 0;
   background: ${colors.primary};
   color: black;
