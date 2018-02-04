@@ -2,6 +2,7 @@
  * App store. Code here deals with global application state (use with disgression!)
  */
 import { observable, action } from 'mobx';
+import { sessionStoragePrefix } from 'constants/app';
 
 class AppStore {
   @observable projectName: string;
@@ -22,7 +23,17 @@ class AppStore {
   @action
   setProjectName = (name: ?string) => {
     this.projectName = name;
+    sessionStorage.setItem(`${sessionStoragePrefix}_projectName`, name);
   };
+
+  constructor() {
+    const projectName = sessionStorage.getItem(
+      `${sessionStoragePrefix}_projectName`
+    );
+    if (projectName) {
+      this.projectName = projectName;
+    }
+  }
 }
 
 export default AppStore;

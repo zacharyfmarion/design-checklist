@@ -21,13 +21,19 @@ const App = inject('user')(
             path="/"
             component={() => <Redirect to="/checklist" />}
           />
-          {scenes.map(scene =>
-            <PrivateRoute
-              exact
-              path={scene.path}
-              component={scene.component}
-              authed={user.loggedIn}
-            />
+          {scenes.map(
+            scene =>
+              scene.name === 'Checklist'
+                ? <PrivateRoute
+                    path={`${scene.path}/:category`}
+                    component={scene.component}
+                    authed={user.loggedIn}
+                  />
+                : <PrivateRoute
+                    path={scene.path}
+                    component={scene.component}
+                    authed={user.loggedIn}
+                  />
           )}
           <Route path="*" exact component={NotFound} />
         </Switch>

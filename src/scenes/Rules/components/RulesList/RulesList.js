@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { Collapse, Tag, Icon } from 'antd';
 import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 import { Flex } from 'reflexbox';
+import { decodeParam } from 'helpers/routes';
 import Rule from '../Rule';
 import { shadow } from 'constants/styles';
 const Panel = Collapse.Panel;
 
-class RulesList extends React.Component<{}> {
+type Props = {
+  match: Object
+};
+
+class RulesList extends React.Component<Props> {
   renderSubcategories = (subcategory: string, i: number) => {
-    const { rules, active } = this.props;
+    const { rules, match } = this.props;
+    const active = decodeParam(match.params.category);
     const errors = rules[active][subcategory].detail;
     return (
       <Panel
@@ -36,7 +43,8 @@ class RulesList extends React.Component<{}> {
   };
 
   renderCategory = () => {
-    const { rules, active } = this.props;
+    const { rules, match } = this.props;
+    const active = decodeParam(match.params.category);
     const errors = rules[active];
     return (
       <Panel
@@ -62,7 +70,8 @@ class RulesList extends React.Component<{}> {
   };
 
   render() {
-    const { active, rules } = this.props;
+    const { match, rules } = this.props;
+    const active = decodeParam(match.params.category);
     const keys = Object.keys(rules[active]).map((_, i) => `${active}_${i}`);
     return (
       <ListContainer column>
@@ -100,4 +109,4 @@ const StyledRule = styled(Rule)`
   margin-bottom: 5px;
 `;
 
-export default RulesList;
+export default withRouter(RulesList);

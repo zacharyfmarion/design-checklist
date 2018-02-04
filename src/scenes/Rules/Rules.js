@@ -2,6 +2,7 @@ import * as React from 'react';
 import Layout from 'components/Layout';
 import { inject, observer } from 'mobx-react';
 import { Spin, Progress } from 'antd';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
@@ -10,6 +11,7 @@ import { colors, shadow } from 'constants/styles';
 import { Transition } from 'react-transition-group';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import { encodeParam, decodeParam } from 'helpers/routes';
 
 // local components
 import RulesList from './components/RulesList';
@@ -66,7 +68,8 @@ class Rules extends React.Component<Props> {
   };
 
   renderErrors = state => {
-    const { ui } = this.props;
+    const { ui, match } = this.props;
+    const { category } = match.params;
     return (
       <div
         style={{
@@ -79,34 +82,36 @@ class Rules extends React.Component<Props> {
             Object.keys(this.store.data.percentage).map((key, i) => {
               const handleCategoryChange = () => this.store.changeCategory(key);
               return (
-                <PercentContainer
-                  auto
-                  column
-                  active={this.store.activeCategory === key}
-                  isDesktop={ui.isDesktop}
-                  justify="center"
-                  align={ui.isDesktop ? 'center' : 'flex-start'}
-                  onClick={handleCategoryChange}
-                >
-                  {!ui.isDesktop &&
-                    <CategoryTitle>
-                      {key}
-                    </CategoryTitle>}
-                  <StyledProgress
-                    type={ui.isMobile ? 'line' : 'circle'}
-                    percent={Math.round(this.store.data.percentage[key], 1)}
-                  />
-                  {ui.isDesktop &&
-                    <CategoryTitle>
-                      {key}
-                    </CategoryTitle>}
-                </PercentContainer>
+                <CategoryLink to={`/checklist/${encodeParam(key)}`}>
+                  <PercentContainer
+                    auto
+                    column
+                    active={decodeParam(category) === key}
+                    isDesktop={ui.isDesktop}
+                    justify="center"
+                    align={ui.isDesktop ? 'center' : 'flex-start'}
+                    onClick={handleCategoryChange}
+                  >
+                    {!ui.isDesktop &&
+                      <CategoryTitle>
+                        {key}
+                      </CategoryTitle>}
+                    <StyledProgress
+                      type={ui.isMobile ? 'line' : 'circle'}
+                      percent={Math.round(this.store.data.percentage[key], 1)}
+                    />
+                    {ui.isDesktop &&
+                      <CategoryTitle>
+                        {key}
+                      </CategoryTitle>}
+                  </PercentContainer>
+                </CategoryLink>
               );
             })}
         </PercentageRow>
         {this.store.data &&
           <StyledRulesList
-            active={this.store.activeCategory}
+            active={decodeParam(category)}
             rules={this.store.data.error}
           />}
       </div>
@@ -115,7 +120,6 @@ class Rules extends React.Component<Props> {
 
   render() {
     const { app } = this.props;
-    console.log(this.store.activeCategory);
     if (!this.store.projectConfirmed) {
       return (
         <PaddedLayout showSidebar={this.store.projectConfirmed}>
@@ -145,6 +149,11 @@ class Rules extends React.Component<Props> {
     );
   }
 }
+
+const CategoryLink = styled(Link)`
+  display: flex;
+  flex: 1 1 auto;
+`;
 
 const StyledProgress = styled(Progress)`
   .ant-progress-circle-path {
@@ -231,4 +240,4 @@ const StyledRulesList = styled(RulesList)`
   margin: 8px;
 `;
 
-export default inject('ui', 'app')(observer(Rules));
+export default inject('ui', 'app')(withRouter(observer(Rules)));

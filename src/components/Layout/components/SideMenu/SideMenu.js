@@ -56,9 +56,9 @@ class SideMenu extends React.Component<Props> {
         >
           <HeaderIcon type="code-o" collapsed={collapsed} />
           {!collapsed &&
-            <h2>
+            <ProjectTitle>
               {title}
-            </h2>}
+            </ProjectTitle>}
         </SidebarHeader>
         <Flex auto>
           <StyledMenu
@@ -91,6 +91,12 @@ class SideMenu extends React.Component<Props> {
     );
   }
 }
+
+const ProjectTitle = styled.h2`
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+`;
 
 const HeaderIcon = styled(Icon)`
   font-size: 18px;

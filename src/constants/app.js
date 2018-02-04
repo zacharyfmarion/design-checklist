@@ -3,6 +3,8 @@
  */
 import Rules from 'scenes/Rules';
 import Graphs from 'scenes/Graphs';
+import Statistics from 'scenes/Statistics';
+import Duplication from 'scenes/Duplication';
 
 export const title = 'Design Checklist';
 export const shortTitle = 'Checklist';
@@ -15,21 +17,21 @@ export const scenes = [
     component: Rules
   },
   {
-    path: '/duplication',
-    icon: 'switcher',
-    name: 'Code Duplication',
-    component: null
-  },
-  {
-    path: '/graphs',
-    icon: 'area-chart',
-    name: 'Graphs',
-    component: Graphs
-  },
-  {
     path: '/statistics',
     icon: 'share-alt',
     name: 'Statistics',
-    component: null
+    component: Statistics
+  },
+  {
+    path: '/duplication',
+    icon: 'switcher',
+    name: 'Code Duplication',
+    component: Duplication
   }
+  // {
+  //   path: '/graphs',
+  //   icon: 'area-chart',
+  //   name: 'Graphs',
+  //   component: Graphs,
+  // },
 ];

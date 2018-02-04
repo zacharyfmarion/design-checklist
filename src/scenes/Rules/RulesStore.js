@@ -54,7 +54,6 @@ class RulesStore {
         `${sessionStoragePrefix}_overview`,
         JSON.stringify({
           data: res,
-          projectName: this.app.projectName,
           activeCategory: this.activeCategory
         })
       );
@@ -68,9 +67,8 @@ class RulesStore {
     this.app = app;
     const cached = sessionStorage.getItem(`${sessionStoragePrefix}_overview`);
     if (cached) {
-      const { data, projectName, activeCategory } = JSON.parse(cached);
+      const { data, activeCategory } = JSON.parse(cached);
       this.data = data;
-      this.app.setProjectName(projectName);
       this.activeCategory = activeCategory;
       this.loading = false;
       this.projectConfirmed = true;
