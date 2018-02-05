@@ -58,11 +58,21 @@ class Rules extends React.Component<Props> {
   };
 
   renderHeaderActions = () => {
+    const { ui } = this.props;
     return (
       !this.store.loading &&
-      <Button primary onClick={this.store.clearProject} icon="rollback">
-        Back
-      </Button>
+      <Flex>
+        <RefreshButton
+          primary
+          onClick={this.store.refreshProject}
+          icon="reload"
+        >
+          {ui.isDesktop && `Refresh`}
+        </RefreshButton>
+        <Button primary onClick={this.store.clearProject} icon="rollback">
+          {ui.isDesktop && `Back`}
+        </Button>
+      </Flex>
     );
   };
 
@@ -159,6 +169,10 @@ const StyledProgress = styled(Progress)`
     background: ${({ percent }) =>
       percent > 90 ? colors.primary : percent > 75 ? '#fdd75f' : '#e63e3e'};
   }
+`;
+
+const RefreshButton = styled(Button)`
+  margin-right: 8px;
 `;
 
 const CategoryTitle = styled.h2`margin-top: 5px;`;
