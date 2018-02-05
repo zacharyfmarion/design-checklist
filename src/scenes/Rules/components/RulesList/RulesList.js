@@ -1,35 +1,34 @@
 import * as React from 'react';
 import { Collapse, Tag, Icon } from 'antd';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
 import { Flex } from 'reflexbox';
-import { decodeParam } from 'helpers/routes';
 import Rule from '../Rule';
 import { shadow } from 'constants/styles';
 const Panel = Collapse.Panel;
 
 type Props = {
-  match: Object
+  rules: Object,
+  active: string,
+  category: string
 };
 
 class RulesList extends React.Component<Props> {
   renderSubcategories = (subcategory: string, i: number) => {
-    const { rules, match } = this.props;
-    const active = decodeParam(match.params.category);
-    const errors = rules[active][subcategory].detail;
+    const { rules, category } = this.props;
+    const errors = rules[category][subcategory].detail;
     return (
       <Panel
         header={
           <div>
             <span>
-              {rules[active][subcategory]['category description']}
+              {rules[category][subcategory]['category description']}
             </span>
             <HeaderTag color={errors.length > 0 ? 'red' : 'green'}>
               {errors.length} {errors.length === 1 ? 'error' : 'errors'}
             </HeaderTag>
           </div>
         }
-        key={`${active}_${i}`}
+        key={`${category}_${i}`}
       >
         {errors.length > 0
           ? errors.map((rule, j) =>
@@ -43,9 +42,8 @@ class RulesList extends React.Component<Props> {
   };
 
   renderCategory = () => {
-    const { rules, match } = this.props;
-    const active = decodeParam(match.params.category);
-    const errors = rules[active];
+    const { rules, category } = this.props;
+    const errors = rules[category];
     return (
       <Panel
         header={
@@ -56,7 +54,7 @@ class RulesList extends React.Component<Props> {
             </HeaderTag>
           </div>
         }
-        key={`${active}_0`}
+        key={`${category}_0`}
       >
         {errors.length > 0
           ? errors.map((rule, i) =>
@@ -70,18 +68,22 @@ class RulesList extends React.Component<Props> {
   };
 
   render() {
-    const { match, rules } = this.props;
-    const active = decodeParam(match.params.category);
-    const keys = Object.keys(rules[active]).map((_, i) => `${active}_${i}`);
+    const { category, active, rules } = this.props;
+    const noSubcategories = rules[category] instanceof Array;
+    const keys = noSubcategories
+      ? `${category}_0`
+      : Object.keys(rules[category])
+          .filter(
+            (subcategory, i) => rules[category][subcategory].detail.length > 0
+          )
+          .map((_, i) => `${category}_${i}`);
     return (
-      <ListContainer column>
-        {rules[active] instanceof Array
-          ? <StyledCollapse defaultActiveKey={['0']}>
-              {this.renderCategory()}
-            </StyledCollapse>
-          : <StyledCollapse defaultActiveKey={keys}>
-              {Object.keys(rules[active]).map(this.renderSubcategories)}
-            </StyledCollapse>}
+      <ListContainer column active={active} category={category}>
+        <StyledCollapse defaultActiveKey={keys}>
+          {noSubcategories
+            ? this.renderCategory()
+            : Object.keys(rules[category]).map(this.renderSubcategories)}
+        </StyledCollapse>
       </ListContainer>
     );
   }
@@ -103,10 +105,11 @@ const StyledCollapse = styled(Collapse)`
 `;
 
 const ListContainer = styled(Flex)`
+  ${({ active, category }) => active !== category && `display: none;`}
 `;
 
 const StyledRule = styled(Rule)`
   margin-bottom: 5px;
 `;
 
-export default withRouter(RulesList);
+export default RulesList;

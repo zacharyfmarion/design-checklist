@@ -23,7 +23,10 @@ class AppStore {
   @action
   setProjectName = (name: ?string) => {
     this.projectName = name;
-    sessionStorage.setItem(`${sessionStoragePrefix}_projectName`, name);
+    sessionStorage.setItem(
+      `${sessionStoragePrefix}_projectName`,
+      name ? name : ''
+    );
   };
 
   constructor() {

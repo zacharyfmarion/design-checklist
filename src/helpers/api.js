@@ -3,7 +3,10 @@
  * API specific things
  */
 
-const baseUrl = 'http://localhost:5000/api';
+const baseUrl =
+  process.env.NODE_ENV === 'production'
+    ? 'http://compsci308.colab.duke.edu:5000/api'
+    : 'http://localhost:5000/api';
 
 // https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
 const encodeParams = params => {
