@@ -41,10 +41,12 @@ sonar_analysis:
 export default [
   {
     name: 'pom.xml',
+    mode: 'xml',
     code: xml
   },
   {
     name: '.gitlab-ci.yml',
+    mode: 'yaml',
     code: yml
   }
 ];

@@ -45,7 +45,7 @@ const CloseButton = styled(Button)`
 const Header = styled(Flex)`
   background: ${colors.primary};
   align-items: center;
-  color: white;
+  color: black;
 `;
 
 export { ModalHeader };

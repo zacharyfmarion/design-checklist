@@ -1,16 +1,17 @@
 import { observable, action } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
-import { notification } from 'antd';
 import AppStore from 'stores/AppStore';
 
 class RulesStore {
   app: AppStore;
 
-  @observable data: Object;
+  @observable data: ?Object;
   @observable loading = true;
   @observable projectConfirmed = false;
+  @observable tutorialVisible: boolean = false;
   @observable activeCategory: string;
+  @observable error: ?string;
 
   @action
   confirmProject = () => {
@@ -38,6 +39,21 @@ class RulesStore {
   };
 
   @action
+  showTutorial = () => {
+    this.tutorialVisible = true;
+  };
+
+  @action
+  hideTutorial = () => {
+    this.tutorialVisible = false;
+  };
+
+  @action
+  clearError = () => {
+    this.error = undefined;
+  };
+
+  @action
   getRules = async (): Promise<*> => {
     if (!this.app.projectName || this.app.projectName === '') {
       throw new Error('Project name not defined');
@@ -45,11 +61,8 @@ class RulesStore {
     try {
       const res = await getRequest(`/show`, { project: this.app.projectName });
       if (res['err']) {
-        notification.open({
-          message: 'Project Error',
-          description: 'Project not found',
-          style: {}
-        });
+        this.error = 'Your project could not be found.';
+        this.showTutorial();
         this.app.setProjectName(undefined);
         this.projectConfirmed = false;
         return;

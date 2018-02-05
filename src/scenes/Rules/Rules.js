@@ -13,8 +13,9 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 
 // local components
-import RulesList from './components/RulesList';
 import RulesStore from './RulesStore';
+import RulesList from './components/RulesList';
+import TutorialModal from './components/TutorialModal';
 
 type Props = {
   ui: UiStore,
@@ -133,7 +134,7 @@ class Rules extends React.Component<Props> {
     if (!this.store.projectConfirmed) {
       return (
         <PaddedLayout showSidebar={this.store.projectConfirmed}>
-          <Flex align="center" justify="center">
+          <Flex column align="center" justify="center">
             <SearchInput
               onChange={app.setProjectName}
               value={app.projectName}
@@ -142,6 +143,8 @@ class Rules extends React.Component<Props> {
               icon="search"
               size="large"
             />
+            {this.store.tutorialVisible &&
+              <TutorialModal onClose={this.store.hideTutorial} />}
           </Flex>
         </PaddedLayout>
       );
@@ -149,7 +152,7 @@ class Rules extends React.Component<Props> {
     return (
       <PaddedLayout
         actions={this.renderHeaderActions()}
-        showSidebar={this.store.projectConfirmed}
+        showSidebar={this.store.projectConfirmed && !this.store.loading}
       >
         {this.store.loading && this.renderLoading()}
         <Transition in={!this.store.loading} timeout={duration}>
@@ -163,11 +166,11 @@ class Rules extends React.Component<Props> {
 const StyledProgress = styled(Progress)`
   .ant-progress-circle-path {
     stroke: ${({ percent }) =>
-      percent > 90 ? colors.primary : percent > 75 ? '#fdd75f' : '#e63e3e'}
+      percent < 100 ? (percent > 75 ? '#fdd75f' : '#e63e3e') : colors.primary}
   }
   .ant-progress-bg {
     background: ${({ percent }) =>
-      percent > 90 ? colors.primary : percent > 75 ? '#fdd75f' : '#e63e3e'};
+      percent < 100 ? (percent > 75 ? '#fdd75f' : '#e63e3e') : colors.primary};
   }
 `;
 
