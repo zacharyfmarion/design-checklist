@@ -74,7 +74,8 @@ const Line = styled(Flex)`
   font-family: monospace;
   font-size: 12px;
   display: inline;
-  overflow-x: scroll;
+  word-wrap: break-word;
+  word-break: break-all;
   color: #000;
   .s {
     color: #d14;
