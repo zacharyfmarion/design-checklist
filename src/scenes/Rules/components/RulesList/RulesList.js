@@ -19,14 +19,12 @@ class RulesList extends React.Component<Props> {
     return (
       <Panel
         header={
-          <div>
-            <span>
-              {rules[category][subcategory]['category description']}
-            </span>
+          <span>
+            {rules[category][subcategory]['category description']}
             <HeaderTag color={errors.length > 0 ? 'red' : 'green'}>
               {errors.length} {errors.length === 1 ? 'error' : 'errors'}
             </HeaderTag>
-          </div>
+          </span>
         }
         key={`${category}_${i}`}
       >
@@ -73,10 +71,11 @@ class RulesList extends React.Component<Props> {
     const keys = noSubcategories
       ? `${category}_0`
       : Object.keys(rules[category])
+          .map((subcategory, i) => ({ subcategory, value: `${category}_${i}` }))
           .filter(
-            (subcategory, i) => rules[category][subcategory].detail.length > 0
+            (obj, i) => rules[category][obj.subcategory].detail.length > 0
           )
-          .map((_, i) => `${category}_${i}`);
+          .map((obj, i) => obj.value);
     return (
       <ListContainer column active={active} category={category}>
         <StyledCollapse defaultActiveKey={keys}>

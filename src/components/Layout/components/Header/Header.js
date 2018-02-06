@@ -80,16 +80,16 @@ class Header extends React.Component<Props> {
         sidebarVisible={sidebarVisible}
       >
         <Flex align="center">
-          <StyledLink to="/">
-            {ui.isDesktop || !sidebarVisible
-              ? <MFSLogo src={logo} />
-              : <MenuButtonContainer onClick={toggleSidebar}>
-                  <MenuButton class="box-shadow-menu" />
-                </MenuButtonContainer>}
-            <Title>
-              {ui.isMobile ? shortTitle : title}
-            </Title>
-          </StyledLink>
+          {ui.isDesktop || !sidebarVisible
+            ? <StyledLink to="/">
+                <MFSLogo src={logo} />
+              </StyledLink>
+            : <MenuButtonContainer onClick={toggleSidebar}>
+                <MenuButton class="box-shadow-menu" />
+              </MenuButtonContainer>}
+          <Title>
+            {ui.isMobile ? shortTitle : title}
+          </Title>
         </Flex>
         <Flex align="center" justify="center">
           {this.props.actions}
@@ -104,11 +104,12 @@ const MenuButtonContainer = styled(Flex)`
   padding-right: 5px;
 `;
 
-const MenuButton = styled.a`
+const MenuButton = styled.span`
   position: relative;
   padding-left: 1.25em;
   align-self: center;
   font-size: 25px;
+  cursor: pointer;
   top: -8px;
   &:before {
     content: "";
