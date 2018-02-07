@@ -22,8 +22,17 @@ class Rule extends React.Component<Props> {
     }
   };
 
+  renderDuplications = () => {
+    const { rule: { duplications } } = this.props;
+    return null;
+  };
+
   render() {
-    const { rule: { path, message, code, textRange }, className } = this.props;
+    const {
+      rule: { path, message, code, duplications },
+      className
+    } = this.props;
+    console.log(code);
     return (
       <RuleContainer column className={className}>
         <RuleHeader column>
@@ -35,14 +44,19 @@ class Rule extends React.Component<Props> {
           </Error>
         </RuleHeader>
         {code &&
-          code.map((line, i) =>
+          Object.keys(code).map((lineNumber, i) =>
             <Flex>
               <LineNumber align="center" justify="center">
-                {textRange.startLine + i}
+                {lineNumber}
               </LineNumber>
-              <Line auto key={i} dangerouslySetInnerHTML={{ __html: line }} />
+              <Line
+                auto
+                key={i}
+                dangerouslySetInnerHTML={{ __html: code[lineNumber][0] }}
+              />
             </Flex>
           )}
+        {duplications && this.renderDuplications()}
       </RuleContainer>
     );
   }

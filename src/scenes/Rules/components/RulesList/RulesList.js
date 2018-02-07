@@ -16,6 +16,9 @@ class RulesList extends React.Component<Props> {
   renderSubcategories = (subcategory: string, i: number) => {
     const { rules, category } = this.props;
     const errors = rules[category][subcategory].detail;
+    if (category === 'Flexibility' && subcategory === 'No duplicated code') {
+      return null;
+    }
     return (
       <Panel
         header={

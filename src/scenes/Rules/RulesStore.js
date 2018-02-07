@@ -1,6 +1,7 @@
 import { observable, action } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
+import { message } from 'antd';
 import AppStore from 'stores/AppStore';
 
 class RulesStore {
@@ -91,6 +92,9 @@ class RulesStore {
       this.activeCategory = activeCategory;
       this.loading = false;
       this.projectConfirmed = true;
+      message.warning(
+        'Using cached project data. Presh refresh to check for the latest analysis.'
+      );
     }
   }
 }
