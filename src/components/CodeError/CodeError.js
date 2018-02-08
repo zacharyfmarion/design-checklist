@@ -29,16 +29,13 @@ const Expand = ({ className }) =>
 class CodeError extends React.Component<Props> {
   // get number of keys of object with most keys from array
   getLargestObjectLength(array: Array<Object>) {
-    return array.reduce((a, b) =>
-      Math.max(
-        a.code[Object.keys(a.code)[0]].length,
-        b.code[Object.keys(b.code)[0]].length
-      )
-    );
+    const vals = array.map(a => a.code[Object.keys(a.code)[0]].length);
+    return Math.max.apply(Math, vals);
   }
 
   // return least number of spaces before code begins in a line
   getDupLeastWhitespace = (code: Object) => {
+    console.log(code);
     const key = Object.keys(code)[0];
     const vals = code[key].map(a => a.lastIndexOf('\t'));
     return Math.min.apply(Math, vals);
