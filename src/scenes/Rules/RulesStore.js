@@ -34,6 +34,7 @@ class RulesStore {
     this.projectConfirmed = false;
     this.loading = true;
     sessionStorage.setItem(`${sessionStoragePrefix}_overview`, '');
+    sessionStorage.setItem(`${sessionStoragePrefix}_duplications`, '');
   };
 
   @action
