@@ -49,7 +49,7 @@ class ErrorList extends React.Component<Props> {
       <Panel
         header={
           <div>
-            <span>All Errors</span>
+            <span>All Issues</span>
             <HeaderTag color={categoryErrors.length > 0 ? 'red' : 'green'}>
               {categoryErrors.length}{' '}
               {categoryErrors.length === 1 ? 'error' : 'errors'}
