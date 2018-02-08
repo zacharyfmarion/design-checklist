@@ -2,8 +2,10 @@ import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
-import { Tabs } from 'antd';
+import { Tabs, Collapse } from 'antd';
 const TabPane = Tabs.TabPane;
+
+const Panel = Collapse.Panel;
 
 type Props = {};
 
@@ -34,6 +36,20 @@ class CodeError extends React.Component<Props> {
       )
     );
   }
+
+  // return least number of spaces before code begins in a line
+  getDupLeastWhitespace = (code: Object) => {
+    const key = Object.keys(code)[0];
+    const vals = code[key].map(a => a.lastIndexOf('\t'));
+    return Math.min.apply(Math, vals);
+  };
+
+  getLeastWhitespace = (code: Object) => {
+    const vals = Object.keys(code).map(lineNumber =>
+      code[lineNumber][0].lastIndexOf('\t')
+    );
+    return Math.min.apply(Math, vals);
+  };
 
   // get the max line number from an array
   getMaxLineNumbers(duplication) {
@@ -81,14 +97,17 @@ class CodeError extends React.Component<Props> {
 
   // maxLines is an array containing the maximum line number
   // for each file
-  renderDuplication = (duplication, maxLines) => {
-    const { ui } = this.props;
+  renderDuplication = (dup, maxLines, dupNumber) => {
+    const { ui, error: { duplications } } = this.props;
+    const leastWhitespaces = duplications[dupNumber].map(item =>
+      this.getDupLeastWhitespace(item.code)
+    );
     return (
       <Flex column auto>
-        {duplication.map((lines, i) =>
+        {dup.map((lines, i) =>
           <Flex auto>
             {lines.map((line, j) =>
-              <LineWrapper numFiles={ui.isDesktop ? duplication[0].length : 1}>
+              <LineWrapper numFiles={ui.isDesktop ? dup[0].length : 1}>
                 <LineNumber
                   align="center"
                   justify="center"
@@ -99,7 +118,9 @@ class CodeError extends React.Component<Props> {
                 <Line
                   auto
                   key={[i, j]}
-                  dangerouslySetInnerHTML={{ __html: line.code }}
+                  dangerouslySetInnerHTML={{
+                    __html: line.code.substring(leastWhitespaces[j] + 1)
+                  }}
                 />
               </LineWrapper>
             )}
@@ -133,7 +154,8 @@ class CodeError extends React.Component<Props> {
             <Duplication>
               {this.renderDuplication(
                 duplication,
-                this.getMaxLineNumbers(duplications[i])
+                this.getMaxLineNumbers(duplications[i]),
+                i
               )}
             </Duplication>
             {i < processedDups.length - 1 &&
@@ -160,47 +182,66 @@ class CodeError extends React.Component<Props> {
       maxLine = 100;
     }
     return (
-      <RuleContainer column className={className}>
-        <RuleHeader column>
-          <Pathname>
-            {duplications
-              ? <Flex column={!ui.isDesktop}>
-                  {duplications[0].map(file =>
-                    <PathTitle
-                      numFiles={ui.isDesktop ? duplications[0].length : 1}
-                    >
-                      {this.stripFilename(file.loc)}
-                    </PathTitle>
-                  )}
-                </Flex>
-              : this.stripFilename(path)}
-          </Pathname>
-          <ErrorMessage>
-            {message}
-          </ErrorMessage>
-        </RuleHeader>
-        {code &&
-          Object.keys(code).map((lineNumber, i) =>
-            <Flex>
-              <LineNumber
-                align="center"
-                justify="center"
-                width={maxLine.toString().length * 5 + 30}
-              >
-                {lineNumber}
-              </LineNumber>
-              <Line
-                auto
-                key={i}
-                dangerouslySetInnerHTML={{ __html: code[lineNumber][0] }}
-              />
-            </Flex>
-          )}
-        {duplications && this.renderDuplications()}
-      </RuleContainer>
+      <Collapse defaultActiveKey={'0'} className={className}>
+        <StyledPanel
+          key="0"
+          header={
+            <RuleHeader column>
+              <Pathname>
+                {duplications
+                  ? <Flex column={!ui.isDesktop}>
+                      {duplications[0].map(file =>
+                        <PathTitle
+                          numFiles={ui.isDesktop ? duplications[0].length : 1}
+                        >
+                          {this.stripFilename(file.loc)}
+                        </PathTitle>
+                      )}
+                    </Flex>
+                  : this.stripFilename(path)}
+              </Pathname>
+              <ErrorMessage>
+                {message}
+              </ErrorMessage>
+            </RuleHeader>
+          }
+        >
+          {code &&
+            Object.keys(code).map((lineNumber, i) =>
+              <Flex>
+                <LineNumber
+                  align="center"
+                  justify="center"
+                  width={maxLine.toString().length * 5 + 30}
+                >
+                  {lineNumber}
+                </LineNumber>
+                <Line
+                  key={i}
+                  dangerouslySetInnerHTML={{
+                    __html: code[lineNumber][0].substring(
+                      this.getLeastWhitespace(code) + 1
+                    )
+                  }}
+                />
+              </Flex>
+            )}
+          {duplications && this.renderDuplications()}
+        </StyledPanel>
+      </Collapse>
     );
   }
 }
+
+const StyledPanel = styled(Panel)`
+  .ant-collapse-content {
+    padding: 0;
+    border-top: 1px solid rgb(216, 216, 216);
+  }
+  .ant-collapse-content-box {
+    padding: 0;
+  }
+`;
 
 const DuplicationTabPane = styled(TabPane)`
   padding: 0 10px 10px 10px;
@@ -248,15 +289,6 @@ const Duplication = styled(Flex)`
 const ErrorMessage = styled.span`color: #f4766e;`;
 
 const RuleHeader = styled(Flex)`
-  padding: 5px;
-  border-bottom: 1px solid #bfbfbf;
-  background: #f4f4f6;
-`;
-
-const RuleContainer = styled(Flex)`
-  border: 1px solid #bfbfbf;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
 `;
 
 const LineNumber = styled(Flex)`
@@ -267,12 +299,14 @@ const LineNumber = styled(Flex)`
   margin-right: 3px;
 `;
 
-const Line = styled(Flex)`
+const Line = styled.pre`
+  display: inline;
   font-family: monospace;
   font-size: 12px;
-  display: inline;
   word-wrap: break-word;
+  white-space: pre-wrap;
   word-break: break-all;
+  tab-size: 15px;
   color: #000;
   .s {
     color: #d14;
@@ -283,7 +317,7 @@ const Line = styled(Flex)`
   .c {
     color: #099;
   }
-  .sym { 
+  .sym {
     color: #ad7817;
   }
   .cd {

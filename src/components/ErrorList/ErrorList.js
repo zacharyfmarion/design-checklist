@@ -72,17 +72,9 @@ class ErrorList extends React.Component<Props> {
   render() {
     const { category, active, errors } = this.props;
     const noSubcategories = errors[category] instanceof Array;
-    const keys = noSubcategories
-      ? `${category}_0`
-      : Object.keys(errors[category])
-          .map((subcategory, i) => ({ subcategory, value: `${category}_${i}` }))
-          .filter(
-            (obj, i) => errors[category][obj.subcategory].detail.length > 0
-          )
-          .map((obj, i) => obj.value);
     return (
       <ListContainer column active={active} category={category}>
-        <StyledCollapse defaultActiveKey={keys}>
+        <StyledCollapse defaultActiveKey={[]}>
           {noSubcategories
             ? this.renderCategory()
             : Object.keys(errors[category]).map(this.renderSubcategories)}
