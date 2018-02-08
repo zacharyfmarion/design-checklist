@@ -105,7 +105,7 @@ class Rules extends React.Component<Props> {
                     percent={Math.round(this.store.data.percentage[key], 1)}
                   />
                   {ui.isDesktop &&
-                    <CategoryTitle>
+                    <CategoryTitle active={this.store.activeCategory === key}>
                       {key}
                     </CategoryTitle>}
                 </PercentContainer>
@@ -174,7 +174,14 @@ const RefreshButton = styled(Button)`
   margin-right: 8px;
 `;
 
-const CategoryTitle = styled.h2`margin-top: 5px;`;
+const CategoryTitle = styled.h2`
+  margin-top: 5px;
+  ${({ active }) =>
+    active &&
+    `
+    color: ${colors.primary};
+  `};
+`;
 
 const PercentageRow = styled(Flex)`
   margin-bottom: 25px;
@@ -212,9 +219,10 @@ const PercentContainer = styled(Flex)`
   padding: 15px 0;
   ${active &&
     `
-    border: 2px solid #108ee9;
-    transform: scale(1.06);
-    transition: all .2s ease-in;
+    background: #dee7f1;
+    // border: 2px solid #108ee9;
+    // transform: scale(1.06);
+    // transition: all .2s ease-in;
   `} 
   `
       : `
