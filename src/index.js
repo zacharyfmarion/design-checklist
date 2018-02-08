@@ -11,6 +11,8 @@ import { scenes } from 'constants/app';
 import NotFound from 'scenes/NotFound';
 import PrivateRoute from 'components/PrivateRoute';
 
+const Checklist = scenes.find(scene => scene.path === '/checklist').component;
+
 const App = inject('app')(
   observer(({ app }) =>
     <Router>
@@ -21,13 +23,16 @@ const App = inject('app')(
             path="/"
             component={() => <Redirect to="/checklist" />}
           />
-          {scenes.map(scene =>
-            <PrivateRoute
-              exact
-              path={scene.path}
-              component={scene.component}
-              authed={app.projectName || scene.name === 'Checklist'}
-            />
+          <Route exact path="/checklist" component={Checklist} />
+          {scenes.map(
+            scene =>
+              scene.path !== '/checklist' &&
+              <PrivateRoute
+                exact
+                path={scene.path}
+                component={scene.component}
+                authed={!!app.projectName}
+              />
           )}
           <Route path="*" exact component={NotFound} />
         </Switch>
