@@ -97,7 +97,7 @@ class Rules extends React.Component<Props> {
                   onClick={handleCategoryChange}
                 >
                   {!ui.isDesktop &&
-                    <CategoryTitle>
+                    <CategoryTitle active={this.store.activeCategory === key}>
                       {key}
                     </CategoryTitle>}
                   <StyledProgress
@@ -174,14 +174,7 @@ const RefreshButton = styled(Button)`
   margin-right: 8px;
 `;
 
-const CategoryTitle = styled.h2`
-  margin-top: 5px;
-  ${({ active }) =>
-    active &&
-    `
-    color: ${colors.primary};
-  `};
-`;
+const CategoryTitle = styled.h2`margin-top: 5px;`;
 
 const PercentageRow = styled(Flex)`
   margin-bottom: 25px;
@@ -219,10 +212,9 @@ const PercentContainer = styled(Flex)`
   padding: 15px 0;
   ${active &&
     `
-    background: #dee7f1;
-    // border: 2px solid #108ee9;
-    // transform: scale(1.06);
-    // transition: all .2s ease-in;
+    box-shadow: 0 15px 15px rgba(50,50,93,0.2), 0 5px 15px rgba(0,0,0,.4);
+    border: 1px solid black;
+    background: ${colors.primary};
   `} 
   `
       : `
