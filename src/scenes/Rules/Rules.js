@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { inject, observer } from 'mobx-react';
-import { Spin, Progress } from 'antd';
+import { Progress } from 'antd';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import UiStore from 'stores/UiStore';
@@ -11,10 +11,11 @@ import { colors, shadow } from 'constants/styles';
 import { Transition } from 'react-transition-group';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import ErrorList from 'components/ErrorList';
+import Spin from 'components/Spin';
 
 // local components
 import RulesStore from './RulesStore';
-import RulesList from './components/RulesList';
 import TutorialModal from './components/TutorialModal';
 
 type Props = {
@@ -43,17 +44,12 @@ class Rules extends React.Component<Props> {
     this.store = new RulesStore(this.props.app);
   }
 
-  handleTabClick = (tab: string) => {
-    console.log('A tab was clicked');
-    if (tab === 'Checklist') {
-      console.log('clicked');
-    }
-  };
+  handleTabClick = (tab: string) => {};
 
   renderLoading = () => {
     return (
       <LoadingWrapper justify="center" align="center">
-        <GreenSpin size="large" />
+        <Spin />
       </LoadingWrapper>
     );
   };
@@ -118,10 +114,10 @@ class Rules extends React.Component<Props> {
         </PercentageRow>
         {this.store.data &&
           Object.keys(this.store.data.error).map((category, i) =>
-            <StyledRulesList
+            <StyledErrorList
               category={category}
               active={this.store.activeCategory}
-              rules={this.store.data.error}
+              errors={this.store.data.error}
             />
           )}
       </div>
@@ -204,18 +200,6 @@ const LoadingWrapper = styled(Flex)`
   height: 150px;
 `;
 
-const GreenSpin = styled(Spin)`
-  .ant-spin-dot {
-    width: 50px;
-    height: 50px;
-    i {
-      background: #baf4bc;
-      width: 23px;
-      height: 23px;
-    }
-  }
-`;
-
 const PercentContainer = styled(Flex)`
   cursor: pointer;
   ${({ isDesktop, active }) =>
@@ -248,7 +232,7 @@ const PaddedLayout = styled(Layout)`
   flex-direction: column;
 `;
 
-const StyledRulesList = styled(RulesList)`
+const StyledErrorList = styled(ErrorList)`
   margin: 8px;
 `;
 

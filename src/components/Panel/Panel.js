@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { shadow } from 'constants/styles';
 import { Flex } from 'reflexbox';
 
-const Panel = ({ children }) =>
-  <Container auto>
+const Panel = ({ children, ...other }) =>
+  <Container auto {...other}>
     {children}
   </Container>;
 

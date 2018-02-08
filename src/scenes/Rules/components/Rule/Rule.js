@@ -32,7 +32,6 @@ class Rule extends React.Component<Props> {
       rule: { path, message, code, duplications },
       className
     } = this.props;
-    console.log(code);
     return (
       <RuleContainer column className={className}>
         <RuleHeader column>

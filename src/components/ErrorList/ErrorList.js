@@ -2,20 +2,20 @@ import * as React from 'react';
 import { Collapse, Tag, Icon } from 'antd';
 import styled from 'styled-components';
 import { Flex } from 'reflexbox';
-import Rule from '../Rule';
+import CodeError from 'components/CodeError';
 import { shadow } from 'constants/styles';
 const Panel = Collapse.Panel;
 
 type Props = {
-  rules: Object,
+  errors: Object,
   active: string,
   category: string
 };
 
-class RulesList extends React.Component<Props> {
+class ErrorList extends React.Component<Props> {
   renderSubcategories = (subcategory: string, i: number) => {
-    const { rules, category } = this.props;
-    const errors = rules[category][subcategory].detail;
+    const { errors, category } = this.props;
+    const subErrors = errors[category][subcategory].detail;
     if (category === 'Flexibility' && subcategory === 'No duplicated code') {
       return null;
     }
@@ -23,17 +23,17 @@ class RulesList extends React.Component<Props> {
       <Panel
         header={
           <span>
-            {rules[category][subcategory]['category description']}
-            <HeaderTag color={errors.length > 0 ? 'red' : 'green'}>
-              {errors.length} {errors.length === 1 ? 'error' : 'errors'}
+            {errors[category][subcategory]['category description']}
+            <HeaderTag color={subErrors.length > 0 ? 'red' : 'green'}>
+              {subErrors.length} {subErrors.length === 1 ? 'error' : 'errors'}
             </HeaderTag>
           </span>
         }
         key={`${category}_${i}`}
       >
-        {errors.length > 0
-          ? errors.map((rule, j) =>
-              <StyledRule rule={rule} type="error" key={j} />
+        {subErrors.length > 0
+          ? subErrors.map((error, j) =>
+              <StyledError error={error} type="error" key={j} />
             )
           : <Flex>
               <CheckIcon type="check-circle-o" />All done!
@@ -43,23 +43,24 @@ class RulesList extends React.Component<Props> {
   };
 
   renderCategory = () => {
-    const { rules, category } = this.props;
-    const errors = rules[category];
+    const { errors, category } = this.props;
+    const categoryErrors = errors[category];
     return (
       <Panel
         header={
           <div>
             <span>All Errors</span>
-            <HeaderTag color={errors.length > 0 ? 'red' : 'green'}>
-              {errors.length} {errors.length === 1 ? 'error' : 'errors'}
+            <HeaderTag color={categoryErrors.length > 0 ? 'red' : 'green'}>
+              {categoryErrors.length}{' '}
+              {categoryErrors.length === 1 ? 'error' : 'errors'}
             </HeaderTag>
           </div>
         }
         key={`${category}_0`}
       >
-        {errors.length > 0
-          ? errors.map((rule, i) =>
-              <StyledRule rule={rule} type="error" key={i} />
+        {categoryErrors.length > 0
+          ? categoryErrors.map((error, i) =>
+              <StyledError error={error} type="error" key={i} />
             )
           : <Flex>
               <CheckIcon type="check-circle-o" />All done!
@@ -69,14 +70,14 @@ class RulesList extends React.Component<Props> {
   };
 
   render() {
-    const { category, active, rules } = this.props;
-    const noSubcategories = rules[category] instanceof Array;
+    const { category, active, errors } = this.props;
+    const noSubcategories = errors[category] instanceof Array;
     const keys = noSubcategories
       ? `${category}_0`
-      : Object.keys(rules[category])
+      : Object.keys(errors[category])
           .map((subcategory, i) => ({ subcategory, value: `${category}_${i}` }))
           .filter(
-            (obj, i) => rules[category][obj.subcategory].detail.length > 0
+            (obj, i) => errors[category][obj.subcategory].detail.length > 0
           )
           .map((obj, i) => obj.value);
     return (
@@ -84,7 +85,7 @@ class RulesList extends React.Component<Props> {
         <StyledCollapse defaultActiveKey={keys}>
           {noSubcategories
             ? this.renderCategory()
-            : Object.keys(rules[category]).map(this.renderSubcategories)}
+            : Object.keys(errors[category]).map(this.renderSubcategories)}
         </StyledCollapse>
       </ListContainer>
     );
@@ -110,8 +111,8 @@ const ListContainer = styled(Flex)`
   ${({ active, category }) => active !== category && `display: none;`}
 `;
 
-const StyledRule = styled(Rule)`
+const StyledError = styled(CodeError)`
   margin-bottom: 5px;
 `;
 
-export default RulesList;
+export default ErrorList;
