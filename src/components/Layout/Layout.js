@@ -8,6 +8,7 @@ import { colors } from 'constants/styles';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideMenu from './components/SideMenu';
+import Feedback from 'components/Feedback';
 import styled from 'styled-components';
 
 type Props = {
@@ -71,6 +72,7 @@ class Layout extends React.Component<Props> {
           </Panel>
           <Footer />
         </Content>
+        <Feedback />
       </Background>
     );
   }

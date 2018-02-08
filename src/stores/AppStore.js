@@ -54,6 +54,7 @@ class AppStore {
     );
     if (projectName) {
       this.projectName = projectName;
+      this.projectConfirmed = true;
     }
   }
 }
