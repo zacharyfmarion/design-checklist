@@ -17,16 +17,16 @@ export const scenes = [
     component: Rules
   },
   {
-    path: '/statistics',
-    icon: 'share-alt',
-    name: 'Statistics',
-    component: Statistics
-  },
-  {
     path: '/duplication',
     icon: 'switcher',
     name: 'Code Duplication',
     component: Duplication
+  },
+  {
+    path: '/statistics',
+    icon: 'share-alt',
+    name: 'Statistics',
+    component: Statistics
   }
   // {
   //   path: '/graphs',
