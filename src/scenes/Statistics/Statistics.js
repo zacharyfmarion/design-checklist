@@ -43,6 +43,7 @@ class Statistics extends React.Component<Props> {
             <StyledTable
               dataSource={this.store.statistics}
               columns={columns}
+              showHeader={false}
               pagination={false}
             />}
         </Panel>

@@ -6,8 +6,8 @@ import Graphs from 'scenes/Graphs';
 import Statistics from 'scenes/Statistics';
 import Duplication from 'scenes/Duplication';
 
-export const title = 'Design Checklist';
-export const shortTitle = 'Checklist';
+export const title = 'Design Checkup';
+export const shortTitle = 'Checkup';
 export const sessionStoragePrefix = 'sonarqube';
 export const scenes = [
   {
