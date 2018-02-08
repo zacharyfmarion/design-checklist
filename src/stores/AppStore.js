@@ -6,9 +6,28 @@ import { sessionStoragePrefix } from 'constants/app';
 
 class AppStore {
   @observable projectName: string;
+  @observable projectConfirmed = false;
   @observable sidebarCollapsed: boolean = false;
   // For mobile, where sidebar is either displayed or not displayed
   @observable sidebarVisible: boolean = false;
+
+  @action
+  confirmProject = () => {
+    this.projectConfirmed = true;
+  };
+
+  @action
+  unconfirmProject = () => {
+    this.projectConfirmed = false;
+  };
+
+  @action
+  clearProject = () => {
+    this.setProjectName(undefined);
+    this.projectConfirmed = false;
+    sessionStorage.setItem(`${sessionStoragePrefix}_overview`, '');
+    sessionStorage.setItem(`${sessionStoragePrefix}_duplications`, '');
+  };
 
   @action
   toggleSidebar = () => {

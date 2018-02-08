@@ -5,10 +5,12 @@ import { withRouter } from 'react-router';
 import { Link, type RouterHistory } from 'react-router-dom';
 import { Flex } from 'reflexbox';
 import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
 import styled from 'styled-components';
 import { shadow, colors } from 'constants/styles';
 import { title, shortTitle } from 'constants/app';
 import logo from 'assets/logo.png';
+import Button from 'components/Button';
 
 type Props = {
   history: RouterHistory,
@@ -19,6 +21,7 @@ type Props = {
   subheader?: React.Node,
   onTabClick?: Function,
   actions?: React.Node,
+  app: AppStore,
   ui: UiStore
 };
 
@@ -69,7 +72,13 @@ class Header extends React.Component<Props> {
   };
 
   render() {
-    const { ui, sidebarCollapsed, toggleSidebar, sidebarVisible } = this.props;
+    const {
+      ui,
+      app,
+      sidebarCollapsed,
+      toggleSidebar,
+      sidebarVisible
+    } = this.props;
     return (
       <HeaderWrapper
         auto
@@ -93,11 +102,19 @@ class Header extends React.Component<Props> {
         </Flex>
         <Flex align="center" justify="center">
           {this.props.actions}
+          {app.projectConfirmed &&
+            <ClearButton primary onClick={app.clearProject} icon="rollback">
+              {!ui.isMobile && `New Project`}
+            </ClearButton>}
         </Flex>
       </HeaderWrapper>
     );
   }
 }
+
+const ClearButton = styled(Button)`
+  margin-left: 8px;
+`;
 
 const MenuButtonContainer = styled(Flex)`
   height: 100%;
@@ -159,4 +176,4 @@ const MFSLogo = styled.img`
 `;
 
 export { Header };
-export default inject('ui')(withRouter(Header));
+export default inject('ui', 'app')(withRouter(Header));

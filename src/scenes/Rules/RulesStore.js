@@ -8,11 +8,9 @@ class RulesStore {
   app: AppStore;
 
   @observable data: ?Object;
-  @observable loading = true;
-  @observable projectConfirmed = false;
   @observable tutorialVisible: boolean = false;
   @observable error: ?string;
-  @observable
+  @observable loading: boolean = false;
   categories: Array<string> = [
     'Communication',
     'Flexibility',
@@ -24,17 +22,9 @@ class RulesStore {
 
   @action
   confirmProject = () => {
-    this.projectConfirmed = true;
-    this.getRules();
-  };
-
-  @action
-  clearProject = () => {
-    this.app.setProjectName(undefined);
-    this.projectConfirmed = false;
+    this.app.confirmProject();
     this.loading = true;
-    sessionStorage.setItem(`${sessionStoragePrefix}_overview`, '');
-    sessionStorage.setItem(`${sessionStoragePrefix}_duplications`, '');
+    this.getRules();
   };
 
   @action
@@ -74,10 +64,11 @@ class RulesStore {
         this.error = 'Your project could not be found.';
         this.showTutorial();
         this.app.setProjectName(undefined);
-        this.projectConfirmed = false;
+        this.app.unconfirmProject();
         return;
       }
       this.data = res;
+      this.loading = false;
       sessionStorage.setItem(
         `${sessionStoragePrefix}_overview`,
         JSON.stringify({
@@ -85,9 +76,8 @@ class RulesStore {
           activeCategory: this.activeCategory
         })
       );
-      this.loading = false;
     } catch (err) {
-      console.log(err);
+      console.log('ERROR', err);
     }
   };
 
@@ -99,7 +89,7 @@ class RulesStore {
       this.data = data;
       this.activeCategory = activeCategory;
       this.loading = false;
-      this.projectConfirmed = true;
+      app.confirmProject();
       message.warning(
         'Using cached project data. Presh refresh to check for the latest analysis.'
       );

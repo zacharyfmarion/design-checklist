@@ -58,18 +58,9 @@ class Rules extends React.Component<Props> {
     const { ui } = this.props;
     return (
       !this.store.loading &&
-      <Flex>
-        <RefreshButton
-          primary
-          onClick={this.store.refreshProject}
-          icon="reload"
-        >
-          {ui.isDesktop && `Refresh`}
-        </RefreshButton>
-        <Button primary onClick={this.store.clearProject} icon="rollback">
-          {ui.isDesktop && `Back`}
-        </Button>
-      </Flex>
+      <Button primary onClick={this.store.refreshProject} icon="reload">
+        {ui.isDesktop && `Refresh`}
+      </Button>
     );
   };
 
@@ -127,10 +118,10 @@ class Rules extends React.Component<Props> {
   render() {
     const { app } = this.props;
     console.log(this.store.activeCategory);
-    if (!this.store.projectConfirmed) {
+    if (!app.projectConfirmed) {
       return (
         <PaddedLayout
-          showSidebar={this.store.projectConfirmed}
+          showSidebar={app.projectConfirmed}
           actions={
             <Button
               primary
@@ -162,7 +153,7 @@ class Rules extends React.Component<Props> {
     return (
       <PaddedLayout
         actions={this.renderHeaderActions()}
-        showSidebar={this.store.projectConfirmed && !this.store.loading}
+        showSidebar={app.projectConfirmed && !this.store.loading}
       >
         {this.store.loading && this.renderLoading()}
         <Transition in={!this.store.loading} timeout={duration}>
@@ -182,10 +173,6 @@ const StyledProgress = styled(Progress)`
     background: ${({ percent }) =>
       percent < 100 ? (percent > 75 ? '#fdd75f' : '#e63e3e') : colors.primary};
   }
-`;
-
-const RefreshButton = styled(Button)`
-  margin-right: 8px;
 `;
 
 const CategoryTitle = styled.h2`margin-top: 5px;`;
