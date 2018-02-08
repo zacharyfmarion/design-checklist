@@ -283,7 +283,12 @@ const Line = styled(Flex)`
   .c {
     color: #099;
   }
-  .sym { }
+  .sym { 
+    color: #ad7817;
+  }
+  .cd {
+    color: gray;
+  }
 `;
 
 const Pathname = styled.span`
