@@ -4,15 +4,15 @@ import ReactDOM from 'react-dom';
 import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import { Switch } from 'react-router';
 import { inject, observer } from 'mobx-react';
-import StoreProvider, { user } from 'stores';
+import StoreProvider from 'stores';
 import { LocaleProvider } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import { scenes } from 'constants/app';
 import NotFound from 'scenes/NotFound';
 import PrivateRoute from 'components/PrivateRoute';
 
-const App = inject('user')(
-  observer(() =>
+const App = inject('app')(
+  observer(({ app }) =>
     <Router>
       <div>
         <Switch>
@@ -26,7 +26,7 @@ const App = inject('user')(
               exact
               path={scene.path}
               component={scene.component}
-              authed={user.loggedIn}
+              authed={app.projectName || scene.name === 'Checklist'}
             />
           )}
           <Route path="*" exact component={NotFound} />
