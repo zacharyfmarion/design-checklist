@@ -11,8 +11,16 @@ class RulesStore {
   @observable loading = true;
   @observable projectConfirmed = false;
   @observable tutorialVisible: boolean = false;
-  @observable activeCategory: string;
   @observable error: ?string;
+  @observable
+  categories: Array<string> = [
+    'Communication',
+    'Flexibility',
+    'Modularity',
+    'Code Smells',
+    'Java Notes'
+  ];
+  @observable activeCategory: string = this.categories[0];
 
   @action
   confirmProject = () => {
@@ -69,7 +77,6 @@ class RulesStore {
         return;
       }
       this.data = res;
-      this.activeCategory = Object.keys(res.error)[0];
       sessionStorage.setItem(
         `${sessionStoragePrefix}_overview`,
         JSON.stringify({

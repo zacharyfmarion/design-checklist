@@ -84,7 +84,7 @@ class Rules extends React.Component<Props> {
       >
         <PercentageRow column={!ui.isDesktop} isDesktop={ui.isDesktop}>
           {this.store.data &&
-            Object.keys(this.store.data.percentage).map((key, i) => {
+            this.store.categories.map((key, i) => {
               const handleCategoryChange = () => this.store.changeCategory(key);
               return (
                 <PercentContainer
@@ -113,7 +113,7 @@ class Rules extends React.Component<Props> {
             })}
         </PercentageRow>
         {this.store.data &&
-          Object.keys(this.store.data.error).map((category, i) =>
+          this.store.categories.map((category, i) =>
             <StyledErrorList
               category={category}
               active={this.store.activeCategory}
