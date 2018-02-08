@@ -25,9 +25,11 @@ class TutorialModal extends React.Component<Props> {
             We couldn't find your project. You will need to have both a{' '}
             <Mono>pom.xml</Mono> and
             <Mono>.gitlab-ci.yml</Mono> in the root directory of your project.
-            Both files are displayed below. The analysis begins when a commit is
-            pushed to the master branch on Gitlab, and can take up to 10 minutes
-            to complete.
+            Both files are displayed below. Remember to replace{' '}
+            <i>YOUR_PROJECT_NAME</i> in <Mono>pom.xml</Mono> with the unique
+            name of your project. The analysis begins when a commit is pushed to
+            the master branch on Gitlab, and can take up to 10 minutes to
+            complete.
           </p>
           <CodeTabs defaultActiveKey={'0'}>
             {files.map((file, i) =>
