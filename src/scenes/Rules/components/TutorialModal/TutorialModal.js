@@ -11,19 +11,20 @@ import files from './files';
 const TabPane = Tabs.TabPane;
 
 type Props = {
-  onClose: Function
+  onClose: Function,
+  fromError: boolean
 };
 
 class TutorialModal extends React.Component<Props> {
   render() {
-    const { onClose } = this.props;
+    const { onClose, fromError } = this.props;
     return (
       <Modal onClose={onClose}>
-        <ModalHeader title="Project not Found" />
+        <ModalHeader title={fromError ? 'Project not Found' : 'Help'} />
         <ModalBody>
           <p>
-            We couldn't find your project. You will need to have both a{' '}
-            <Mono>pom.xml</Mono> and
+            {fromError && "We couldn't find your project. "}You will need to
+            have both a <Mono>pom.xml</Mono> and
             <Mono>.gitlab-ci.yml</Mono> in the root directory of your project.
             Both files are displayed below. Remember to replace{' '}
             <i>YOUR_PROJECT_NAME</i> in <Mono>pom.xml</Mono> with the unique

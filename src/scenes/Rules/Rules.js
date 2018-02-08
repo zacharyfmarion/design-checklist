@@ -129,7 +129,18 @@ class Rules extends React.Component<Props> {
     console.log(this.store.activeCategory);
     if (!this.store.projectConfirmed) {
       return (
-        <PaddedLayout showSidebar={this.store.projectConfirmed}>
+        <PaddedLayout
+          showSidebar={this.store.projectConfirmed}
+          actions={
+            <Button
+              primary
+              icon="question-circle-o"
+              onClick={this.store.showTutorial}
+            >
+              Help
+            </Button>
+          }
+        >
           <Flex column align="center" justify="center">
             <SearchInput
               onChange={app.setProjectName}
@@ -140,7 +151,10 @@ class Rules extends React.Component<Props> {
               size="large"
             />
             {this.store.tutorialVisible &&
-              <TutorialModal onClose={this.store.hideTutorial} />}
+              <TutorialModal
+                onClose={this.store.hideTutorial}
+                fromError={!!this.store.error}
+              />}
           </Flex>
         </PaddedLayout>
       );
