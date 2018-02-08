@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
+import { Tabs } from 'antd';
+const TabPane = Tabs.TabPane;
 
 type Props = {};
 
@@ -65,6 +67,11 @@ class CodeError extends React.Component<Props> {
     return path.substring(path.indexOf(':', path.indexOf(':') + 1) + 1);
   };
 
+  stripFilenameMobile = (path: string) => {
+    if (path instanceof Array) path = path[0];
+    return path.substring(path.lastIndexOf('/') + 1);
+  };
+
   /**
    * Change the duplications from [[], []] to pairs of lines
    */
@@ -75,13 +82,13 @@ class CodeError extends React.Component<Props> {
   // maxLines is an array containing the maximum line number
   // for each file
   renderDuplication = (duplication, maxLines) => {
-    console.log(maxLines);
+    const { ui } = this.props;
     return (
       <Flex column auto>
         {duplication.map((lines, i) =>
           <Flex auto>
             {lines.map((line, j) =>
-              <LineWrapper numFiles={duplication[0].length}>
+              <LineWrapper numFiles={ui.isDesktop ? duplication[0].length : 1}>
                 <LineNumber
                   align="center"
                   justify="center"
@@ -103,8 +110,22 @@ class CodeError extends React.Component<Props> {
   };
 
   renderDuplications = () => {
-    const { error: { duplications } } = this.props;
+    const { ui, error: { duplications } } = this.props;
     const processedDups = this.processDuplications(duplications);
+    if (!ui.isDesktop) {
+      return (
+        <DuplicationTabs defaultActiveKey="0">
+          {duplications[0].map((dup, i) =>
+            <DuplicationTabPane
+              tab={this.stripFilenameMobile(dup.loc)}
+              key={`${i}`}
+            >
+              For now, you must be on a desktop to view duplicated code
+            </DuplicationTabPane>
+          )}
+        </DuplicationTabs>
+      );
+    }
     return (
       <Flex column>
         {processedDups.map((duplication, i) =>
@@ -129,7 +150,8 @@ class CodeError extends React.Component<Props> {
   render() {
     const {
       error: { path, message, code, duplications },
-      className
+      className,
+      ui
     } = this.props;
     let maxLine;
     try {
@@ -142,9 +164,11 @@ class CodeError extends React.Component<Props> {
         <RuleHeader column>
           <Pathname>
             {duplications
-              ? <Flex>
+              ? <Flex column={!ui.isDesktop}>
                   {duplications[0].map(file =>
-                    <PathTitle numFiles={duplications[0].length}>
+                    <PathTitle
+                      numFiles={ui.isDesktop ? duplications[0].length : 1}
+                    >
                       {this.stripFilename(file.loc)}
                     </PathTitle>
                   )}
@@ -177,6 +201,21 @@ class CodeError extends React.Component<Props> {
     );
   }
 }
+
+const DuplicationTabPane = styled(TabPane)`
+  padding: 0 10px 10px 10px;
+`;
+
+const DuplicationTabs = styled(Tabs)`
+  .ant-tabs-nav-scroll {
+    overflow: scroll;
+  }
+  .ant-tabs-tab {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+`;
 
 const PathTitle = styled(Flex)`
   padding-right: 10px;
@@ -254,4 +293,4 @@ const Pathname = styled.span`
   font-family: monospace;
 `;
 
-export default CodeError;
+export default inject('ui')(CodeError);
