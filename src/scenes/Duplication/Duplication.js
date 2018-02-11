@@ -36,6 +36,14 @@ class Duplication extends React.Component<Props> {
     );
   };
 
+  renderDuplications = () => {
+    return this.store.duplications.length > 0
+      ? this.store.duplications.map(error => <StyledError error={error} />)
+      : <Flex auto align="center" justify="center">
+          <Title>No duplications</Title>
+        </Flex>;
+  };
+
   render() {
     return (
       <Layout actions={this.renderHeaderActions()}>
@@ -44,14 +52,17 @@ class Duplication extends React.Component<Props> {
             ? <LoadingContainer flex>
                 <Spin />
               </LoadingContainer>
-            : this.store.duplications.map(error =>
-                <StyledError error={error} />
-              )}
+            : this.renderDuplications()}
         </Panel>
       </Layout>
     );
   }
 }
+
+const Title = styled.h1`
+  color: gray;
+  text-transform: uppercase;
+`;
 
 const StyledError = styled(CodeError)`
   align-self: stretch;
