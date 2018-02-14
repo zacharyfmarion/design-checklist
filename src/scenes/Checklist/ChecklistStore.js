@@ -4,7 +4,7 @@ import { sessionStoragePrefix } from 'constants/app';
 import { message } from 'antd';
 import AppStore from 'stores/AppStore';
 
-class RulesStore {
+class ChecklistStore {
   app: AppStore;
 
   @observable data: ?Object;
@@ -77,7 +77,7 @@ class RulesStore {
         })
       );
     } catch (err) {
-      console.log('ERROR', err);
+      console.log(err);
     }
   };
 
@@ -97,4 +97,4 @@ class RulesStore {
   }
 }
 
-export default RulesStore;
+export default ChecklistStore;

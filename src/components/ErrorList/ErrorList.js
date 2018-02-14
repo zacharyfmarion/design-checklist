@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Collapse, Tag, Icon } from 'antd';
 import styled from 'styled-components';
+import GoogleAnalytics from 'react-ga';
 import { Flex } from 'reflexbox';
 import CodeError from 'components/CodeError';
 import { shadow } from 'constants/styles';
@@ -13,6 +14,10 @@ type Props = {
 };
 
 class ErrorList extends React.Component<Props> {
+  state = {
+    activeColumns: []
+  };
+
   renderSubcategories = (subcategory: string, i: number) => {
     const { errors, category } = this.props;
     const subErrors = errors[category][subcategory].detail;
@@ -69,12 +74,35 @@ class ErrorList extends React.Component<Props> {
     );
   };
 
+  handleCollapseChange = (activeColumns: Array<string>) => {
+    const { category, errors } = this.props;
+    const noSubcategories = errors[category] instanceof Array;
+    const columnsClicked = activeColumns.filter(
+      col => !this.state.activeColumns.includes(col)
+    );
+    if (columnsClicked.length > 0) {
+      const col = columnsClicked[0];
+      const subcategoryIndex = parseInt(col.slice(-1));
+      const subcategory = Object.keys(errors[category])[subcategoryIndex];
+      const label = noSubcategories ? category : `${category} - ${subcategory}`;
+      GoogleAnalytics.event({
+        category: 'Interaction',
+        action: 'Subcategory expanded',
+        label
+      });
+    }
+    this.setState({ activeColumns });
+  };
+
   render() {
     const { category, active, errors } = this.props;
     const noSubcategories = errors[category] instanceof Array;
     return (
       <ListContainer column active={active} category={category}>
-        <StyledCollapse defaultActiveKey={[]}>
+        <StyledCollapse
+          defaultActiveKey={[]}
+          onChange={this.handleCollapseChange}
+        >
           {noSubcategories
             ? this.renderCategory()
             : Object.keys(errors[category]).map(this.renderSubcategories)}

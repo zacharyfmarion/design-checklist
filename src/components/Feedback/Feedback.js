@@ -16,7 +16,12 @@ class Feedback extends React.Component<Props> {
   render() {
     return (
       <Tooltip placement="left" title="Send Feedback">
-        <FeedbackButton icon="mail" size="large" onClick={this.handleClick} />
+        <FeedbackButton
+          action="feedback"
+          icon="mail"
+          size="large"
+          onClick={this.handleClick}
+        />
       </Tooltip>
     );
   }

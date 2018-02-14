@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react';
 import { Progress } from 'antd';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import GoogleAnalytics from 'react-ga';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import { Flex } from 'reflexbox';
@@ -15,7 +16,7 @@ import ErrorList from 'components/ErrorList';
 import Spin from 'components/Spin';
 
 // local components
-import RulesStore from './RulesStore';
+import ChecklistStore from './ChecklistStore';
 import TutorialModal from './components/TutorialModal';
 
 type Props = {
@@ -36,12 +37,12 @@ const transitionStyles = {
 };
 
 @observer
-class Rules extends React.Component<Props> {
-  store: RulesStore;
+class Checklist extends React.Component<Props> {
+  store: ChecklistStore;
 
   constructor(props: Props) {
     super(props);
-    this.store = new RulesStore(this.props.app);
+    this.store = new ChecklistStore(this.props.app);
   }
 
   handleTabClick = (tab: string) => {};
@@ -58,10 +59,25 @@ class Rules extends React.Component<Props> {
     const { ui } = this.props;
     return (
       !this.store.loading &&
-      <Button primary onClick={this.store.refreshProject} icon="reload">
+      <Button
+        primary
+        onClick={this.store.refreshProject}
+        icon="reload"
+        action="clicked refresh"
+        label="Checklist"
+      >
         {ui.isDesktop && `Refresh`}
       </Button>
     );
+  };
+
+  changeCategory = key => {
+    GoogleAnalytics.event({
+      category: 'Interaction',
+      action: 'clicked cateogory',
+      label: key
+    });
+    this.store.changeCategory(key);
   };
 
   renderErrors = state => {
@@ -76,7 +92,7 @@ class Rules extends React.Component<Props> {
         <PercentageRow column={!ui.isDesktop} isDesktop={ui.isDesktop}>
           {this.store.data &&
             this.store.categories.map((key, i) => {
-              const handleCategoryChange = () => this.store.changeCategory(key);
+              const handleCategoryChange = () => this.changeCategory(key);
               return (
                 <PercentContainer
                   auto
@@ -115,6 +131,16 @@ class Rules extends React.Component<Props> {
     );
   };
 
+  confirmProject = () => {
+    const { app } = this.props;
+    GoogleAnalytics.event({
+      category: 'Interaction',
+      action: 'entered project name',
+      label: app.projectName
+    });
+    this.store.confirmProject();
+  };
+
   render() {
     const { app } = this.props;
     console.log(this.store.activeCategory);
@@ -137,7 +163,7 @@ class Rules extends React.Component<Props> {
               onChange={app.setProjectName}
               value={app.projectName}
               placeholder="Enter Project Name..."
-              onEnter={this.store.confirmProject}
+              onEnter={this.confirmProject}
               icon="search"
               size="large"
             />
@@ -237,4 +263,4 @@ const StyledErrorList = styled(ErrorList)`
   margin: 8px;
 `;
 
-export default inject('ui', 'app')(withRouter(observer(Rules)));
+export default inject('ui', 'app')(withRouter(observer(Checklist)));

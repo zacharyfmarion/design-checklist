@@ -12,7 +12,7 @@ type Props = {
 };
 
 const ModalHeader = ({ title, onClose }: Props) =>
-  <Header p={1}>
+  <Header>
     <Flex auto>
       <Text size="large">
         {title}
@@ -25,6 +25,7 @@ const CloseButton = styled(Button)`
   background: none;
   border: none;
   box-shadow: none;
+  color: #fff;
   &:hover{
     background: none;
     border: none;
@@ -45,7 +46,8 @@ const CloseButton = styled(Button)`
 const Header = styled(Flex)`
   background: ${colors.primary};
   align-items: center;
-  color: black;
+  padding: 8px 15px;
+  color: #fff;
 `;
 
 export { ModalHeader };

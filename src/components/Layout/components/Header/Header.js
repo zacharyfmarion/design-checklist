@@ -103,7 +103,12 @@ class Header extends React.Component<Props> {
         <Flex align="center" justify="center">
           {this.props.actions}
           {app.projectConfirmed &&
-            <ClearButton primary onClick={app.clearProject} icon="rollback">
+            <ClearButton
+              primary
+              onClick={app.clearProject}
+              icon="rollback"
+              action="clicked new project"
+            >
               {!ui.isMobile && `New Project`}
             </ClearButton>}
         </Flex>

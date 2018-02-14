@@ -1,8 +1,44 @@
+import * as React from 'react';
 import { Button as AntButton } from 'antd';
 import styled from 'styled-components';
+import GoogleAnalytics from 'react-ga';
 import { shadow } from 'constants/styles';
 
-const Button = styled(AntButton)`
+type Props = {
+  onClick: Function,
+  action?: string,
+  label?: string,
+  value?: string,
+  children: React.Node
+};
+
+const Button = ({
+  onClick,
+  action,
+  label,
+  value,
+  children,
+  ...other
+}: Props) => {
+  const handleClick = () => {
+    if (action) {
+      GoogleAnalytics.event({
+        category: 'Interaction',
+        action,
+        label,
+        value
+      });
+    }
+    onClick();
+  };
+  return (
+    <StyledButton onClick={handleClick} {...other}>
+      {children}
+    </StyledButton>
+  );
+};
+
+const StyledButton = styled(AntButton)`
   height: 38px;
   padding: 0 20px;
   box-shadow: ${shadow}; 

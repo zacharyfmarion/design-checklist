@@ -29,7 +29,13 @@ class Duplication extends React.Component<Props> {
     return (
       !this.store.loading &&
       <Flex>
-        <Button primary onClick={this.store.refresh} icon="reload">
+        <Button
+          primary
+          onClick={this.store.refresh}
+          icon="reload"
+          action="clicked refresh"
+          label="Duplication"
+        >
           {ui.isDesktop && `Refresh`}
         </Button>
       </Flex>

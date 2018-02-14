@@ -35,7 +35,6 @@ class CodeError extends React.Component<Props> {
 
   // return least number of spaces before code begins in a line
   getDupLeastWhitespace = (code: Object) => {
-    console.log(code);
     const key = Object.keys(code)[0];
     const vals = code[key].map(a => a.lastIndexOf('\t'));
     return Math.min.apply(Math, vals);
