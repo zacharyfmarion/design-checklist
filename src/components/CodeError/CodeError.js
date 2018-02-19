@@ -198,7 +198,7 @@ class CodeError extends React.Component<Props> {
     const { ui, error: { duplications } } = this.props;
     const processedDups = this.processDuplications(duplications);
     const maxLines = this.getMaxLineNumbers(duplications);
-    if (!ui.isDesktop) {
+    if (!ui.isDesktop || duplications[0].length > 3) {
       return this.renderMobileDuplications(maxLines);
     }
     return (
@@ -275,10 +275,14 @@ class CodeError extends React.Component<Props> {
             <RuleHeader column>
               <Pathname>
                 {duplications
-                  ? <Flex column={!ui.isDesktop}>
+                  ? <Flex column={!ui.isDesktop || duplications[0].length > 3}>
                       {duplications[0].map(file =>
                         <PathTitle
-                          numFiles={ui.isDesktop ? duplications[0].length : 1}
+                          numFiles={
+                            ui.isDesktop && !duplications[0].length > 3
+                              ? duplications[0].length
+                              : 1
+                          }
                         >
                           {this.stripFilename(file.loc)}
                         </PathTitle>
