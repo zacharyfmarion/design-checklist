@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react';
 import { Progress } from 'antd';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import GoogleAnalytics from 'react-ga';
+import GoogleAnalytics from 'helpers/analytics';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import { Flex } from 'reflexbox';
@@ -241,7 +241,7 @@ const PercentContainer = styled(Flex)`
     `
     box-shadow: 0 15px 15px rgba(50,50,93,0.2), 0 5px 15px rgba(0,0,0,.4);
     border: 1px solid black;
-    background: ${colors.primary};
+    background: #82dcb9;
   `} 
   `
       : `

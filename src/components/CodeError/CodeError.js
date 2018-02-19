@@ -3,6 +3,7 @@ import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import { Tabs, Collapse } from 'antd';
+import { shadow } from 'constants/styles';
 const TabPane = Tabs.TabPane;
 
 const Panel = Collapse.Panel;
@@ -28,45 +29,60 @@ const Expand = ({ className }) =>
 @observer
 class CodeError extends React.Component<Props> {
   // get number of keys of object with most keys from array
-  getLargestObjectLength(array: Array<Object>) {
-    const vals = array.map(a => a.code[Object.keys(a.code)[0]].length);
+  getLongestCodeLength(duplication: Array<Object>) {
+    const vals = duplication.map(file => file.code.length);
     return Math.max.apply(Math, vals);
   }
 
+  getLastTabIndex = (line: string) => {
+    let i = 0;
+    for (; i < line.length; i++) {
+      if (line[i] !== '\t' && line[i] !== ' ') break;
+    }
+    return i;
+  };
+
   // return least number of spaces before code begins in a line
-  getDupLeastWhitespace = (code: Object) => {
-    const key = Object.keys(code)[0];
-    const vals = code[key].map(a => a.lastIndexOf('\t'));
+  getDupLeastWhitespace = (code: Array<string>) => {
+    const vals = code.map(this.getLastTabIndex);
     return Math.min.apply(Math, vals);
   };
 
   getLeastWhitespace = (code: Object) => {
-    const vals = Object.keys(code).map(lineNumber =>
-      code[lineNumber][0].lastIndexOf('\t')
-    );
+    const vals = code.map(issue => {
+      const lastIndices = issue.code.map(this.getLastTabIndex);
+      return Math.min.apply(Math, lastIndices);
+    });
     return Math.min.apply(Math, vals);
   };
 
   // get the max line number from an array
-  getMaxLineNumbers(duplication) {
-    return duplication.map(file => {
-      const startLine = Object.keys(file.code)[0];
-      return parseInt(startLine) + file.code[startLine].length - 1;
+  getMaxLineNumbers(duplications) {
+    return duplications[0].map((file, i) => {
+      return Math.max.apply(
+        Math,
+        duplications.map(duplication => duplication[i].endLine)
+      );
     });
   }
+
+  /**
+   * Change the duplications from [[], []] to pairs of lines
+   */
+  processDuplications = (duplications: Array) => {
+    return duplications.map(this.processDuplication);
+  };
 
   processDuplication = duplication => {
     let lines = [];
     for (let i = 0; i < duplication.length; i++) {
-      for (let j = 0; j < this.getLargestObjectLength(duplication); j++) {
-        const startLine = Object.keys(duplication[i].code)[0];
+      for (let j = 0; j < this.getLongestCodeLength(duplication); j++) {
+        const startLine = duplication[i].startLine;
         const code =
-          j < duplication[i].code[startLine].length
-            ? duplication[i].code[startLine][j]
-            : '';
+          j < duplication[i].code.length ? duplication[i].code[j] : '';
         if (!lines[j]) lines.push([]);
         lines[j].push({
-          lineNumber: parseInt(startLine) + j,
+          lineNumber: startLine + j,
           code
         });
       }
@@ -82,13 +98,6 @@ class CodeError extends React.Component<Props> {
   stripFilenameMobile = (path: string) => {
     if (path instanceof Array) path = path[0];
     return path.substring(path.lastIndexOf('/') + 1);
-  };
-
-  /**
-   * Change the duplications from [[], []] to pairs of lines
-   */
-  processDuplications = (duplications: Array) => {
-    return duplications.map(this.processDuplication);
   };
 
   // maxLines is an array containing the maximum line number
@@ -115,7 +124,7 @@ class CodeError extends React.Component<Props> {
                   auto
                   key={[i, j]}
                   dangerouslySetInnerHTML={{
-                    __html: line.code.substring(leastWhitespaces[j] + 1)
+                    __html: line.code.substring(leastWhitespaces[j])
                   }}
                 />
               </LineWrapper>
@@ -126,43 +135,126 @@ class CodeError extends React.Component<Props> {
     );
   };
 
+  renderMobileDuplication = (fileIndex: number, maxLine: number) => {
+    const { ui, error: { duplications } } = this.props;
+    const leastWhitespace = this.getLeastWhitespace(
+      duplications.map(duplication => {
+        return { code: duplication[fileIndex].code };
+      })
+    );
+    return (
+      <Flex column auto>
+        {duplications.map((duplication, i) => {
+          const code = duplication[fileIndex].code;
+          return (
+            <Flex column auto>
+              {code.map((line, j) =>
+                <LineWrapper numFiles={ui.isDesktop ? duplication.length : 1}>
+                  <LineNumber
+                    align="center"
+                    justify="center"
+                    width={maxLine.toString.length * 5 + 30}
+                  >
+                    {duplication[fileIndex].startLine + j}
+                  </LineNumber>
+                  <Line
+                    auto
+                    key={[i, j]}
+                    dangerouslySetInnerHTML={{
+                      __html: line.substring(leastWhitespace)
+                    }}
+                  />
+                </LineWrapper>
+              )}
+              {i < duplications.length - 1 &&
+                <DuplicationSeparator>
+                  <PaddedExpand width={maxLine.toString.length * 5 + 30} />
+                  <SeparatorMessage>Collapsed lines...</SeparatorMessage>
+                </DuplicationSeparator>}
+            </Flex>
+          );
+        })}
+      </Flex>
+    );
+  };
+
+  renderMobileDuplications = (maxLines: Array) => {
+    const { error: { duplications } } = this.props;
+    return (
+      <DuplicationTabs defaultActiveKey="0">
+        {duplications[0].map((dup, i) =>
+          <DuplicationTabPane
+            tab={this.stripFilenameMobile(dup.loc)}
+            key={`${i}`}
+          >
+            {this.renderMobileDuplication(i, maxLines[i])}
+          </DuplicationTabPane>
+        )}
+      </DuplicationTabs>
+    );
+  };
+
   renderDuplications = () => {
     const { ui, error: { duplications } } = this.props;
     const processedDups = this.processDuplications(duplications);
+    const maxLines = this.getMaxLineNumbers(duplications);
     if (!ui.isDesktop) {
-      return (
-        <DuplicationTabs defaultActiveKey="0">
-          {duplications[0].map((dup, i) =>
-            <DuplicationTabPane
-              tab={this.stripFilenameMobile(dup.loc)}
-              key={`${i}`}
-            >
-              For now, you must be on a desktop to view duplicated code
-            </DuplicationTabPane>
-          )}
-        </DuplicationTabs>
-      );
+      return this.renderMobileDuplications(maxLines);
     }
     return (
       <Flex column>
-        {processedDups.map((duplication, i) =>
-          <Flex column>
-            <Duplication>
-              {this.renderDuplication(
-                duplication,
-                this.getMaxLineNumbers(duplications[i]),
-                i
-              )}
-            </Duplication>
-            {i < processedDups.length - 1 &&
-              <DuplicationSeparator>
-                <PaddedExpand />
-                <SeparatorMessage>Collapsed lines...</SeparatorMessage>
-              </DuplicationSeparator>}
-          </Flex>
-        )}
+        {processedDups.map((duplication, i) => {
+          return (
+            <Flex column>
+              <Duplication>
+                {this.renderDuplication(duplication, maxLines, i)}
+              </Duplication>
+              {i < processedDups.length - 1 &&
+                <DuplicationSeparator>
+                  <PaddedExpand width={maxLines[0].toString.length * 5 + 30} />
+                  <SeparatorMessage>Collapsed lines...</SeparatorMessage>
+                </DuplicationSeparator>}
+            </Flex>
+          );
+        })}
       </Flex>
     );
+  };
+
+  renderCode = () => {
+    const { error: { code } } = this.props;
+    if (code.length === 0) return null;
+    const maxLine = code[code.length - 1].textRange.endLine;
+    return code.map((issue, i) => {
+      return (
+        <Flex column>
+          {issue.code.map((line, j) =>
+            <Flex>
+              <LineNumber
+                align="center"
+                justify="center"
+                width={maxLine.toString().length * 5 + 30}
+              >
+                {issue.textRange.startLine + j}
+              </LineNumber>
+              <Line
+                key={issue.textRange.startLine + j}
+                dangerouslySetInnerHTML={{
+                  __html: line.substring(this.getLeastWhitespace(code))
+                }}
+              />
+            </Flex>
+          )}
+          {i + 1 < code.length &&
+            code[i + 1].textRange.startLine !==
+              code[i].textRange.startLine + 1 &&
+            <DuplicationSeparator>
+              <PaddedExpand width={maxLine.toString().length * 5 + 30} />
+              <SeparatorMessage>Collapsed lines...</SeparatorMessage>
+            </DuplicationSeparator>}
+        </Flex>
+      );
+    });
   };
 
   render() {
@@ -171,14 +263,12 @@ class CodeError extends React.Component<Props> {
       className,
       ui
     } = this.props;
-    let maxLine;
-    try {
-      maxLine = parseInt(Object.keys(code)[Object.keys(code).length - 1]);
-    } catch (err) {
-      maxLine = 100;
-    }
     return (
-      <Collapse defaultActiveKey={'0'} className={className}>
+      <CodeCollapse
+        defaultActiveKey={'0'}
+        className={className}
+        desktop={ui.isDesktop}
+      >
         <StyledPanel
           key="0"
           header={
@@ -202,32 +292,17 @@ class CodeError extends React.Component<Props> {
             </RuleHeader>
           }
         >
-          {code &&
-            Object.keys(code).map((lineNumber, i) =>
-              <Flex>
-                <LineNumber
-                  align="center"
-                  justify="center"
-                  width={maxLine.toString().length * 5 + 30}
-                >
-                  {lineNumber}
-                </LineNumber>
-                <Line
-                  key={i}
-                  dangerouslySetInnerHTML={{
-                    __html: code[lineNumber][0].substring(
-                      this.getLeastWhitespace(code) + 1
-                    )
-                  }}
-                />
-              </Flex>
-            )}
+          {code && this.renderCode()}
           {duplications && this.renderDuplications()}
         </StyledPanel>
-      </Collapse>
+      </CodeCollapse>
     );
   }
 }
+
+const CodeCollapse = styled(Collapse)`
+  ${({ desktop }) => !desktop && `box-shadow: ${shadow}`};
+`;
 
 const StyledPanel = styled(Panel)`
   .ant-collapse-content {
@@ -240,12 +315,14 @@ const StyledPanel = styled(Panel)`
 `;
 
 const DuplicationTabPane = styled(TabPane)`
-  padding: 0 10px 10px 10px;
 `;
 
 const DuplicationTabs = styled(Tabs)`
   .ant-tabs-nav-scroll {
     overflow: scroll;
+  }
+  .ant-tabs-bar {
+    margin-bottom: 0;
   }
   .ant-tabs-tab {
     word-wrap: break-word;
@@ -261,21 +338,21 @@ const PathTitle = styled(Flex)`
 
 const SeparatorMessage = styled.span`
   font-family: monospace;
-  line-height: 30px;
+  line-height: 20px;
   margin-left: 5px;
   vertical-align: middle;
 `;
 
 const PaddedExpand = styled(Expand)`
-  padding: 0 5px;
+  width: ${({ width }) => `${width}px`};
 `;
 
 const LineWrapper = styled(Flex)`
-  width: ${({ numFiles }) => `${100.0 / numFiles}%`};
+  min-width: ${({ numFiles }) => `${100.0 / numFiles}%`};
 `;
 
 const DuplicationSeparator = styled(Flex)`
-  height: 30px;
+  height: 20px;
   background: #f1f8ff;
 `;
 
@@ -290,7 +367,7 @@ const RuleHeader = styled(Flex)`
 const LineNumber = styled(Flex)`
   font-family: monospace;
   background: #f7f7f7;
-  width: ${({ width }) => `${width}px`};
+  min-width: ${({ width }) => `${width}px`};
   text-align: center;
   margin-right: 3px;
 `;

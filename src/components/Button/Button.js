@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button as AntButton } from 'antd';
 import styled from 'styled-components';
-import GoogleAnalytics from 'react-ga';
+import GoogleAnalytics from 'helpers/analytics';
 import { shadow } from 'constants/styles';
 
 type Props = {

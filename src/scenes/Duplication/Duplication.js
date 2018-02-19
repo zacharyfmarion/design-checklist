@@ -51,19 +51,25 @@ class Duplication extends React.Component<Props> {
   };
 
   render() {
+    const { ui } = this.props;
+    const Wrapper = ui.isDesktop ? Panel : Duplications;
     return (
       <Layout actions={this.renderHeaderActions()}>
-        <Panel align="center" column>
+        <Wrapper column>
           {this.store.loading
-            ? <LoadingContainer flex>
+            ? <LoadingContainer auto justify="center">
                 <Spin />
               </LoadingContainer>
             : this.renderDuplications()}
-        </Panel>
+        </Wrapper>
       </Layout>
     );
   }
 }
+
+const Duplications = styled(Flex)`
+  padding: 30px;
+`;
 
 const Title = styled.h1`
   color: gray;

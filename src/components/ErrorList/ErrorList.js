@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Collapse, Tag, Icon } from 'antd';
 import styled from 'styled-components';
-import GoogleAnalytics from 'react-ga';
+import GoogleAnalytics from 'helpers/analytics';
 import { Flex } from 'reflexbox';
 import CodeError from 'components/CodeError';
 import { shadow } from 'constants/styles';
@@ -82,7 +82,7 @@ class ErrorList extends React.Component<Props> {
     );
     if (columnsClicked.length > 0) {
       const col = columnsClicked[0];
-      const subcategoryIndex = parseInt(col.slice(-1));
+      const subcategoryIndex = parseInt(col.slice(-1), 10);
       const subcategory = Object.keys(errors[category])[subcategoryIndex];
       const label = noSubcategories ? category : `${category} - ${subcategory}`;
       GoogleAnalytics.event({

@@ -12,7 +12,7 @@ class DuplicationStore {
 
   @computed
   get duplications() {
-    return this.data.error['Flexibility']['No duplicated code'].detail;
+    return this.data.error.Duplications.detail;
   }
 
   @action

@@ -5,7 +5,7 @@ import { HashRouter as Router, Redirect, Route } from 'react-router-dom';
 import { Switch } from 'react-router';
 import { inject, observer } from 'mobx-react';
 import createHistory from 'history/createBrowserHistory';
-import ReactGA from 'react-ga';
+import GoogleAnalytics from 'helpers/analytics';
 import StoreProvider from 'stores';
 import { LocaleProvider } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
@@ -14,13 +14,11 @@ import NotFound from 'scenes/NotFound';
 import PrivateRoute from 'components/PrivateRoute';
 
 // Initialize google analytics
-ReactGA.initialize(analyticsId, {
-  debug: process.env.NODE_ENV !== 'production'
-});
+GoogleAnalytics.initialize(analyticsId, {});
 
 const sendPageAnalytics = location => {
-  ReactGA.set({ page: location.hash.substring(1) });
-  ReactGA.pageview(location.hash.substring(1));
+  GoogleAnalytics.set({ page: location.hash.substring(1) });
+  GoogleAnalytics.pageview(location.hash.substring(1));
 };
 
 const history = createHistory();
