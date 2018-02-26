@@ -1,6 +1,7 @@
 import { observable, action } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
+import { categories } from 'constants/general';
 import { message } from 'antd';
 import AppStore from 'stores/AppStore';
 
@@ -11,14 +12,7 @@ class ChecklistStore {
   @observable tutorialVisible: boolean = false;
   @observable error: ?string;
   @observable loading: boolean = false;
-  categories: Array<string> = [
-    'Communication',
-    'Flexibility',
-    'Modularity',
-    'Code Smells',
-    'Java Notes'
-  ];
-  @observable activeCategory: string = this.categories[0];
+  @observable activeCategory: string = categories[0];
 
   @action
   confirmProject = () => {

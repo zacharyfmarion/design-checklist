@@ -8,24 +8,47 @@ class StatisticsStore {
   @observable loading: boolean = true;
   @observable data: boolean = true;
   @observable
+  statOrder: Array<string> = [
+    'ncloc',
+    'classes',
+    'functions',
+    'comment_lines',
+    'comment_lines_density',
+    'directories'
+  ];
+  @observable
   nameMap: Object = {
-    files: 'Number of files',
-    functions: 'Number of functions',
+    functions: 'Number of methods',
+    directories: 'Number of Packages',
     comment_lines: 'Number of comment lines',
     comment_lines_density: 'Density of comment lines',
-    lines: 'Number of lines',
     classes: 'Number of classes',
-    ncloc: 'Number of lines without comments and empty lines'
+    ncloc: 'Number of lines of code'
   };
 
   @computed
   get statistics() {
-    return Object.keys(this.data.measures).map((key, i) => ({
-      key: i,
-      metric: this.nameMap.hasOwnProperty(key) ? this.nameMap[key] : key,
-      value: this.data.measures[key]
+    return Object.keys(this.data.measures)
+      .filter(key => !(key === 'lmethods'))
+      .sort((a, b) => this.statOrder.indexOf(a) > this.statOrder.indexOf(b))
+      .map((key, i) => ({
+        key: i,
+        metric: this.nameMap.hasOwnProperty(key) ? this.nameMap[key] : key,
+        value: this.data.measures[key]
+      }));
+  }
+
+  @computed
+  get longestMethods() {
+    return this.data.measures.lmethods.map(({ path, methodlen }) => ({
+      path: this.stripFilename(path),
+      methodlen
     }));
   }
+
+  stripFilename = (path: string) => {
+    return path.substring(path.indexOf(':', path.indexOf(':') + 1) + 1);
+  };
 
   @action
   getStatistics = async (): Promise<*> => {

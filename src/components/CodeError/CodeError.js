@@ -8,7 +8,9 @@ const TabPane = Tabs.TabPane;
 
 const Panel = Collapse.Panel;
 
-type Props = {};
+type Props = {
+  shadowed: boolean
+};
 
 const Expand = ({ className }) =>
   <Flex align="center" justify="center" className={className}>
@@ -259,7 +261,8 @@ class CodeError extends React.Component<Props> {
 
   render() {
     const {
-      error: { path, message, code, duplications },
+      error: { path, severity, message, code, duplications },
+      shadowed,
       className,
       ui
     } = this.props;
@@ -268,6 +271,7 @@ class CodeError extends React.Component<Props> {
         defaultActiveKey={'0'}
         className={className}
         desktop={ui.isDesktop}
+        shadowed={shadowed}
       >
         <StyledPanel
           key="0"
@@ -288,7 +292,7 @@ class CodeError extends React.Component<Props> {
                         </PathTitle>
                       )}
                     </Flex>
-                  : this.stripFilename(path)}
+                  : `${this.stripFilename(path)} - ${severity}`}
               </Pathname>
               <ErrorMessage>
                 {message}
@@ -305,7 +309,7 @@ class CodeError extends React.Component<Props> {
 }
 
 const CodeCollapse = styled(Collapse)`
-  ${({ desktop }) => !desktop && `box-shadow: ${shadow}`};
+  ${({ desktop, shadowed }) => !desktop && shadowed && `box-shadow: ${shadow}`};
 `;
 
 const StyledPanel = styled(Panel)`

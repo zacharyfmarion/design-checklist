@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Table } from 'antd';
 import { inject, observer } from 'mobx-react';
+import { Flex } from 'reflexbox';
 import styled from 'styled-components';
+import { colors } from 'constants/styles';
 import AppStore from 'stores/AppStore';
 import Layout from 'components/Layout';
 import Panel from 'components/Panel';
@@ -24,6 +26,19 @@ const columns = [
   }
 ];
 
+const longestMethodsColumns = [
+  {
+    title: 'File Name',
+    dataIndex: 'path',
+    key: 'path'
+  },
+  {
+    title: 'Length',
+    dataIndex: 'methodlen',
+    key: 'methodlen'
+  }
+];
+
 @observer
 class Statistics extends React.Component<Props> {
   constructor(props: Props) {
@@ -40,20 +55,34 @@ class Statistics extends React.Component<Props> {
       <Layout>
         <Panel>
           {!this.store.loading &&
-            <StyledTable
-              dataSource={this.store.statistics}
-              columns={columns}
-              showHeader={false}
-              pagination={false}
-            />}
+            <Flex column auto>
+              <SectionHeader topHeader>General Statistics</SectionHeader>
+              <StyledTable
+                dataSource={this.store.statistics}
+                bordered
+                columns={columns}
+                pagination={false}
+              />
+              <SectionHeader>Longest Methods</SectionHeader>
+              <StyledTable
+                dataSource={this.store.longestMethods}
+                columns={longestMethodsColumns}
+                bordered
+                pagination={false}
+              />
+            </Flex>}
         </Panel>
       </Layout>
     );
   }
 }
 
+const SectionHeader = styled.h3`
+  color: ${colors.primary};
+  margin: ${({ topHeader }) => (topHeader ? 0 : 20)}px 0 10px 0;
+`;
+
 const StyledTable = styled(Table)`
-  flex: 1 1 auto;
 `;
 
 export default inject('app')(Statistics);

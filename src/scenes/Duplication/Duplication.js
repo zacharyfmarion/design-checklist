@@ -44,7 +44,9 @@ class Duplication extends React.Component<Props> {
 
   renderDuplications = () => {
     return this.store.duplications.length > 0
-      ? this.store.duplications.map(error => <StyledError error={error} />)
+      ? this.store.duplications.map(error =>
+          <StyledError error={error} shadowed />
+        )
       : <Flex auto align="center" justify="center">
           <Title>No duplications</Title>
         </Flex>;

@@ -4,18 +4,22 @@ import styled from 'styled-components';
 import GoogleAnalytics from 'helpers/analytics';
 import { Flex } from 'reflexbox';
 import CodeError from 'components/CodeError';
+import { severities } from 'constants/general';
 import { shadow } from 'constants/styles';
 const Panel = Collapse.Panel;
 
 type Props = {
   errors: Object,
-  active: string,
   category: string
 };
 
 class ErrorList extends React.Component<Props> {
   state = {
     activeColumns: []
+  };
+
+  sortErrors = (a, b) => {
+    return severities.indexOf(a.severity) - severities.indexOf(b.severity);
   };
 
   renderSubcategories = (subcategory: string, i: number) => {
@@ -37,9 +41,11 @@ class ErrorList extends React.Component<Props> {
         key={`${category}_${i}`}
       >
         {subErrors.length > 0
-          ? subErrors.map((error, j) =>
-              <StyledError error={error} type="error" key={j} />
-            )
+          ? subErrors
+              .sort(this.sortErrors)
+              .map((error, j) =>
+                <StyledError error={error} type="error" key={j} />
+              )
           : <Flex>
               <CheckIcon type="check-circle-o" />All done!
             </Flex>}
@@ -64,9 +70,11 @@ class ErrorList extends React.Component<Props> {
         key={`${category}_0`}
       >
         {categoryErrors.length > 0
-          ? categoryErrors.map((error, i) =>
-              <StyledError error={error} type="error" key={i} />
-            )
+          ? categoryErrors
+              .sort(this.sortErrors)
+              .map((error, i) =>
+                <StyledError error={error} type="error" key={i} />
+              )
           : <Flex>
               <CheckIcon type="check-circle-o" />All done!
             </Flex>}
@@ -95,10 +103,10 @@ class ErrorList extends React.Component<Props> {
   };
 
   render() {
-    const { category, active, errors } = this.props;
+    const { category, errors } = this.props;
     const noSubcategories = errors[category] instanceof Array;
     return (
-      <ListContainer column active={active} category={category}>
+      <ListContainer column category={category}>
         <StyledCollapse
           defaultActiveKey={[]}
           onChange={this.handleCollapseChange}
@@ -127,9 +135,7 @@ const StyledCollapse = styled(Collapse)`
   margin: 0 10px;
 `;
 
-const ListContainer = styled(Flex)`
-  ${({ active, category }) => active !== category && `display: none;`}
-`;
+const ListContainer = styled(Flex)``;
 
 const StyledError = styled(CodeError)`
   margin-bottom: 5px;

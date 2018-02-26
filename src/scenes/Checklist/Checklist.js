@@ -10,6 +10,7 @@ import AppStore from 'stores/AppStore';
 import { Flex } from 'reflexbox';
 import { colors, shadow } from 'constants/styles';
 import { Transition } from 'react-transition-group';
+import { categories } from 'constants/general';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import ErrorList from 'components/ErrorList';
@@ -91,7 +92,7 @@ class Checklist extends React.Component<Props> {
       >
         <PercentageRow column={!ui.isDesktop} isDesktop={ui.isDesktop}>
           {this.store.data &&
-            this.store.categories.map((key, i) => {
+            categories.map((key, i) => {
               const handleCategoryChange = () => this.changeCategory(key);
               return (
                 <PercentContainer
@@ -108,7 +109,7 @@ class Checklist extends React.Component<Props> {
                       {key}
                     </CategoryTitle>}
                   <StyledProgress
-                    type={ui.isMobile ? 'line' : 'circle'}
+                    type={ui.isDesktop ? 'circle' : 'line'}
                     percent={Math.round(this.store.data.percentage[key], 1)}
                   />
                   {ui.isDesktop &&
@@ -120,13 +121,11 @@ class Checklist extends React.Component<Props> {
             })}
         </PercentageRow>
         {this.store.data &&
-          this.store.categories.map((category, i) =>
-            <StyledErrorList
-              category={category}
-              active={this.store.activeCategory}
-              errors={this.store.data.error}
-            />
-          )}
+          <StyledErrorList
+            category={this.store.activeCategory}
+            active={this.store.activeCategory}
+            errors={this.store.data.error}
+          />}
       </div>
     );
   };
