@@ -40,10 +40,12 @@ class StatisticsStore {
 
   @computed
   get longestMethods() {
-    return this.data.measures.lmethods.map(({ path, methodlen }) => ({
-      path: this.stripFilename(path),
-      methodlen
-    }));
+    return this.data.measures.lmethods
+      .map(({ path, methodlen }) => ({
+        path: this.stripFilename(path),
+        methodlen
+      }))
+      .sort((a, b) => b.methodlen - a.methodlen);
   }
 
   stripFilename = (path: string) => {
