@@ -10,6 +10,7 @@ type Props = {
   icon?: string,
   size?: 'normal' | 'large',
   onEnter?: Function,
+  action?: React.Node,
   placeholder?: string,
   className?: string
 };
@@ -31,7 +32,14 @@ class Input extends React.Component<Props> {
   };
 
   render() {
-    const { value, icon, placeholder, size = 'normal', className } = this.props;
+    const {
+      value,
+      icon,
+      action,
+      placeholder,
+      size = 'normal',
+      className
+    } = this.props;
     return (
       <InputContainer className={className}>
         {icon &&
@@ -48,10 +56,21 @@ class Input extends React.Component<Props> {
           onChange={this.handleChange}
           className="input-instance"
         />
+        {action &&
+          <ActionContainer>
+            {action}
+          </ActionContainer>}
       </InputContainer>
     );
   }
 }
+
+const ActionContainer = styled(Flex)`
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+`;
 
 const IconContainer = styled(Flex)`
   position: absolute;

@@ -3,23 +3,36 @@ import styled from 'styled-components';
 import { Select, Popover } from 'antd';
 import { observer, inject } from 'mobx-react';
 import { themeColors } from 'constants/styles';
+import { validHex } from 'helpers/colors';
 import { Flex } from 'reflexbox';
 import Button from 'components/Button';
+import Input from 'components/Input';
 
 const Option = Select.Option;
 
 @observer
 class Settings extends React.Component<Props> {
+  state = {
+    customHex: ''
+  };
+
+  handleCustomHexChange = (value: string) => {
+    this.setState({
+      customHex: value
+    });
+  };
+
   renderContent = () => {
     const { app } = this.props;
     const activeColor = themeColors.find(
       theme => theme.color === app.primaryColor
     );
+    const changeCustom = () => app.changeTheme(this.state.customHex);
     return (
       <Flex column>
         <Header primary={app.primaryColor}>Theme</Header>
         <ThemeSelect
-          defaultValue={activeColor ? activeColor.color : 'custom'}
+          value={activeColor ? activeColor.color : 'custom'}
           onChange={app.changeTheme}
         >
           {themeColors.map((theme, i) =>
@@ -30,7 +43,24 @@ class Settings extends React.Component<Props> {
               </span>
             </Option>
           )}
+          {!activeColor &&
+            <Option value="custom" key={100}>
+              <ColorSwab color={app.primaryColor} />
+              <span>Custom</span>
+            </Option>}
         </ThemeSelect>
+        <Header primary={app.primaryColor}>Custom Theme</Header>
+        <HexInput
+          placeholder="hex string"
+          onChange={this.handleCustomHexChange}
+          action={
+            <InputAction
+              icon="arrow-right"
+              onClick={changeCustom}
+              disabled={!validHex(this.state.customHex)}
+            />
+          }
+        />
       </Flex>
     );
   };
@@ -47,6 +77,20 @@ class Settings extends React.Component<Props> {
     );
   }
 }
+
+const InputAction = styled(Button)`
+  height: 29px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+`;
+
+const HexInput = styled(Input)`
+  input {
+    box-shadow: none;
+    border: 1px solid #d9d9d9;
+    padding: 3px 7px;
+  }
+`;
 
 const Header = styled.h4`
   color: ${({ primary }) => primary};

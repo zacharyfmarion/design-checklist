@@ -53,10 +53,12 @@ const StyledButton = styled(AntButton)`
   text-transform: uppercase;
   font-size: 14px;
   ${({ primary, primaryColor }) =>
-    primary &&
     `
-    background-color: ${primaryColor}; 
-    color: #fff;
+    ${primary &&
+      `
+      background-color: ${primaryColor}; 
+      color: #fff;
+    `}
     &:hover {
       border-color: ${primaryColor};
       color: ${primaryColor};
