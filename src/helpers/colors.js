@@ -18,6 +18,6 @@ export function shadeColor(color, percent) {
 }
 
 export function validHex(value: string) {
-  const regExp = /^#[0-9A-Fa-f]+\.?[0-9A-Fa-f]*?$/;
+  const regExp = /^#([0-9a-f]{6}|[0-9a-f]{3})$/i;
   return typeof value === 'string' && regExp.test(value);
 }
