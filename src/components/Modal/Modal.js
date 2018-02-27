@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { inject, observer } from 'mobx-react';
 import ReactModal from 'react-modal';
 import ModalHeader from './components/ModalHeader';
 
@@ -8,7 +9,7 @@ type Props = {
   onClose: Function
 };
 
-const modalStyles = () => ({
+const modalStyles = (isMobile: boolean) => ({
   overlay: {
     position: 'fixed',
     display: 'flex',
@@ -22,6 +23,7 @@ const modalStyles = () => ({
   content: {
     position: 'static',
     maxWidth: '600px',
+    // height: isMobile ? '100%' : 'auto',
     margin: 'auto',
     border: 'none',
     boxShadow: 'rgba(0, 0, 0, 0.15) 0px 0px 36px 14px',
@@ -34,8 +36,8 @@ const modalStyles = () => ({
   }
 });
 
-const Modal = ({ children, onClose, ...otherProps }: Props) => {
-  const style = modalStyles();
+const Modal = ({ children, onClose, ui, ...otherProps }: Props) => {
+  const style = modalStyles(ui.isMobile);
   return (
     <ReactModal
       isOpen
@@ -57,4 +59,4 @@ const Modal = ({ children, onClose, ...otherProps }: Props) => {
 };
 
 export { Modal };
-export default Modal;
+export default inject('ui')(observer(Modal));

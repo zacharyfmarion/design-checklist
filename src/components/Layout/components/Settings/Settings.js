@@ -17,6 +17,7 @@ class Settings extends React.Component<Props> {
     );
     return (
       <Flex column>
+        <Header primary={app.primaryColor}>Theme</Header>
         <ThemeSelect
           defaultValue={activeColor ? activeColor.color : 'custom'}
           onChange={app.changeTheme}
@@ -46,6 +47,11 @@ class Settings extends React.Component<Props> {
     );
   }
 }
+
+const Header = styled.h4`
+  color: ${({ primary }) => primary};
+  margin-bottom: 5px;
+`;
 
 const ColorSwab = styled.div`
   display: inline-block;

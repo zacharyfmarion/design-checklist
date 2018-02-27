@@ -108,7 +108,7 @@ class Checklist extends React.Component<Props> {
                   justify="center"
                   align={ui.isDesktop ? 'center' : 'flex-start'}
                   onClick={handleCategoryChange}
-                  primary={app.primaryColor}
+                  activeColor={shadeColor(app.primaryColor, 0.5)}
                 >
                   {!ui.isDesktop &&
                     <CategoryTitle active={this.store.activeCategory === key}>
@@ -242,7 +242,7 @@ const LoadingWrapper = styled(Flex)`
 
 const PercentContainer = styled(Flex)`
   cursor: pointer;
-  ${({ isDesktop, active, primary }) =>
+  ${({ isDesktop, active, activeColor }) =>
     isDesktop
       ? `
   background: #fff;
@@ -254,7 +254,7 @@ const PercentContainer = styled(Flex)`
     `
     box-shadow: 0 15px 15px rgba(50,50,93,0.2), 0 5px 15px rgba(0,0,0,.4);
     border: 1px solid black;
-    background: ${shadeColor(primary, 0.5)};
+    background: ${activeColor};
   `} 
   `
       : `

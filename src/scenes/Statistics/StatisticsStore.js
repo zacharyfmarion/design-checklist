@@ -38,15 +38,18 @@ class StatisticsStore {
       .map((key, i) => ({
         key: i,
         metric: this.nameMap.hasOwnProperty(key) ? this.nameMap[key] : key,
-        value: this.data.measures[key]
+        value:
+          key === 'comment_lines_density'
+            ? this.data.measures[key].toString() + '%'
+            : this.data.measures[key]
       }));
   }
 
   @computed
   get longestMethods() {
     return this.data.measures.lmethods
-      .map(({ path, methodlen, code }) => ({
-        path: this.stripFilename(path),
+      .map(({ path, methodlen, code, startline }) => ({
+        path: `${this.stripFilename(path)}:${startline}`,
         methodlen,
         method: this.stripFunction(code[0])
       }))
@@ -60,7 +63,7 @@ class StatisticsStore {
   stripFunction = (code: string) => {
     const codeText = striptags(code);
     const match = methodRegex.exec(codeText);
-    return match && match.length >= 3 ? match[2] : 'not found';
+    return match && match.length >= 4 ? match[2] : 'not found';
   };
 
   @action
