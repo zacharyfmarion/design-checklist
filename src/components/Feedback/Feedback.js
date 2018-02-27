@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { Tooltip } from 'antd';
-import { colors } from 'constants/styles';
 import Button from 'components/Button';
 
 type Props = {};
@@ -17,6 +16,7 @@ class Feedback extends React.Component<Props> {
     return (
       <Tooltip placement="left" title="Send Feedback">
         <FeedbackButton
+          primary
           action="feedback"
           icon="mail"
           size="large"
@@ -35,8 +35,6 @@ const FeedbackButton = styled(Button)`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  color: #fff;
-  background: ${colors.primary};
 `;
 
 export default Feedback;

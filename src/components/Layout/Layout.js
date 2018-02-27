@@ -4,7 +4,6 @@ import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
-import { colors } from 'constants/styles';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideMenu from './components/SideMenu';
@@ -66,6 +65,7 @@ class Layout extends React.Component<Props> {
             auto
             justify="center"
             mobile={ui.isMobile}
+            primary={app.primaryColor}
             className={className}
           >
             {children}
@@ -106,7 +106,7 @@ const Panel = styled(Flex)`
   z-index: 1;
   
   &:before {
-    background: ${colors.primary};
+    background: ${({ primary }) => primary};
     content: '';
     display: block;
     height: 550px;

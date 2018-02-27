@@ -1,6 +1,10 @@
 import { action, computed, observable } from 'mobx';
+import striptags from 'striptags';
 import { getRequest } from 'helpers/api';
 import AppStore from 'stores/AppStore';
+
+// Regex to match a java method
+const methodRegex = /(public|protected|private|static|\s) +[\w\<\>\[\]]+\s+(\w+) *\([^\)]*\) *(\{?|[^;])/;
 
 class StatisticsStore {
   app: AppStore;
@@ -10,11 +14,11 @@ class StatisticsStore {
   @observable
   statOrder: Array<string> = [
     'ncloc',
+    'directories',
     'classes',
     'functions',
     'comment_lines',
-    'comment_lines_density',
-    'directories'
+    'comment_lines_density'
   ];
   @observable
   nameMap: Object = {
@@ -41,15 +45,22 @@ class StatisticsStore {
   @computed
   get longestMethods() {
     return this.data.measures.lmethods
-      .map(({ path, methodlen }) => ({
+      .map(({ path, methodlen, code }) => ({
         path: this.stripFilename(path),
-        methodlen
+        methodlen,
+        method: this.stripFunction(code[0])
       }))
       .sort((a, b) => b.methodlen - a.methodlen);
   }
 
   stripFilename = (path: string) => {
     return path.substring(path.indexOf(':', path.indexOf(':') + 1) + 1);
+  };
+
+  stripFunction = (code: string) => {
+    const codeText = striptags(code);
+    const match = methodRegex.exec(codeText);
+    return match[2] || 'not found';
   };
 
   @action

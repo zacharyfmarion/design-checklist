@@ -7,10 +7,13 @@ import { Flex } from 'reflexbox';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import styled from 'styled-components';
-import { shadow, colors } from 'constants/styles';
+import { shadow } from 'constants/styles';
 import { title, shortTitle } from 'constants/app';
 import logo from 'assets/logo.png';
 import Button from 'components/Button';
+
+// local components
+import Settings from '../Settings';
 
 type Props = {
   history: RouterHistory,
@@ -87,6 +90,7 @@ class Header extends React.Component<Props> {
         collapsed={sidebarCollapsed}
         isDesktop={ui.isDesktop}
         sidebarVisible={sidebarVisible}
+        primary={app.primaryColor}
       >
         <Flex align="center">
           {ui.isDesktop || !sidebarVisible
@@ -103,19 +107,29 @@ class Header extends React.Component<Props> {
         <Flex align="center" justify="center">
           {this.props.actions}
           {app.projectConfirmed &&
-            <ClearButton
-              primary
-              onClick={app.clearProject}
-              icon="rollback"
-              action="clicked new project"
-            >
-              {!ui.isMobile && `New Project`}
-            </ClearButton>}
+            <Flex align="center">
+              <ClearButton
+                primary
+                onClick={app.clearProject}
+                icon="rollback"
+                action="clicked new project"
+              >
+                {!ui.isMobile && `New Project`}
+              </ClearButton>
+              <VerticalBar />
+              <Settings />
+            </Flex>}
         </Flex>
       </HeaderWrapper>
     );
   }
 }
+
+const VerticalBar = styled.div`
+  height: 30px;
+  border-left: 1px solid #fff;
+  margin: 0 8px;
+`;
 
 const ClearButton = styled(Button)`
   margin-left: 8px;
@@ -151,7 +165,7 @@ const StyledLink = styled(Link)`
 `;
 
 const Title = styled.h2`
-  color: black;
+  color: #fff;
   font-size: 2em;
   text-transform: uppercase;
 `;
@@ -161,7 +175,7 @@ const HeaderWrapper = styled(Flex)`
   left: ${({ sidebarVisible, collapsed, isDesktop }) =>
     sidebarVisible && isDesktop ? (collapsed ? '64px' : '256px') : '0'};
   right: 0;
-  background: ${colors.primary};
+  background: ${({ primary }) => primary};
   color: black;
   padding: 0 30px;
   height: 75px;

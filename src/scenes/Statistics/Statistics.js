@@ -3,7 +3,6 @@ import { Table } from 'antd';
 import { inject, observer } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
-import { colors } from 'constants/styles';
 import AppStore from 'stores/AppStore';
 import Layout from 'components/Layout';
 import Panel from 'components/Panel';
@@ -33,6 +32,11 @@ const longestMethodsColumns = [
     key: 'path'
   },
   {
+    title: 'Method Name',
+    dataIndex: 'method',
+    key: 'method'
+  },
+  {
     title: 'Length',
     dataIndex: 'methodlen',
     key: 'methodlen'
@@ -51,24 +55,30 @@ class Statistics extends React.Component<Props> {
   }
 
   render() {
+    const { app } = this.props;
     return (
       <Layout>
         <Panel>
           {!this.store.loading &&
             <Flex column auto>
-              <SectionHeader topHeader>General Statistics</SectionHeader>
+              <SectionHeader primary={app.primaryColor} topHeader>
+                General Statistics
+              </SectionHeader>
               <StyledTable
                 dataSource={this.store.statistics}
                 bordered
                 columns={columns}
                 pagination={false}
               />
-              <SectionHeader>Longest Methods</SectionHeader>
+              <SectionHeader primary={app.primaryColor}>
+                Longest Methods
+              </SectionHeader>
               <StyledTable
                 dataSource={this.store.longestMethods}
                 columns={longestMethodsColumns}
                 bordered
                 pagination={false}
+                monospace
               />
             </Flex>}
         </Panel>
@@ -78,11 +88,18 @@ class Statistics extends React.Component<Props> {
 }
 
 const SectionHeader = styled.h3`
-  color: ${colors.primary};
+  color: ${({ primary }) => primary};
   margin: ${({ topHeader }) => (topHeader ? 0 : 20)}px 0 10px 0;
 `;
 
 const StyledTable = styled(Table)`
+  ${({ monospace }) =>
+    monospace &&
+    `
+    .ant-table-row td {
+      font-family: monospace;
+    }
+  `}
 `;
 
 export default inject('app')(Statistics);

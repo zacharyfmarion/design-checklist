@@ -1,18 +1,20 @@
 // @flow
 import * as React from 'react';
 import { Flex } from 'reflexbox';
+import { inject, observer } from 'mobx-react';
 import Button from 'components/Button';
 import Text from 'components/Text';
-import { colors } from 'constants/styles';
+import AppStore from 'stores/AppStore';
 import styled from 'styled-components';
 
 type Props = {
   title: string,
-  onClose: Function
+  onClose: Function,
+  app: AppStore
 };
 
-const ModalHeader = ({ title, onClose }: Props) =>
-  <Header>
+const ModalHeader = ({ title, onClose, app }: Props) =>
+  <Header primary={app.primaryColor}>
     <Flex auto>
       <Text size="large">
         {title}
@@ -44,11 +46,10 @@ const CloseButton = styled(Button)`
 `;
 
 const Header = styled(Flex)`
-  background: ${colors.primary};
+  background: ${({ primary }) => primary};
   align-items: center;
   padding: 8px 15px;
   color: #fff;
 `;
 
-export { ModalHeader };
-export default ModalHeader;
+export default inject('app')(observer(ModalHeader));

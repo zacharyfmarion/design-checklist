@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Collapse, Tag, Icon } from 'antd';
 import styled from 'styled-components';
 import GoogleAnalytics from 'helpers/analytics';
+import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import CodeError from 'components/CodeError';
 import { severities } from 'constants/general';
@@ -13,6 +14,7 @@ type Props = {
   category: string
 };
 
+@observer
 class ErrorList extends React.Component<Props> {
   state = {
     activeColumns: []
@@ -22,9 +24,19 @@ class ErrorList extends React.Component<Props> {
     return severities.indexOf(a.severity) - severities.indexOf(b.severity);
   };
 
+  filterErrors = error => {
+    const { app } = this.props;
+    const activeSeverities = Object.keys(app.filters).filter(
+      severity => app.filters[severity]
+    );
+    return activeSeverities.includes(error.severity);
+  };
+
   renderSubcategories = (subcategory: string, i: number) => {
     const { errors, category } = this.props;
-    const subErrors = errors[category][subcategory].detail;
+    const subErrors = errors[category][subcategory].detail
+      .sort(this.sortErrors)
+      .filter(this.filterErrors);
     if (category === 'Flexibility' && subcategory === 'No duplicated code') {
       return null;
     }
@@ -41,11 +53,9 @@ class ErrorList extends React.Component<Props> {
         key={`${category}_${i}`}
       >
         {subErrors.length > 0
-          ? subErrors
-              .sort(this.sortErrors)
-              .map((error, j) =>
-                <StyledError error={error} type="error" key={j} />
-              )
+          ? subErrors.map((error, j) =>
+              <StyledError error={error} type="error" key={j} />
+            )
           : <Flex>
               <CheckIcon type="check-circle-o" />All done!
             </Flex>}
@@ -55,7 +65,9 @@ class ErrorList extends React.Component<Props> {
 
   renderCategory = () => {
     const { errors, category } = this.props;
-    const categoryErrors = errors[category];
+    const categoryErrors = errors[category]
+      .sort(this.sortErrors)
+      .filter(this.filterErrors);
     return (
       <Panel
         header={
@@ -70,11 +82,9 @@ class ErrorList extends React.Component<Props> {
         key={`${category}_0`}
       >
         {categoryErrors.length > 0
-          ? categoryErrors
-              .sort(this.sortErrors)
-              .map((error, i) =>
-                <StyledError error={error} type="error" key={i} />
-              )
+          ? categoryErrors.map((error, i) =>
+              <StyledError error={error} type="error" key={i} />
+            )
           : <Flex>
               <CheckIcon type="check-circle-o" />All done!
             </Flex>}
@@ -141,4 +151,4 @@ const StyledError = styled(CodeError)`
   margin-bottom: 5px;
 `;
 
-export default ErrorList;
+export default inject('app')(ErrorList);

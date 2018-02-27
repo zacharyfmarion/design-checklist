@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Menu, Icon } from 'antd';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
-import { colors, shadow } from 'constants/styles';
+import { shadow } from 'constants/styles';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { scenes } from 'constants/app';
@@ -46,7 +46,7 @@ class SideMenu extends React.Component<Props> {
   };
 
   render() {
-    const { collapsed, title, ui, toggleCollapsed } = this.props;
+    const { collapsed, app, title, ui, toggleCollapsed } = this.props;
     return (
       <SidebarContainer column collapsed={collapsed} isDesktop={ui.isDesktop}>
         <SidebarHeader
@@ -67,6 +67,7 @@ class SideMenu extends React.Component<Props> {
             mode="inline"
             isDesktop={ui.isDesktop}
             inlineCollapsed={ui.isDesktop ? collapsed : false}
+            primary={app.primaryColor}
           >
             {scenes.map((scene, i) =>
               <Menu.Item key={scene.path}>
@@ -84,6 +85,7 @@ class SideMenu extends React.Component<Props> {
           <CollapseButton
             onClick={toggleCollapsed}
             icon={collapsed ? 'menu-unfold' : 'menu-fold'}
+            primaryColor={app.primaryColor}
           >
             {!collapsed ? `Collapse Menu` : ``}
           </CollapseButton>}
@@ -120,43 +122,47 @@ const SidebarHeader = styled(Flex)`
 `;
 
 const CollapseButton = styled(Button)`
+  ${({ primaryColor }) => `
   height: 50px;
   border-radius: 0;
   box-shadow: none;
   border-top: 1px solid #bfbfbf;
   &:hover {
-    border-color: ${colors.primary};
-    color: ${colors.primary};
+    border-color: ${primaryColor};
+    color: ${primaryColor};
   }
   &:active {
-    border-color: ${colors.primary};
-    color: ${colors.primary};
+    border-color: ${primaryColor};
+    color: ${primaryColor};
   }
   &:focus {
-    border-color: ${colors.primary};
-    color: ${colors.primary};
+    border-color: ${primaryColor};
+    color: ${primaryColor};
   }
   &:visited {
-    border-color: ${colors.primary};
-    color: ${colors.primary};
+    border-color: ${primaryColor};
+    color: ${primaryColor};
   }
+  `}
 `;
 
 const StyledMenu = styled(Menu)`
-  .ant-menu-item:hover, .ant-menu-item > a:hover, .ant-menu-item-selected, .ant-menu-item-selected > a {
-    color: ${colors.primary};
-  }
-  .ant-menu-item:after {
-    border-right: 3px solid ${colors.primary} !important;
-  }
-  ${({ isDesktop }) =>
-    !isDesktop &&
-    `
-    .ant-menu-item {
-      font-size: 18px;
-      height: 52px;
-      line-height: 52px;
-    } 
+  ${({ primary }) => `
+    .ant-menu-item:hover, .ant-menu-item > a:hover, .ant-menu-item-selected, .ant-menu-item-selected > a {
+      color: ${primary};
+    }
+    .ant-menu-item:after {
+      border-right: 3px solid ${primary} !important;
+    }
+    ${({ isDesktop }) =>
+      !isDesktop &&
+      `
+      .ant-menu-item {
+        font-size: 18px;
+        height: 52px;
+        line-height: 52px;
+      } 
+    `}
   `}
 `;
 

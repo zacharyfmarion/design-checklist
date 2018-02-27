@@ -6,7 +6,7 @@ import Graphs from 'scenes/Graphs';
 import Statistics from 'scenes/Statistics';
 import Duplication from 'scenes/Duplication';
 
-export const VERSION = '0.0.2';
+export const VERSION = '0.0.3';
 export const title = 'Design Checkup';
 export const shortTitle = 'Checkup';
 export const sessionStoragePrefix = `sonarqube_${VERSION}`;

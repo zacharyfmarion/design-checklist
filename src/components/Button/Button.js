@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button as AntButton } from 'antd';
+import { observer, inject } from 'mobx-react';
 import styled from 'styled-components';
 import GoogleAnalytics from 'helpers/analytics';
 import { shadow } from 'constants/styles';
@@ -16,11 +17,12 @@ const Button = ({
   onClick,
   action,
   label,
+  app,
   value,
   children,
   ...other
 }: Props) => {
-  const handleClick = () => {
+  const handleClick = e => {
     if (action) {
       GoogleAnalytics.event({
         category: 'Interaction',
@@ -29,10 +31,16 @@ const Button = ({
         value
       });
     }
-    onClick();
+    if (onClick) {
+      onClick(e);
+    }
   };
   return (
-    <StyledButton onClick={handleClick} {...other}>
+    <StyledButton
+      onClick={handleClick}
+      primaryColor={app.primaryColor}
+      {...other}
+    >
       {children}
     </StyledButton>
   );
@@ -44,16 +52,24 @@ const StyledButton = styled(AntButton)`
   box-shadow: ${shadow}; 
   text-transform: uppercase;
   font-size: 14px;
-  ${({ primary }) =>
+  ${({ primary, primaryColor }) =>
     primary &&
     `
-    background-color: #26b47b; 
+    background-color: ${primaryColor}; 
     color: #fff;
     &:hover {
-      border-color: #26b47b;
-      color: #26b47b;
+      border-color: ${primaryColor};
+      color: ${primaryColor};
+    }
+    &:active {
+      border-color: ${primaryColor};
+      color: ${primaryColor};
+    }
+    &:focus {
+      border-color: ${primaryColor};
+      color: ${primaryColor};
     }
   `}
 `;
 
-export default Button;
+export default inject('app')(observer(Button));

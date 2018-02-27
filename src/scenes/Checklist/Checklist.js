@@ -19,6 +19,8 @@ import Spin from 'components/Spin';
 // local components
 import ChecklistStore from './ChecklistStore';
 import TutorialModal from './components/TutorialModal';
+import FilterMenu from './components/FilterMenu';
+import { shadeColor } from '../../helpers/colors';
 
 type Props = {
   ui: UiStore,
@@ -60,15 +62,18 @@ class Checklist extends React.Component<Props> {
     const { ui } = this.props;
     return (
       !this.store.loading &&
-      <Button
-        primary
-        onClick={this.store.refreshProject}
-        icon="reload"
-        action="clicked refresh"
-        label="Checklist"
-      >
-        {ui.isDesktop && `Refresh`}
-      </Button>
+      <Flex>
+        <StyledFilterMenu />
+        <Button
+          primary
+          onClick={this.store.refreshProject}
+          icon="reload"
+          action="clicked refresh"
+          label="Checklist"
+        >
+          {ui.isDesktop && `Refresh`}
+        </Button>
+      </Flex>
     );
   };
 
@@ -82,7 +87,7 @@ class Checklist extends React.Component<Props> {
   };
 
   renderErrors = state => {
-    const { ui } = this.props;
+    const { ui, app } = this.props;
     return (
       <div
         style={{
@@ -103,6 +108,7 @@ class Checklist extends React.Component<Props> {
                   justify="center"
                   align={ui.isDesktop ? 'center' : 'flex-start'}
                   onClick={handleCategoryChange}
+                  primary={app.primaryColor}
                 >
                   {!ui.isDesktop &&
                     <CategoryTitle active={this.store.activeCategory === key}>
@@ -189,14 +195,22 @@ class Checklist extends React.Component<Props> {
   }
 }
 
+const StyledFilterMenu = styled(FilterMenu)`
+  margin-right: 8px;
+`;
+
 const StyledProgress = styled(Progress)`
   .ant-progress-circle-path {
     stroke: ${({ percent }) =>
-      percent < 100 ? (percent > 75 ? '#fdd75f' : '#e63e3e') : colors.primary}
+      percent < 100
+        ? percent > 75 ? colors.average : colors.bad
+        : colors.good}
   }
   .ant-progress-bg {
     background: ${({ percent }) =>
-      percent < 100 ? (percent > 75 ? '#fdd75f' : '#e63e3e') : colors.primary};
+      percent < 100
+        ? percent > 75 ? colors.average : colors.bad
+        : colors.good};
   }
 `;
 
@@ -228,7 +242,7 @@ const LoadingWrapper = styled(Flex)`
 
 const PercentContainer = styled(Flex)`
   cursor: pointer;
-  ${({ isDesktop, active }) =>
+  ${({ isDesktop, active, primary }) =>
     isDesktop
       ? `
   background: #fff;
@@ -240,7 +254,7 @@ const PercentContainer = styled(Flex)`
     `
     box-shadow: 0 15px 15px rgba(50,50,93,0.2), 0 5px 15px rgba(0,0,0,.4);
     border: 1px solid black;
-    background: #82dcb9;
+    background: ${shadeColor(primary, 0.5)};
   `} 
   `
       : `
