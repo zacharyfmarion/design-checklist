@@ -60,7 +60,7 @@ class StatisticsStore {
   stripFunction = (code: string) => {
     const codeText = striptags(code);
     const match = methodRegex.exec(codeText);
-    return match[2] || 'not found';
+    return match && match.length >= 3 ? match[2] : 'not found';
   };
 
   @action
