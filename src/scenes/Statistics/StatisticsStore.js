@@ -3,9 +3,6 @@ import striptags from 'striptags';
 import { getRequest } from 'helpers/api';
 import AppStore from 'stores/AppStore';
 
-// Regex to match a java method
-const methodRegex = /(public|protected|private|static|\s) +[\w\<\>\[\]]+\s+(\w+) *\([^\)]*\) *(\{?|[^;])/;
-
 class StatisticsStore {
   app: AppStore;
 
@@ -48,22 +45,16 @@ class StatisticsStore {
   @computed
   get longestMethods() {
     return this.data.measures.lmethods
-      .map(({ path, methodlen, code, startline }) => ({
+      .map(({ path, methodlen, code, methodname, startline }) => ({
         path: `${this.stripFilename(path)}:${startline}`,
         methodlen,
-        method: this.stripFunction(code[0])
+        methodname
       }))
       .sort((a, b) => b.methodlen - a.methodlen);
   }
 
   stripFilename = (path: string) => {
     return path.substring(path.indexOf(':', path.indexOf(':') + 1) + 1);
-  };
-
-  stripFunction = (code: string) => {
-    const codeText = striptags(code);
-    const match = methodRegex.exec(codeText);
-    return match && match.length >= 4 ? match[2] : 'not found';
   };
 
   @action

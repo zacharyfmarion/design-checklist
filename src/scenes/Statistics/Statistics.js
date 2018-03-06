@@ -33,8 +33,8 @@ const longestMethodsColumns = [
   },
   {
     title: 'Method Name',
-    dataIndex: 'method',
-    key: 'method'
+    dataIndex: 'methodname',
+    key: 'methodname'
   },
   {
     title: 'Length',

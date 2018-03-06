@@ -12,7 +12,9 @@ class DuplicationStore {
 
   @computed
   get duplications() {
-    return this.data.error.Duplications.detail;
+    const dups = this.data.error.Duplications.detail;
+    const res = [];
+    return dups;
   }
 
   @action

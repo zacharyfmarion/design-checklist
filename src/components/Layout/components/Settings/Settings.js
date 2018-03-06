@@ -51,7 +51,7 @@ class Settings extends React.Component<Props> {
         </ThemeSelect>
         <Header primary={app.primaryColor}>Custom Theme</Header>
         <HexInput
-          placeholder="hex string"
+          placeholder="Hex string"
           onChange={this.handleCustomHexChange}
           action={
             <InputAction
@@ -82,6 +82,7 @@ const InputAction = styled(Button)`
   height: 29px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  box-shadow: none;
 `;
 
 const HexInput = styled(Input)`

@@ -118,7 +118,11 @@ class CodeError extends React.Component<Props> {
                 <LineNumber
                   align="center"
                   justify="center"
-                  width={maxLines[j].toString.length * 5 + 30}
+                  width={
+                    maxLines.length >= j && maxLines[j]
+                      ? maxLines[j].toString.length * 5 + 30
+                      : 40
+                  }
                 >
                   {line.lineNumber}
                 </LineNumber>

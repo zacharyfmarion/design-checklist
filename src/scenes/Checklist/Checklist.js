@@ -200,6 +200,9 @@ const StyledFilterMenu = styled(FilterMenu)`
 `;
 
 const StyledProgress = styled(Progress)`
+  .ant-progress-text {
+    // display: none;
+  }
   .ant-progress-circle-path {
     stroke: ${({ percent }) =>
       percent < 100
