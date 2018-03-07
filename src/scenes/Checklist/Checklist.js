@@ -58,6 +58,19 @@ class Checklist extends React.Component<Props> {
     );
   };
 
+  numberOfStars = percent => {
+    if (percent === 100) {
+      return 5;
+    } else if (percent < 100 && percent >= 90) {
+      return 4;
+    } else if (percent < 90 && percent >= 80) {
+      return 3;
+    } else if (percent < 80 && percent >= 70) {
+      return 2;
+    }
+    return 1;
+  };
+
   renderHeaderActions = () => {
     const { ui } = this.props;
     return (
@@ -99,6 +112,7 @@ class Checklist extends React.Component<Props> {
           {this.store.data &&
             categories.map((key, i) => {
               const handleCategoryChange = () => this.changeCategory(key);
+              const percent = Math.round(this.store.data.percentage[key], 1);
               return (
                 <PercentContainer
                   auto
@@ -117,13 +131,16 @@ class Checklist extends React.Component<Props> {
                   <ProgressWrapper column justify="center" align="center">
                     <StyledProgress
                       type={ui.isDesktop ? 'circle' : 'line'}
-                      percent={Math.round(this.store.data.percentage[key], 1)}
+                      isDesktop={ui.isDesktop}
+                      percent={percent}
                     />
-                    {/* <StyledRate
-                      disabled
-                      defaultValue={2}
-                      color={app.primaryColor}
-                    /> */}
+                    {percent < 100 &&
+                      ui.isDesktop &&
+                      <StyledRate
+                        disabled
+                        defaultValue={this.numberOfStars(percent)}
+                        percent={percent}
+                      />}
                   </ProgressWrapper>
                   {ui.isDesktop &&
                     <CategoryTitle active={this.store.activeCategory === key}>
@@ -208,11 +225,14 @@ const StyledRate = styled(Rate)`
     margin: 0;
   }
   .ant-rate-star-full .anticon-star {
-    color: ${({ color }) => color};
+    color: ${({ percent }) =>
+      percent < 100
+        ? percent > 75 ? colors.average : colors.bad
+        : colors.good};
   }
 `;
 
-const ProgressWrapper = styled(Flex)`position: relative;`;
+const ProgressWrapper = styled(Flex)`position: relative; width: 100%;`;
 
 const StyledFilterMenu = styled(FilterMenu)`
   margin-right: 8px;
@@ -220,7 +240,8 @@ const StyledFilterMenu = styled(FilterMenu)`
 
 const StyledProgress = styled(Progress)`
   .ant-progress-text {
-    display: none;
+    ${({ percent, isDesktop }) =>
+      percent < 100 && isDesktop && `display: none`};
   }
   .ant-progress-circle-path {
     stroke: ${({ percent }) =>
