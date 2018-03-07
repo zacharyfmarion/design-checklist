@@ -299,7 +299,10 @@ class CodeError extends React.Component<Props> {
                   : `${this.stripFilename(path)} - ${severity}`}
               </Pathname>
               <ErrorMessage>
-                {message}
+                {duplications
+                  ? `${duplications[0]
+                      .length} duplicated blocks of code must be removed.`
+                  : message}
               </ErrorMessage>
             </RuleHeader>
           }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { inject, observer } from 'mobx-react';
-import { Progress } from 'antd';
+import { Progress, Rate } from 'antd';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import GoogleAnalytics from 'helpers/analytics';
@@ -114,10 +114,17 @@ class Checklist extends React.Component<Props> {
                     <CategoryTitle active={this.store.activeCategory === key}>
                       {key}
                     </CategoryTitle>}
-                  <StyledProgress
-                    type={ui.isDesktop ? 'circle' : 'line'}
-                    percent={Math.round(this.store.data.percentage[key], 1)}
-                  />
+                  <ProgressWrapper column justify="center" align="center">
+                    <StyledProgress
+                      type={ui.isDesktop ? 'circle' : 'line'}
+                      percent={Math.round(this.store.data.percentage[key], 1)}
+                    />
+                    {/* <StyledRate
+                      disabled
+                      defaultValue={2}
+                      color={app.primaryColor}
+                    /> */}
+                  </ProgressWrapper>
                   {ui.isDesktop &&
                     <CategoryTitle active={this.store.activeCategory === key}>
                       {key}
@@ -195,13 +202,25 @@ class Checklist extends React.Component<Props> {
   }
 }
 
+const StyledRate = styled(Rate)`
+  position: absolute;
+  .ant-rate-star {
+    margin: 0;
+  }
+  .ant-rate-star-full .anticon-star {
+    color: ${({ color }) => color};
+  }
+`;
+
+const ProgressWrapper = styled(Flex)`position: relative;`;
+
 const StyledFilterMenu = styled(FilterMenu)`
   margin-right: 8px;
 `;
 
 const StyledProgress = styled(Progress)`
   .ant-progress-text {
-    // display: none;
+    display: none;
   }
   .ant-progress-circle-path {
     stroke: ${({ percent }) =>

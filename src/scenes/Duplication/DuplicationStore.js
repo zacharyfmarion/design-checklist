@@ -14,7 +14,20 @@ class DuplicationStore {
   get duplications() {
     const dups = this.data.error.Duplications.detail;
     const res = [];
-    return dups;
+    for (let entry of dups) {
+      if (entry.code) {
+        res.push(entry);
+      } else {
+        for (let duplication of entry.duplications) {
+          res.push({
+            ...entry,
+            duplications: [duplication]
+          });
+        }
+      }
+    }
+    console.log(res);
+    return res;
   }
 
   @action
