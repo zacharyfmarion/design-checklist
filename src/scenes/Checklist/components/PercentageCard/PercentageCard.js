@@ -6,20 +6,21 @@ import styled from 'styled-components';
 import { Flex } from 'reflexbox';
 import { colors, shadow } from 'constants/styles';
 
-const numberOfStars = percent => {
+const percentMappings = percent => {
   if (percent === 100) {
-    return 5;
+    return { stars: 5, color: colors.good };
   } else if (percent < 100 && percent >= 90) {
-    return 4;
+    return { stars: 4, color: colors.average };
   } else if (percent < 90 && percent >= 80) {
-    return 3;
+    return { stars: 3, color: colors.average };
   } else if (percent < 80 && percent >= 70) {
-    return 2;
+    return { stars: 2, color: colors.bad };
   }
-  return 1;
+  return { stars: 1, color: colors.terrible };
 };
 
 const PercentageCard = ({ percent, active, category, onClick, ui, app }) => {
+  const mapping = percentMappings(percent);
   return (
     <PercentContainer
       auto
@@ -40,13 +41,14 @@ const PercentageCard = ({ percent, active, category, onClick, ui, app }) => {
           type={ui.isDesktop ? 'circle' : 'line'}
           isDesktop={ui.isDesktop}
           percent={percent}
+          color={mapping.color}
         />
         {percent < 100 &&
           ui.isDesktop &&
           <StyledRate
             disabled
-            defaultValue={numberOfStars(percent)}
-            colorThreshold={percent}
+            defaultValue={mapping.stars}
+            color={mapping.color}
           />}
       </ProgressWrapper>
       {ui.isDesktop &&
@@ -63,10 +65,7 @@ const StyledRate = styled(Rate)`
     margin: 0;
   }
   .ant-rate-star-full .anticon-star {
-    color: ${({ colorThreshold }) =>
-      colorThreshold < 100
-        ? colorThreshold >= 70 ? colors.average : colors.bad
-        : colors.good};
+    color: ${({ color }) => color};
   }
 `;
 
@@ -78,16 +77,10 @@ const StyledProgress = styled(Progress)`
       percent < 100 && isDesktop && `display: none`};
   }
   .ant-progress-circle-path {
-    stroke: ${({ percent }) =>
-      percent < 100
-        ? percent >= 70 ? colors.average : colors.bad
-        : colors.good}
+    stroke: ${({ color }) => color};
   }
   .ant-progress-bg {
-    background: ${({ percent }) =>
-      percent < 100
-        ? percent >= 70 ? colors.average : colors.bad
-        : colors.good};
+    background: ${({ color }) => color};
   }
 `;
 
