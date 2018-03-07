@@ -1,59 +1,122 @@
 import * as React from 'react';
-import { Card } from 'antd';
+import { observer, inject } from 'mobx-react';
+import { shadeColor } from 'helpers/colors';
+import { Progress, Rate } from 'antd';
 import styled from 'styled-components';
-import { shadow } from 'constants/styles';
+import { Flex } from 'reflexbox';
+import { colors, shadow } from 'constants/styles';
 
-const Percent = ({ percent }) =>
-  <div>
-    <BigNumber>
-      {Math.round(percent, 1)}
-    </BigNumber>
-    <SuperScript>%</SuperScript>
-  </div>;
+const numberOfStars = percent => {
+  if (percent === 100) {
+    return 5;
+  } else if (percent < 100 && percent >= 90) {
+    return 4;
+  } else if (percent < 90 && percent >= 80) {
+    return 3;
+  } else if (percent < 80 && percent >= 70) {
+    return 2;
+  }
+  return 1;
+};
 
-const PercentageCard = ({ className, percent, title }) =>
-  <RatingCard title={title} percent={percent}>
-    <Percent percent={percent} />
-  </RatingCard>;
+const PercentageCard = ({ percent, active, category, onClick, ui, app }) => {
+  return (
+    <PercentContainer
+      auto
+      column
+      active={active}
+      isDesktop={ui.isDesktop}
+      justify="center"
+      align={ui.isDesktop ? 'center' : 'flex-start'}
+      onClick={onClick}
+      activeColor={shadeColor(app.primaryColor, 0.5)}
+    >
+      {!ui.isDesktop &&
+        <CategoryTitle active={active}>
+          {category}
+        </CategoryTitle>}
+      <ProgressWrapper column justify="center" align="center">
+        <StyledProgress
+          type={ui.isDesktop ? 'circle' : 'line'}
+          isDesktop={ui.isDesktop}
+          percent={percent}
+        />
+        {percent < 100 &&
+          ui.isDesktop &&
+          <StyledRate
+            disabled
+            defaultValue={numberOfStars(percent)}
+            colorThreshold={percent}
+          />}
+      </ProgressWrapper>
+      {ui.isDesktop &&
+        <CategoryTitle active={active}>
+          {category}
+        </CategoryTitle>}
+    </PercentContainer>
+  );
+};
 
-const SuperScript = styled.span`
-  vertical-align: top;
-  line-height: 2em;
-  font-size: 6em;
+const StyledRate = styled(Rate)`
+  position: absolute;
+  .ant-rate-star {
+    margin: 0;
+  }
+  .ant-rate-star-full .anticon-star {
+    color: ${({ colorThreshold }) =>
+      colorThreshold < 100
+        ? colorThreshold >= 70 ? colors.average : colors.bad
+        : colors.good};
+  }
 `;
 
-const BigNumber = styled.span`font-size: 10em;`;
+const ProgressWrapper = styled(Flex)`position: relative; width: 100%;`;
 
-const RatingCard = styled(Card)`
+const StyledProgress = styled(Progress)`
+  .ant-progress-text {
+    ${({ percent, isDesktop }) =>
+      percent < 100 && isDesktop && `display: none`};
+  }
+  .ant-progress-circle-path {
+    stroke: ${({ percent }) =>
+      percent < 100
+        ? percent >= 70 ? colors.average : colors.bad
+        : colors.good}
+  }
+  .ant-progress-bg {
+    background: ${({ percent }) =>
+      percent < 100
+        ? percent >= 70 ? colors.average : colors.bad
+        : colors.good};
+  }
+`;
+
+const CategoryTitle = styled.h2`margin-top: 5px;`;
+
+const PercentContainer = styled(Flex)`
+  cursor: pointer;
+  ${({ isDesktop, active, activeColor }) =>
+    isDesktop
+      ? `
+  background: #fff;
   border-radius: 5px;
-  border: none !important;
-  background: ${({ percent }) =>
-    percent > 90 ? 'rgb(185, 244, 188)' : percent > 75 ? '#fdd75f' : '#e63e3e'};
-  color: ${({ percent }) =>
-    percent > 90 ? '#24b47e' : percent > 75 ? '#b37e35' : '#771515'} !important;
   box-shadow: ${shadow};
-  &:hover {
-    box-shadow: ${shadow} !important;
-  }
-  .ant-card-head {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    font-size: 4em;
-    text-align: center;
-    height: none;
-    background: inherit;
-    border: none;
-    text-align: left;
-    .ant-card-head-title {
-      font-size: 1.5rem;
-      text-transform: uppercase;
-      color: inherit;
-      margin-top: 10px;
-    }
-  }
-  .ant-card-body: {
-    padding-top: 0;
-  }
+  margin: 0 10px;
+  padding: 15px 0;
+  ${active &&
+    `
+    box-shadow: 0 15px 15px rgba(50,50,93,0.2), 0 5px 15px rgba(0,0,0,.4);
+    border: 1px solid black;
+    background: ${activeColor};
+  `} 
+  `
+      : `
+    padding: 0 10px 5px 10px;
+    ${active &&
+      `
+      background: #e8e8e8;
+    `}
+  `}
 `;
 
-export default PercentageCard;
+export default inject('ui', 'app')(observer(PercentageCard));

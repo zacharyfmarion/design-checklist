@@ -1,14 +1,13 @@
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { inject, observer } from 'mobx-react';
-import { Progress, Rate } from 'antd';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import GoogleAnalytics from 'helpers/analytics';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import { Flex } from 'reflexbox';
-import { colors, shadow } from 'constants/styles';
+import { shadow } from 'constants/styles';
 import { Transition } from 'react-transition-group';
 import { categories } from 'constants/general';
 import Input from 'components/Input';
@@ -20,7 +19,7 @@ import Spin from 'components/Spin';
 import ChecklistStore from './ChecklistStore';
 import TutorialModal from './components/TutorialModal';
 import FilterMenu from './components/FilterMenu';
-import { shadeColor } from '../../helpers/colors';
+import PercentageCard from './components/PercentageCard';
 
 type Props = {
   ui: UiStore,
@@ -48,27 +47,12 @@ class Checklist extends React.Component<Props> {
     this.store = new ChecklistStore(this.props.app);
   }
 
-  handleTabClick = (tab: string) => {};
-
   renderLoading = () => {
     return (
       <LoadingWrapper justify="center" align="center">
         <Spin />
       </LoadingWrapper>
     );
-  };
-
-  numberOfStars = percent => {
-    if (percent === 100) {
-      return 5;
-    } else if (percent < 100 && percent >= 90) {
-      return 4;
-    } else if (percent < 90 && percent >= 80) {
-      return 3;
-    } else if (percent < 80 && percent >= 70) {
-      return 2;
-    }
-    return 1;
   };
 
   renderHeaderActions = () => {
@@ -99,54 +83,32 @@ class Checklist extends React.Component<Props> {
     this.store.changeCategory(key);
   };
 
-  renderErrors = state => {
-    const { ui, app } = this.props;
+  confirmProject = () => {
+    const { app } = this.props;
+    GoogleAnalytics.event({
+      category: 'Interaction',
+      action: 'entered project name',
+      label: app.projectName
+    });
+    this.store.confirmProject();
+  };
+
+  renderErrors = () => {
+    const { ui } = this.props;
     return (
-      <div
-        style={{
-          ...defaultStyle,
-          ...transitionStyles[state]
-        }}
-      >
+      <div>
         <PercentageRow column={!ui.isDesktop} isDesktop={ui.isDesktop}>
           {this.store.data &&
             categories.map((key, i) => {
               const handleCategoryChange = () => this.changeCategory(key);
               const percent = Math.round(this.store.data.percentage[key], 1);
               return (
-                <PercentContainer
-                  auto
-                  column
+                <PercentageCard
+                  percent={percent}
+                  category={key}
                   active={this.store.activeCategory === key}
-                  isDesktop={ui.isDesktop}
-                  justify="center"
-                  align={ui.isDesktop ? 'center' : 'flex-start'}
                   onClick={handleCategoryChange}
-                  activeColor={shadeColor(app.primaryColor, 0.5)}
-                >
-                  {!ui.isDesktop &&
-                    <CategoryTitle active={this.store.activeCategory === key}>
-                      {key}
-                    </CategoryTitle>}
-                  <ProgressWrapper column justify="center" align="center">
-                    <StyledProgress
-                      type={ui.isDesktop ? 'circle' : 'line'}
-                      isDesktop={ui.isDesktop}
-                      percent={percent}
-                    />
-                    {percent < 100 &&
-                      ui.isDesktop &&
-                      <StyledRate
-                        disabled
-                        defaultValue={this.numberOfStars(percent)}
-                        percent={percent}
-                      />}
-                  </ProgressWrapper>
-                  {ui.isDesktop &&
-                    <CategoryTitle active={this.store.activeCategory === key}>
-                      {key}
-                    </CategoryTitle>}
-                </PercentContainer>
+                />
               );
             })}
         </PercentageRow>
@@ -160,19 +122,8 @@ class Checklist extends React.Component<Props> {
     );
   };
 
-  confirmProject = () => {
-    const { app } = this.props;
-    GoogleAnalytics.event({
-      category: 'Interaction',
-      action: 'entered project name',
-      label: app.projectName
-    });
-    this.store.confirmProject();
-  };
-
   render() {
     const { app } = this.props;
-    console.log(this.store.activeCategory);
     if (!app.projectConfirmed) {
       return (
         <PaddedLayout
@@ -210,54 +161,15 @@ class Checklist extends React.Component<Props> {
         actions={this.renderHeaderActions()}
         showSidebar={app.projectConfirmed && !this.store.loading}
       >
-        {this.store.loading && this.renderLoading()}
-        <Transition in={!this.store.loading} timeout={duration}>
-          {state => this.renderErrors(state)}
-        </Transition>
+        {this.store.loading ? this.renderLoading() : this.renderErrors()}
       </PaddedLayout>
     );
   }
 }
 
-const StyledRate = styled(Rate)`
-  position: absolute;
-  .ant-rate-star {
-    margin: 0;
-  }
-  .ant-rate-star-full .anticon-star {
-    color: ${({ percent }) =>
-      percent < 100
-        ? percent > 75 ? colors.average : colors.bad
-        : colors.good};
-  }
-`;
-
-const ProgressWrapper = styled(Flex)`position: relative; width: 100%;`;
-
 const StyledFilterMenu = styled(FilterMenu)`
   margin-right: 8px;
 `;
-
-const StyledProgress = styled(Progress)`
-  .ant-progress-text {
-    ${({ percent, isDesktop }) =>
-      percent < 100 && isDesktop && `display: none`};
-  }
-  .ant-progress-circle-path {
-    stroke: ${({ percent }) =>
-      percent < 100
-        ? percent > 75 ? colors.average : colors.bad
-        : colors.good}
-  }
-  .ant-progress-bg {
-    background: ${({ percent }) =>
-      percent < 100
-        ? percent > 75 ? colors.average : colors.bad
-        : colors.good};
-  }
-`;
-
-const CategoryTitle = styled.h2`margin-top: 5px;`;
 
 const PercentageRow = styled(Flex)`
   margin-bottom: 25px;
@@ -281,32 +193,6 @@ const SearchInput = styled(Input)`
 
 const LoadingWrapper = styled(Flex)`
   height: 150px;
-`;
-
-const PercentContainer = styled(Flex)`
-  cursor: pointer;
-  ${({ isDesktop, active, activeColor }) =>
-    isDesktop
-      ? `
-  background: #fff;
-  border-radius: 5px;
-  box-shadow: ${shadow};
-  margin: 0 10px;
-  padding: 15px 0;
-  ${active &&
-    `
-    box-shadow: 0 15px 15px rgba(50,50,93,0.2), 0 5px 15px rgba(0,0,0,.4);
-    border: 1px solid black;
-    background: ${activeColor};
-  `} 
-  `
-      : `
-    padding: 0 10px 5px 10px;
-    ${active &&
-      `
-      background: #e8e8e8;
-    `}
-  `}
 `;
 
 const PaddedLayout = styled(Layout)`
