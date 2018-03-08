@@ -2,7 +2,7 @@ import { observable, action } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
 import { categories } from 'constants/general';
-import { message } from 'antd';
+import { message, notification } from 'antd';
 import AppStore from 'stores/AppStore';
 
 class ChecklistStore {
@@ -72,6 +72,14 @@ class ChecklistStore {
       );
     } catch (err) {
       console.log(err);
+      this.error = 'Your project could not be found.';
+      notification.open({
+        message: 'Server Error',
+        description: `There was an error attempting to load your project's analysis. Please contact the developers for support.`
+      });
+      this.app.setProjectName(undefined);
+      this.app.unconfirmProject();
+      return;
     }
   };
 
