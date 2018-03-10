@@ -5,6 +5,8 @@ import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import AppStore from 'stores/AppStore';
 import Layout from 'components/Layout';
+import ErrorMessage from 'components/ErrorMessage';
+import Spin from 'components/Spin';
 import Panel from 'components/Panel';
 import StatisticsStore from './StatisticsStore';
 
@@ -54,33 +56,46 @@ class Statistics extends React.Component<Props> {
     this.store.getStatistics();
   }
 
-  render() {
+  renderStatistics() {
     const { app } = this.props;
+    const { error } = this.store;
+    if (error) {
+      return <ErrorMessage title={error.title} message={error.message} />;
+    }
+    return (
+      <Flex column auto>
+        <SectionHeader primary={app.primaryColor} topHeader>
+          General Statistics
+        </SectionHeader>
+        <StyledTable
+          dataSource={this.store.statistics}
+          bordered
+          columns={columns}
+          pagination={false}
+        />
+        <SectionHeader primary={app.primaryColor}>
+          Longest Methods
+        </SectionHeader>
+        <StyledTable
+          dataSource={this.store.longestMethods}
+          columns={longestMethodsColumns}
+          bordered
+          pagination={false}
+          monospace
+        />
+      </Flex>
+    );
+  }
+
+  render() {
     return (
       <Layout>
         <Panel>
-          {!this.store.loading &&
-            <Flex column auto>
-              <SectionHeader primary={app.primaryColor} topHeader>
-                General Statistics
-              </SectionHeader>
-              <StyledTable
-                dataSource={this.store.statistics}
-                bordered
-                columns={columns}
-                pagination={false}
-              />
-              <SectionHeader primary={app.primaryColor}>
-                Longest Methods
-              </SectionHeader>
-              <StyledTable
-                dataSource={this.store.longestMethods}
-                columns={longestMethodsColumns}
-                bordered
-                pagination={false}
-                monospace
-              />
-            </Flex>}
+          {this.store.loading
+            ? <LoadingContainer auto justify="center">
+                <Spin />
+              </LoadingContainer>
+            : this.renderStatistics()}
         </Panel>
       </Layout>
     );
@@ -90,6 +105,10 @@ class Statistics extends React.Component<Props> {
 const SectionHeader = styled.h3`
   color: ${({ primary }) => primary};
   margin: ${({ topHeader }) => (topHeader ? 0 : 20)}px 0 10px 0;
+`;
+
+const LoadingContainer = styled(Flex)`
+  margin-top: 30px;
 `;
 
 const StyledTable = styled(Table)`

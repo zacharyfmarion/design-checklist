@@ -17,6 +17,7 @@ class GraphsStore {
   @observable activeMode: string = this.modes[0].value;
   @observable commits: Object;
   @observable loading: boolean = true;
+  @observable error: string;
 
   @computed
   get commitNumberData() {
@@ -65,6 +66,11 @@ class GraphsStore {
       this.loading = false;
     } catch (err) {
       console.log(err);
+      this.loading = false;
+      this.error = {
+        title: 'Server Error',
+        message: 'Your commit data could not be loaded from the server.'
+      };
     }
   };
 

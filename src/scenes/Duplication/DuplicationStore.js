@@ -9,6 +9,7 @@ class DuplicationStore {
 
   @observable loading: boolean = true;
   @observable data: boolean = true;
+  @observable error: Object;
 
   @computed
   get duplications() {
@@ -50,6 +51,11 @@ class DuplicationStore {
       this.loading = false;
     } catch (err) {
       console.log(err);
+      this.error = {
+        title: 'Server Error',
+        message: 'Your code duplications could not be loaded from the server.'
+      };
+      this.loading = false;
     }
   };
 

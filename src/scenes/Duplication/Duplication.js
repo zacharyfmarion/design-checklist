@@ -4,8 +4,9 @@ import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import Layout from 'components/Layout';
 import Panel from 'components/Panel';
+import ErrorMessage from 'components/ErrorMessage';
 import Button from 'components/Button';
-import CodeError from 'components/CodeError';
+import CodeIssue from 'components/CodeIssue';
 import Spin from 'components/Spin';
 import DuplicationStore from './DuplicationStore';
 
@@ -43,6 +44,10 @@ class Duplication extends React.Component<Props> {
   };
 
   renderDuplications = () => {
+    const { error } = this.store;
+    if (error) {
+      return <ErrorMessage title={error.title} message={error.message} />;
+    }
     return this.store.duplications.length > 0
       ? this.store.duplications.map(error =>
           <StyledError error={error} shadowed />
@@ -78,7 +83,7 @@ const Title = styled.h1`
   text-transform: uppercase;
 `;
 
-const StyledError = styled(CodeError)`
+const StyledError = styled(CodeIssue)`
   align-self: stretch;
   margin: 10px 0;
 `;

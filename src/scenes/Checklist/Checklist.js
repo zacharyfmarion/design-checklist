@@ -8,7 +8,6 @@ import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import { Flex } from 'reflexbox';
 import { shadow } from 'constants/styles';
-import { Transition } from 'react-transition-group';
 import { categories } from 'constants/general';
 import Input from 'components/Input';
 import Button from 'components/Button';
@@ -24,18 +23,6 @@ import PercentageCard from './components/PercentageCard';
 type Props = {
   ui: UiStore,
   app: AppStore
-};
-
-const duration = 300;
-
-const defaultStyle = {
-  transition: `opacity ${duration}ms ease-in-out`,
-  opacity: 0
-};
-
-const transitionStyles = {
-  entering: { opacity: 0 },
-  entered: { opacity: 1 }
 };
 
 @observer

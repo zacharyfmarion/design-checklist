@@ -29,7 +29,7 @@ const Expand = ({ className }) =>
   </Flex>;
 
 @observer
-class CodeError extends React.Component<Props> {
+class CodeIssue extends React.Component<Props> {
   // get number of keys of object with most keys from array
   getLongestCodeLength(duplication: Array<Object>) {
     const vals = duplication.map(file => file.code.length);
@@ -420,4 +420,4 @@ const Pathname = styled.span`
   font-family: monospace;
 `;
 
-export default inject('ui')(CodeError);
+export default inject('ui')(CodeIssue);

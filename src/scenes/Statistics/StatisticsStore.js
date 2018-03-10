@@ -1,5 +1,4 @@
 import { action, computed, observable } from 'mobx';
-import striptags from 'striptags';
 import { getRequest } from 'helpers/api';
 import AppStore from 'stores/AppStore';
 
@@ -8,6 +7,7 @@ class StatisticsStore {
 
   @observable loading: boolean = true;
   @observable data: boolean = true;
+  @observable error: Object;
   @observable
   statOrder: Array<string> = [
     'ncloc',
@@ -67,6 +67,11 @@ class StatisticsStore {
       this.loading = false;
     } catch (err) {
       console.log(err);
+      this.error = {
+        title: 'Server Error',
+        message: `Your code's statistics could not be loaded from the server.`
+      };
+      this.loading = false;
     }
   };
 

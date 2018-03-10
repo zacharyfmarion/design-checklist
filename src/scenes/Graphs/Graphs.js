@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import { observer, inject } from 'mobx-react';
 import { Select } from 'antd';
 import { Flex } from 'reflexbox';
-import { shadow } from 'constants/styles';
+import Spin from 'components/Spin';
+import Panel from 'components/Panel';
+import ErrorMessage from 'components/ErrorMessage';
 import {
   ResponsiveContainer,
   BarChart,
@@ -34,38 +36,45 @@ class Graphs extends React.Component<{}> {
     this.store.changeMode(mode);
   };
 
-  render() {
+  renderGraph = () => {
     const { app } = this.props;
+    const { error } = this.store;
+    if (error) {
+      return <ErrorMessage title={error.title} message={error.message} />;
+    }
+    return (
+      this.store.commits &&
+      <ResponsiveContainer>
+        <StyledBarChart width={600} height={300} data={this.store.data}>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey={this.store.activeMode} fill={app.primaryColor} />
+        </StyledBarChart>
+      </ResponsiveContainer>
+    );
+  };
+
+  render() {
     return (
       <Layout>
-        <Container column auto>
-          <StyledSelect
-            defaultValue={this.store.activeMode}
-            onChange={this.handleModeChange}
-            style={{ width: 220 }}
-          >
-            {this.store.modes.map(mode =>
-              <Option value={mode.value}>
-                {mode.title}
-              </Option>
-            )}
-          </StyledSelect>
-          {this.store.commits &&
-            <ResponsiveContainer>
-              <StyledBarChart width={600} height={300} data={this.store.data}>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey={this.store.activeMode} fill={app.primaryColor} />
-              </StyledBarChart>
-            </ResponsiveContainer>}
-        </Container>
+        <Panel column auto>
+          {this.store.loading
+            ? <LoadingContainer auto justify="center">
+                <Spin />
+              </LoadingContainer>
+            : this.renderGraph()}
+        </Panel>
       </Layout>
     );
   }
 }
+
+const LoadingContainer = styled(Flex)`
+  margin-top: 30px;
+`;
 
 const StyledSelect = styled(Select)`
   margin-bottom: 15px;
@@ -73,14 +82,6 @@ const StyledSelect = styled(Select)`
 `;
 
 const StyledBarChart = styled(BarChart)`
-`;
-
-const Container = styled(Flex)`
-  margin: 30px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 2px;
-  box-shadow: ${shadow}; 
 `;
 
 export default inject('app')(Graphs);

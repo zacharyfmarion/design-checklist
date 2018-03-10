@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import GoogleAnalytics from 'helpers/analytics';
 import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
-import CodeError from 'components/CodeError';
+import CodeIssue from 'components/CodeIssue';
 import { severities } from 'constants/general';
 import { shadow } from 'constants/styles';
 const Panel = Collapse.Panel;
@@ -147,7 +147,7 @@ const StyledCollapse = styled(Collapse)`
 
 const ListContainer = styled(Flex)``;
 
-const StyledError = styled(CodeError)`
+const StyledError = styled(CodeIssue)`
   margin-bottom: 5px;
 `;
 
