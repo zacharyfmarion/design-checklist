@@ -36,11 +36,11 @@ export const scenes = [
     icon: 'share-alt',
     name: 'Statistics',
     component: Statistics
-  },
-  {
-    path: '/graphs',
-    icon: 'area-chart',
-    name: 'Graphs',
-    component: Graphs
   }
+  // {
+  //   path: '/graphs',
+  //   icon: 'area-chart',
+  //   name: 'Graphs',
+  //   component: Graphs
+  // }
 ];
