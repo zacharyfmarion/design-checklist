@@ -17,6 +17,7 @@ import Spin from 'components/Spin';
 // local components
 import ChecklistStore from './ChecklistStore';
 import TutorialModal from './components/TutorialModal';
+import InfoModal from './components/InfoModal';
 import FilterMenu from './components/FilterMenu';
 import PercentageCard from './components/PercentageCard';
 
@@ -110,19 +111,28 @@ class Checklist extends React.Component<Props> {
   };
 
   render() {
-    const { app } = this.props;
+    const { app, ui } = this.props;
     if (!app.projectConfirmed) {
       return (
         <PaddedLayout
           showSidebar={app.projectConfirmed}
           actions={
-            <Button
-              primary
-              icon="question-circle-o"
-              onClick={this.store.showTutorial}
-            >
-              Help
-            </Button>
+            <div>
+              <Button
+                primary
+                icon="question-circle-o"
+                onClick={this.store.showTutorial}
+              >
+                {!ui.isMobile && `Help`}
+              </Button>
+              <InfoButton
+                primary
+                icon="info-circle-o"
+                onClick={this.store.showInfoModal}
+              >
+                {!ui.isMobile && `Info`}
+              </InfoButton>
+            </div>
           }
         >
           <Flex column align="center" justify="center">
@@ -139,6 +149,8 @@ class Checklist extends React.Component<Props> {
                 onClose={this.store.hideTutorial}
                 fromError={!!this.store.error}
               />}
+            {this.store.infoModalVisible &&
+              <InfoModal onClose={this.store.hideInfoModal} />}
           </Flex>
         </PaddedLayout>
       );
@@ -153,6 +165,10 @@ class Checklist extends React.Component<Props> {
     );
   }
 }
+
+const InfoButton = styled(Button)`
+  margin-left: 8px;
+`;
 
 const StyledFilterMenu = styled(FilterMenu)`
   margin-right: 8px;

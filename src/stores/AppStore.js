@@ -6,19 +6,31 @@ import { colors } from 'constants/styles';
 import { severities } from 'constants/general';
 import { sessionStoragePrefix } from 'constants/app';
 
-const defaultFilters = severities.reduce((result, item, index, array) => {
-  result[item] = true; //a, b, c
-  return result;
-}, {});
-
 class AppStore {
   @observable projectName: string;
   @observable projectConfirmed = false;
   @observable sidebarCollapsed: boolean = false;
   @observable primaryColor: string = colors.primary;
-  @observable filters: Object = defaultFilters;
+  // we have a hardcoded backup severity list, but this should be updated
+  // as soon as we call the main API endpoint and get the on the backend uses
+  @observable severityList: Array<string> = severities;
+  @observable filters: Object;
   // For mobile, where sidebar is either displayed or not displayed
   @observable sidebarVisible: boolean = false;
+
+  @action
+  formatDefaultFilters(filterList: Array<string>) {
+    this.filters = this.severityList.reduce((result, item, index, array) => {
+      result[item] = true; //a, b, c
+      return result;
+    }, {});
+  }
+
+  @action
+  setSeverityList(list) {
+    this.severityList = list;
+    this.formatDefaultFilters();
+  }
 
   @action
   confirmProject = () => {
@@ -80,6 +92,8 @@ class AppStore {
   };
 
   constructor() {
+    // intialize the default filters
+    this.formatDefaultFilters();
     const projectName = sessionStorage.getItem(
       `${sessionStoragePrefix}_projectName`
     );

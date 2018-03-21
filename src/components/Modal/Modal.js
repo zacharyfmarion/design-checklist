@@ -26,7 +26,7 @@ const modalStyles = (isMobile: boolean) => ({
     // height: isMobile ? '100%' : 'auto',
     margin: 'auto',
     border: 'none',
-    boxShadow: 'rgba(0, 0, 0, 0.15) 0px 0px 36px 14px',
+    boxShadow: 'rgba(0, 0, 0, 0.05) 0px 0px 36px 14px',
     background: '#fff',
     overflow: 'auto',
     WebkitOverflowScrolling: 'touch',

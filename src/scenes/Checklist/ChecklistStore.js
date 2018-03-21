@@ -10,6 +10,7 @@ class ChecklistStore {
 
   @observable data: ?Object;
   @observable tutorialVisible: boolean = false;
+  @observable infoModalVisible: boolean = false;
   @observable error: ?string;
   @observable loading: boolean = false;
   @observable activeCategory: string = categories[0];
@@ -43,6 +44,16 @@ class ChecklistStore {
   };
 
   @action
+  showInfoModal = () => {
+    this.infoModalVisible = true;
+  };
+
+  @action
+  hideInfoModal = () => {
+    this.infoModalVisible = false;
+  };
+
+  @action
   clearError = () => {
     this.error = undefined;
   };
@@ -62,6 +73,8 @@ class ChecklistStore {
         return;
       }
       this.data = res;
+      this.app.setSeverityList(res.severitylist);
+      console.log('severity', res.severitylist);
       this.loading = false;
       sessionStorage.setItem(
         `${sessionStoragePrefix}_overview`,
