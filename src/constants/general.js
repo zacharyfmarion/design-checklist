@@ -1,4 +1,4 @@
-export const severities = ['BLOCKER', 'CRITICAL', 'MAJOR', 'MINOR', 'INFO'];
+export const severities = ['fail', 'high', 'medium', 'low', 'info'];
 export const categories = [
   'Communication',
   'Flexibility',

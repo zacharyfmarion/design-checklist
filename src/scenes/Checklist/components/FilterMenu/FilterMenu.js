@@ -22,7 +22,7 @@ class FilterMenu extends React.Component<Props> {
           return (
             <OptionRow justify="space-between">
               <Text>
-                {severity}
+                {severity.toUpperCase()}
               </Text>
               <Switch checked={app.filters[severity]} onChange={handleChange} />
             </OptionRow>

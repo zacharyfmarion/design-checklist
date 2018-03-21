@@ -296,7 +296,7 @@ class CodeIssue extends React.Component<Props> {
                         </PathTitle>
                       )}
                     </Flex>
-                  : `${this.stripFilename(path)} - ${severity}`}
+                  : `${this.stripFilename(path)} - ${severity.toUpperCase()}`}
               </Pathname>
               <ErrorMessage>
                 {duplications

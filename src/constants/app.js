@@ -41,6 +41,6 @@ export const scenes = [
   //   path: '/graphs',
   //   icon: 'area-chart',
   //   name: 'Graphs',
-  //   component: Graphs
-  // }
+  //   component: Graphs,
+  // },
 ];

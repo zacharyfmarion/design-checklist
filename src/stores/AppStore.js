@@ -54,8 +54,7 @@ class AppStore {
     localStorage.setItem(
       `${sessionStoragePrefix}_settings`,
       JSON.stringify({
-        primary: this.primaryColor,
-        filters: this.filters
+        primary: this.primaryColor
       })
     );
   };
@@ -86,9 +85,8 @@ class AppStore {
     );
     const app = localStorage.getItem(`${sessionStoragePrefix}_settings`);
     if (app) {
-      const { primary, filters } = JSON.parse(app);
+      const { primary } = JSON.parse(app);
       this.primaryColor = primary;
-      this.filters = filters;
     }
     if (projectName) {
       this.projectName = projectName;
