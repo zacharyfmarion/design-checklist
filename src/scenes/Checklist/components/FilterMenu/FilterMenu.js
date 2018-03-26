@@ -20,7 +20,7 @@ class FilterMenu extends React.Component<Props> {
         {Object.keys(app.filters).map((severity, i) => {
           const handleChange = checked => app.changeFilter(severity, checked);
           return (
-            <OptionRow justify="space-between">
+            <OptionRow justify="space-between" key={i}>
               <Text>
                 {severity.toUpperCase()}
               </Text>

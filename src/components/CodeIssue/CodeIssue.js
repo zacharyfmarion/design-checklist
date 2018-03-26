@@ -233,9 +233,9 @@ class CodeIssue extends React.Component<Props> {
     const maxLine = code[code.length - 1].textRange.endLine;
     return code.map((issue, i) => {
       return (
-        <Flex column>
+        <Flex column key={i}>
           {issue.code.map((line, j) =>
-            <Flex>
+            <Flex key={`${i}-${j}`}>
               <LineNumber
                 align="center"
                 justify="center"

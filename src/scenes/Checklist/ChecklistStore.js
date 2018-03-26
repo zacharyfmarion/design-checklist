@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
 import { categories } from 'constants/general';
@@ -9,11 +9,77 @@ class ChecklistStore {
   app: AppStore;
 
   @observable data: ?Object;
-  @observable tutorialVisible: boolean = false;
-  @observable infoModalVisible: boolean = false;
   @observable error: ?string;
   @observable loading: boolean = false;
   @observable activeCategory: string = categories[0];
+
+  @computed
+  get activeSeverities() {
+    return Object.keys(this.app.filters).filter(
+      severity => this.app.filters[severity]
+    );
+  }
+
+  errorSort = (a, b) => {
+    return (
+      this.app.severityList.indexOf(a.severity) -
+      this.app.severityList.indexOf(b.severity)
+    );
+  };
+
+  errorFilter = error => this.activeSeverities.includes(error.severity);
+
+  // Get all category issues (filtered and sorted)
+  getCategoryIssues = category => {
+    if (!this.data) return null;
+    const issues = this.data.error[category];
+    if (issues instanceof Array) {
+      return this.data.error[category]
+        .sort(this.errorSort)
+        .filter(this.errorFilter);
+    }
+    // Otherwise it is a category with subcategories
+    let res = {};
+    Object.keys(issues).forEach(key => {
+      res[key] = {
+        ...issues[key],
+        detail: issues[key].detail.sort(this.errorSort).filter(this.errorFilter)
+      };
+    });
+    return res;
+  };
+
+  // get issues for all categories
+  @computed
+  get allIssues() {
+    if (!this.data) return null;
+    let res = {};
+    for (let category of categories) {
+      res[category] = this.getCategoryIssues(category);
+    }
+    return res;
+  }
+
+  // Get the active category errors and filter them
+  @computed
+  get activeCategoryIssues() {
+    return this.allIssues[this.activeCategory];
+  }
+
+  @computed
+  get numCategoryIssues() {
+    let res = {};
+    for (let category of categories) {
+      const issues = this.allIssues[category];
+      if (issues instanceof Array) res[category] = issues.length;
+      else {
+        res[category] = Object.keys(issues)
+          .map(category => issues[category].detail.length)
+          .reduce((a, b) => a + b, 0);
+      }
+    }
+    return res;
+  }
 
   @action
   confirmProject = () => {
@@ -31,26 +97,6 @@ class ChecklistStore {
   @action
   changeCategory = (category: string) => {
     this.activeCategory = category;
-  };
-
-  @action
-  showTutorial = () => {
-    this.tutorialVisible = true;
-  };
-
-  @action
-  hideTutorial = () => {
-    this.tutorialVisible = false;
-  };
-
-  @action
-  showInfoModal = () => {
-    this.infoModalVisible = true;
-  };
-
-  @action
-  hideInfoModal = () => {
-    this.infoModalVisible = false;
   };
 
   @action
@@ -74,7 +120,6 @@ class ChecklistStore {
       }
       this.data = res;
       this.app.setSeverityList(res.severitylist);
-      console.log('severity', res.severitylist);
       this.loading = false;
       sessionStorage.setItem(
         `${sessionStoragePrefix}_overview`,

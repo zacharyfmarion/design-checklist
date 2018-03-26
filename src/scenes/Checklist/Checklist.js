@@ -9,15 +9,13 @@ import AppStore from 'stores/AppStore';
 import { Flex } from 'reflexbox';
 import { shadow } from 'constants/styles';
 import { categories } from 'constants/general';
-import Input from 'components/Input';
 import Button from 'components/Button';
 import ErrorList from 'components/ErrorList';
 import Spin from 'components/Spin';
 
 // local components
 import ChecklistStore from './ChecklistStore';
-import TutorialModal from './components/TutorialModal';
-import InfoModal from './components/InfoModal';
+import WelcomePage from './components/WelcomePage';
 import FilterMenu from './components/FilterMenu';
 import PercentageCard from './components/PercentageCard';
 
@@ -94,8 +92,10 @@ class Checklist extends React.Component<Props> {
                 <PercentageCard
                   percent={percent}
                   category={key}
+                  numIssues={this.store.numCategoryIssues[key]}
                   active={this.store.activeCategory === key}
                   onClick={handleCategoryChange}
+                  key={i}
                 />
               );
             })}
@@ -104,55 +104,17 @@ class Checklist extends React.Component<Props> {
           <StyledErrorList
             category={this.store.activeCategory}
             active={this.store.activeCategory}
-            errors={this.store.data.error}
+            errors={this.store.activeCategoryIssues}
           />}
       </div>
     );
   };
 
   render() {
-    const { app, ui } = this.props;
+    const { app } = this.props;
     if (!app.projectConfirmed) {
       return (
-        <PaddedLayout
-          showSidebar={app.projectConfirmed}
-          actions={
-            <div>
-              <Button
-                primary
-                icon="question-circle-o"
-                onClick={this.store.showTutorial}
-              >
-                {!ui.isMobile && `Help`}
-              </Button>
-              <InfoButton
-                primary
-                icon="info-circle-o"
-                onClick={this.store.showInfoModal}
-              >
-                {!ui.isMobile && `Info`}
-              </InfoButton>
-            </div>
-          }
-        >
-          <Flex column align="center" justify="center">
-            <SearchInput
-              onChange={app.setProjectName}
-              value={app.projectName}
-              placeholder="Enter Project Name..."
-              onEnter={this.confirmProject}
-              icon="search"
-              size="large"
-            />
-            {this.store.tutorialVisible &&
-              <TutorialModal
-                onClose={this.store.hideTutorial}
-                fromError={!!this.store.error}
-              />}
-            {this.store.infoModalVisible &&
-              <InfoModal onClose={this.store.hideInfoModal} />}
-          </Flex>
-        </PaddedLayout>
+        <WelcomePage error={this.store.error} onConfirm={this.confirmProject} />
       );
     }
     return (
@@ -165,10 +127,6 @@ class Checklist extends React.Component<Props> {
     );
   }
 }
-
-const InfoButton = styled(Button)`
-  margin-left: 8px;
-`;
 
 const StyledFilterMenu = styled(FilterMenu)`
   margin-right: 8px;
@@ -185,13 +143,6 @@ const PercentageRow = styled(Flex)`
     margin: 0 10px 20px 10px;
     padding: 8px 0;
   `}
-`;
-
-const SearchInput = styled(Input)`
-  width: 350px;
-  .input-instance {
-    width: 350px;
-  }
 `;
 
 const LoadingWrapper = styled(Flex)`

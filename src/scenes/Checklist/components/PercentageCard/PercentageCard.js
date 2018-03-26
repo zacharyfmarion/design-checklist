@@ -19,8 +19,21 @@ const percentMappings = percent => {
   return { stars: 1, color: colors.terrible };
 };
 
-const PercentageCard = ({ percent, active, category, onClick, ui, app }) => {
+const PercentageCard = ({
+  percent,
+  active,
+  category,
+  onClick,
+  numIssues,
+  ui,
+  app
+}) => {
   const mapping = percentMappings(percent);
+  const categoryTitle = (
+    <CategoryTitle active={active}>
+      {category}
+    </CategoryTitle>
+  );
   return (
     <PercentContainer
       auto
@@ -32,10 +45,7 @@ const PercentageCard = ({ percent, active, category, onClick, ui, app }) => {
       onClick={onClick}
       activeColor={shadeColor(app.primaryColor, 0.5)}
     >
-      {!ui.isDesktop &&
-        <CategoryTitle active={active}>
-          {category}
-        </CategoryTitle>}
+      {!ui.isDesktop && categoryTitle}
       <ProgressWrapper column justify="center" align="center">
         <StyledProgress
           type={ui.isDesktop ? 'circle' : 'line'}
@@ -50,14 +60,27 @@ const PercentageCard = ({ percent, active, category, onClick, ui, app }) => {
             defaultValue={mapping.stars}
             color={mapping.color}
           />}
+        {ui.isDesktop > 0 &&
+          <NumIssues borderColor={app.primaryColor}>
+            {numIssues}
+          </NumIssues>}
       </ProgressWrapper>
-      {ui.isDesktop &&
-        <CategoryTitle active={active}>
-          {category}
-        </CategoryTitle>}
+      {ui.isDesktop && categoryTitle}
     </PercentContainer>
   );
 };
+
+const NumIssues = styled.div`
+  position: absolute;
+  top: 0;
+  right: 10px;
+  margin-top: -8px;
+  width: 31px;
+  text-align: center;
+  border: 1px solid ${({ borderColor }) => borderColor};
+  font-size: 15px;
+  border-radius: 2px;
+`;
 
 const StyledRate = styled(Rate)`
   position: absolute;

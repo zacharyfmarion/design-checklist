@@ -5,7 +5,6 @@ import GoogleAnalytics from 'helpers/analytics';
 import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import CodeIssue from 'components/CodeIssue';
-import { severities } from 'constants/general';
 import { shadow } from 'constants/styles';
 const Panel = Collapse.Panel;
 
@@ -20,23 +19,9 @@ class ErrorList extends React.Component<Props> {
     activeColumns: []
   };
 
-  sortErrors = (a, b) => {
-    return severities.indexOf(a.severity) - severities.indexOf(b.severity);
-  };
-
-  filterErrors = error => {
-    const { app } = this.props;
-    const activeSeverities = Object.keys(app.filters).filter(
-      severity => app.filters[severity]
-    );
-    return activeSeverities.includes(error.severity);
-  };
-
   renderSubcategories = (subcategory: string, i: number) => {
     const { errors, category } = this.props;
-    const subErrors = errors[category][subcategory].detail
-      .sort(this.sortErrors)
-      .filter(this.filterErrors);
+    const subErrors = errors[subcategory].detail;
     if (category === 'Flexibility' && subcategory === 'No duplicated code') {
       return null;
     }
@@ -44,7 +29,7 @@ class ErrorList extends React.Component<Props> {
       <Panel
         header={
           <span>
-            {errors[category][subcategory]['category description']}
+            {errors[subcategory]['category description']}
             <HeaderTag color={subErrors.length > 0 ? 'red' : 'green'}>
               {subErrors.length} {subErrors.length === 1 ? 'error' : 'errors'}
             </HeaderTag>
@@ -65,9 +50,7 @@ class ErrorList extends React.Component<Props> {
 
   renderCategory = () => {
     const { errors, category } = this.props;
-    const categoryErrors = errors[category]
-      .sort(this.sortErrors)
-      .filter(this.filterErrors);
+    const categoryErrors = errors;
     return (
       <Panel
         header={
@@ -94,14 +77,14 @@ class ErrorList extends React.Component<Props> {
 
   handleCollapseChange = (activeColumns: Array<string>) => {
     const { category, errors } = this.props;
-    const noSubcategories = errors[category] instanceof Array;
+    const noSubcategories = errors instanceof Array;
     const columnsClicked = activeColumns.filter(
       col => !this.state.activeColumns.includes(col)
     );
     if (columnsClicked.length > 0) {
       const col = columnsClicked[0];
       const subcategoryIndex = parseInt(col.slice(-1), 10);
-      const subcategory = Object.keys(errors[category])[subcategoryIndex];
+      const subcategory = Object.keys(errors)[subcategoryIndex];
       const label = noSubcategories ? category : `${category} - ${subcategory}`;
       GoogleAnalytics.event({
         category: 'Interaction',
@@ -113,19 +96,19 @@ class ErrorList extends React.Component<Props> {
   };
 
   render() {
-    const { category, errors } = this.props;
-    const noSubcategories = errors[category] instanceof Array;
+    const { errors } = this.props;
+    const noSubcategories = errors instanceof Array;
     return (
-      <ListContainer column category={category}>
+      <Flex column>
         <StyledCollapse
           defaultActiveKey={[]}
           onChange={this.handleCollapseChange}
         >
           {noSubcategories
             ? this.renderCategory()
-            : Object.keys(errors[category]).map(this.renderSubcategories)}
+            : Object.keys(errors).map(this.renderSubcategories)}
         </StyledCollapse>
-      </ListContainer>
+      </Flex>
     );
   }
 }
@@ -144,8 +127,6 @@ const StyledCollapse = styled(Collapse)`
   box-shadow: ${shadow} !important;
   margin: 0 10px;
 `;
-
-const ListContainer = styled(Flex)``;
 
 const StyledError = styled(CodeIssue)`
   margin-bottom: 5px;

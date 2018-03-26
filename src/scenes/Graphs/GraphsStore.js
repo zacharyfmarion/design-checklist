@@ -4,17 +4,6 @@ import AppStore from 'stores/AppStore';
 
 class GraphsStore {
   app: AppStore;
-  modes: Array<Object> = [
-    {
-      title: 'Commit number',
-      value: 'commits'
-    },
-    {
-      title: 'Percentage of lines',
-      value: 'percentage'
-    }
-  ];
-  @observable activeMode: string = this.modes[0].value;
   @observable commits: Object;
   @observable loading: boolean = true;
   @observable error: string;
@@ -32,28 +21,9 @@ class GraphsStore {
   }
 
   @computed
-  get commitPercentageData() {
-    if (!this.commits) return [];
-    const authors = this.commits.authors;
-    return Object.keys(authors).map(author => {
-      return {
-        name: author,
-        percentage: authors[author].percentageofcommits
-      };
-    });
-  }
-
-  @computed
   get data() {
-    return this.activeMode === 'commits'
-      ? this.commitNumberData
-      : this.commitPercentageData;
+    return this.commitNumberData;
   }
-
-  @action
-  changeMode = mode => {
-    this.activeMode = mode;
-  };
 
   @action
   getCommits = async (): Promise<*> => {

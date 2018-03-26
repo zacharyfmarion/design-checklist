@@ -52,7 +52,7 @@ class Graphs extends React.Component<{}> {
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Legend />
-            <Bar dataKey={this.store.activeMode} fill={app.primaryColor} />
+            <Bar dataKey="commits" fill={app.primaryColor} />
           </BarChart>
         </ResponsiveContainer>
       </ChartWrapper>

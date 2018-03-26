@@ -41,13 +41,14 @@ const App = inject('app')(
           />
           <Route exact path="/checklist" component={Checklist} />
           {scenes.map(
-            scene =>
+            (scene, i) =>
               scene.path !== '/checklist' &&
               <PrivateRoute
                 exact
                 path={scene.path}
                 component={scene.component}
                 authed={!!app.projectName}
+                key={i}
               />
           )}
           <Route path="*" exact component={NotFound} />

@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { scenes } from 'constants/app';
 
 type Props = {
-  location: Object,
+  location: Object
 };
 
 const Footer = ({ location }: Props) => {
@@ -19,8 +19,8 @@ const Footer = ({ location }: Props) => {
   return (
     <FooterLinks>
       <Breadcrumb>
-        {scenes.map(scene =>
-          <Breadcrumb.Item>
+        {scenes.map((scene, i) =>
+          <Breadcrumb.Item key={i}>
             <FooterLink to={scene.path}>
               {scene.name}
             </FooterLink>
