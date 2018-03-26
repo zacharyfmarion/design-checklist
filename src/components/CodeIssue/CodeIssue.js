@@ -187,7 +187,11 @@ class CodeIssue extends React.Component<Props> {
   renderMobileDuplications = (maxLines: Array) => {
     const { error: { duplications } } = this.props;
     return (
-      <DuplicationTabs defaultActiveKey="0">
+      <DuplicationTabs
+        defaultActiveKey="0"
+        onNextClick={() => console.log('next')}
+        onPrevClick={() => console.log('prev')}
+      >
         {duplications[0].map((dup, i) =>
           <DuplicationTabPane
             tab={this.stripFilenameMobile(dup.loc)}
