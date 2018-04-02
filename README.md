@@ -4,4 +4,4 @@
 
 ## Setting Up
 
-To get started, first clone the backend, found [here](https://github.com/wellxchen/SonarQube-Web-plugin). Run `node server.js` in the server directory to start the backend. In this repo, first run `npm install` or `yarn`. Then run `npm start` or `yarn start` in the root of the project. This should open a web browser that will live reload when changes are made to the application. I'm using antd as the component framework, just to mix things up.
+To get started, first clone and set up the backend, found [here](https://github.com/wellxchen/SonarQube-Web-Backend). In this repo, first run `npm install` or `yarn`. Then run `npm start` or `yarn start` in the root of the project. This should open a web browser that will live reload when changes are made to the application. I'm using antd as the component framework, just to mix things up.
