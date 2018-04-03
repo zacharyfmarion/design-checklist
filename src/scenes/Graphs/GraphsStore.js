@@ -28,9 +28,8 @@ class GraphsStore {
   @action
   getCommits = async (): Promise<*> => {
     try {
-      const data = await getRequest('/commit', {
-        project: this.app.projectName,
-        group: 'CompSci308_2018Spring'
+      const data = await getRequest('/commitsonar', {
+        project: this.app.projectName
       });
       this.commits = data;
       this.loading = false;

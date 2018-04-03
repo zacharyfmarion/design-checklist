@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react';
 import { shadow } from 'constants/styles';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { scenes } from 'constants/app';
+import scenes from 'scenes';
 import styled from 'styled-components';
 import Button from 'components/Button';
 

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
-import { scenes } from 'constants/app';
+import scenes from 'scenes';
 
 type Props = {
   location: Object

@@ -9,7 +9,8 @@ import GoogleAnalytics from 'helpers/analytics';
 import StoreProvider from 'stores';
 import { LocaleProvider } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
-import { scenes, analyticsId } from 'constants/app';
+import { analyticsId } from 'constants/app';
+import scenes from 'scenes';
 import NotFound from 'scenes/NotFound';
 import PrivateRoute from 'components/PrivateRoute';
 
