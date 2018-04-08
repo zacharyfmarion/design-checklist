@@ -25,22 +25,21 @@ type Props = {
   onTabClick?: Function,
   actions?: React.Node,
   app: AppStore,
-  ui: UiStore
+  ui: UiStore,
 };
 
 type State = {
-  topAligned: boolean
+  topAligned: boolean,
 };
 
 @observer
-class Header extends React.Component<Props> {
-  state: State;
+class Header extends React.Component<Props, State> {
   header: ?HTMLDivElement;
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      topAligned: true // whether we are at the top of the page
+      topAligned: true, // whether we are at the top of the page
     };
   }
 
@@ -53,9 +52,8 @@ class Header extends React.Component<Props> {
   }
 
   handleScroll = () => {
-    // $FlowIssue
     this.setState({
-      topAligned: window.scrollY === 0
+      topAligned: window.scrollY === 0,
     });
   };
 
@@ -80,7 +78,7 @@ class Header extends React.Component<Props> {
       app,
       sidebarCollapsed,
       toggleSidebar,
-      sidebarVisible
+      sidebarVisible,
     } = this.props;
     return (
       <HeaderWrapper
@@ -93,20 +91,20 @@ class Header extends React.Component<Props> {
         primary={app.primaryColor}
       >
         <Flex align="center">
-          {ui.isDesktop || !sidebarVisible
-            ? <StyledLink to="/">
-                <MFSLogo src={logo} />
-              </StyledLink>
-            : <MenuButtonContainer onClick={toggleSidebar}>
-                <MenuButton class="box-shadow-menu" />
-              </MenuButtonContainer>}
-          <Title>
-            {ui.isMobile ? shortTitle : title}
-          </Title>
+          {ui.isDesktop || !sidebarVisible ? (
+            <StyledLink to="/">
+              <MFSLogo src={logo} />
+            </StyledLink>
+          ) : (
+            <MenuButtonContainer onClick={toggleSidebar}>
+              <MenuButton class="box-shadow-menu" />
+            </MenuButtonContainer>
+          )}
+          <Title>{ui.isMobile ? shortTitle : title}</Title>
         </Flex>
         <Flex align="center" justify="center">
           {this.props.actions}
-          {app.projectConfirmed &&
+          {app.projectConfirmed && (
             <Flex align="center">
               <ClearButton
                 primary
@@ -118,7 +116,8 @@ class Header extends React.Component<Props> {
               </ClearButton>
               <VerticalBar />
               <Settings />
-            </Flex>}
+            </Flex>
+          )}
         </Flex>
       </HeaderWrapper>
     );
@@ -148,7 +147,7 @@ const MenuButton = styled.span`
   cursor: pointer;
   top: -8px;
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     width: 1em;
@@ -184,8 +183,7 @@ const HeaderWrapper = styled(Flex)`
     !topAligned &&
     `
     box-shadow: ${shadow} !important;
-  `}
-  transition: box-shadow 0.3s ease-in-out;
+  `} transition: box-shadow 0.3s ease-in-out;
 `;
 
 const MFSLogo = styled.img`

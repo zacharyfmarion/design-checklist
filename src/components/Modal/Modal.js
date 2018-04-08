@@ -1,12 +1,14 @@
 // @flow
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
+import UiStore from 'stores/UiStore';
 import ReactModal from 'react-modal';
 import ModalHeader from './components/ModalHeader';
 
 type Props = {
   children: React.Node,
-  onClose: Function
+  onClose: Function,
+  ui: UiStore,
 };
 
 const modalStyles = (isMobile: boolean) => ({
@@ -18,7 +20,7 @@ const modalStyles = (isMobile: boolean) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(212, 212, 212, 0.5)'
+    backgroundColor: 'rgba(212, 212, 212, 0.5)',
   },
   content: {
     position: 'static',
@@ -32,8 +34,8 @@ const modalStyles = (isMobile: boolean) => ({
     WebkitOverflowScrolling: 'touch',
     borderRadius: '4px',
     outline: 'none',
-    padding: '0'
-  }
+    padding: '0',
+  },
 });
 
 const Modal = ({ children, onClose, ui, ...otherProps }: Props) => {
