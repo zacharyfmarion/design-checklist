@@ -18,7 +18,11 @@ const encodeParams = params => {
     .join('&');
 };
 
-export const getRequest = (url, params = {}, options = {}): Promise<*> => {
+export const getRequest = (
+  url: string,
+  params = {},
+  options = {},
+): Promise<*> => {
   const opts = options || {};
   const base = opts.externalBase || baseUrl;
   const path = base + url + '?' + encodeParams(params);
@@ -33,7 +37,11 @@ export const getRequest = (url, params = {}, options = {}): Promise<*> => {
   });
 };
 
-export const postRequest = (url, params, options): Promise<*> => {
+export const postRequest = (
+  url: string,
+  params = {},
+  options = {},
+): Promise<*> => {
   const opts = options || {};
   const base = opts.externalBase || baseUrl;
   const path = base + url;
@@ -51,11 +59,3 @@ export const postRequest = (url, params, options): Promise<*> => {
       .catch(err => reject(err));
   });
 };
-
-export const gitlabGetRequest = (url, params) =>
-  getRequest(url, params, {
-    externalBase: 'https://coursework.cs.duke.edu/api/v4',
-    additionalHeaders: {
-      Authorization: `Bearer ${window.auth.accessToken || ''}`,
-    },
-  });

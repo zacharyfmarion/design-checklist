@@ -1,6 +1,6 @@
 // @flow
 // https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
-export function shadeColor(color, percent) {
+export function shadeColor(color: string, percent: number) {
   var f = parseInt(color.slice(1), 16),
     t = percent < 0 ? 0 : 255,
     p = percent < 0 ? percent * -1 : percent,

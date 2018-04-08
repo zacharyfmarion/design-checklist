@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Button as AntButton } from 'antd';
 import { observer, inject } from 'mobx-react';
 import styled from 'styled-components';
+import AppStore from 'stores/AppStore';
 import GoogleAnalytics from 'helpers/analytics';
 import { shadow } from 'constants/styles';
 
@@ -12,6 +13,7 @@ type Props = {
   label?: string,
   value?: string,
   children: React.Node,
+  app: AppStore,
 };
 
 const Button = ({

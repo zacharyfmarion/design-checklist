@@ -9,8 +9,16 @@ const TabPane = Tabs.TabPane;
 
 const Panel = Collapse.Panel;
 
+type Issue = {
+  duplications?: Array<Array<Object>>,
+  error?: Array<Object>,
+};
+
 type Props = {
   shadowed: boolean,
+  className?: string,
+  ui: UiStore,
+  error: Issue,
 };
 
 const Expand = ({ className }) => (
@@ -73,7 +81,7 @@ class CodeIssue extends React.Component<Props> {
   /**
    * Change the duplications from [[], []] to pairs of lines
    */
-  processDuplications = (duplications: Array) => {
+  processDuplications = (duplications: Array<Array<Object>>) => {
     return duplications.map(this.processDuplication);
   };
 

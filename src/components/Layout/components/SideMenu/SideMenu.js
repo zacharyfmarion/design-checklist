@@ -6,6 +6,8 @@ import { inject, observer } from 'mobx-react';
 import { shadow } from 'constants/styles';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
+import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
 import scenes from 'scenes';
 import styled from 'styled-components';
 import Button from 'components/Button';
@@ -15,11 +17,17 @@ type Props = {
   toggleCollapsed: Function,
   toggleCollapsed: Function,
   title: string,
+  ui: UiStore,
+  app: AppStore,
   location: Object,
 };
 
+type State = {
+  collapsed: boolean,
+};
+
 @observer
-class SideMenu extends React.Component<Props> {
+class SideMenu extends React.Component<Props, State> {
   state = {
     collapsed: false,
   };

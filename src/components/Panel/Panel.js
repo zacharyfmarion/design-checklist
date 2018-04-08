@@ -4,7 +4,11 @@ import styled from 'styled-components';
 import { shadow } from 'constants/styles';
 import { Flex } from 'reflexbox';
 
-const Panel = ({ children, ...other }) => (
+type Props = {
+  children: React.Node,
+};
+
+const Panel = ({ children, ...other }: Props) => (
   <Container auto {...other}>
     {children}
   </Container>
