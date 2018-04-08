@@ -12,9 +12,8 @@ export const app = new AppStore();
 const stores = { ui, app };
 window.stores = stores;
 
-const StoreProvider = ({ children }: { children: React.Node }) =>
-  <Provider {...stores}>
-    {children}
-  </Provider>;
+const StoreProvider = ({ children }: { children: React.Node }) => (
+  <Provider {...stores}>{children}</Provider>
+);
 
 export default StoreProvider;

@@ -24,7 +24,7 @@ export const getRequest = (url, params = {}, options = {}): Promise<*> => {
   return new Promise((resolve, reject) => {
     fetch(path, {
       method: 'GET',
-      headers: opts.additionalHeaders || {}
+      headers: opts.additionalHeaders || {},
     })
       .then(res => res.json())
       .then(json => resolve(json))
@@ -41,9 +41,9 @@ export const postRequest = (url, params, options): Promise<*> => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        ...opts.additionalHeaders
+        ...opts.additionalHeaders,
       },
-      body: encodeParams(params)
+      body: encodeParams(params),
     })
       .then(res => res.json())
       .then(json => resolve(json))
@@ -55,6 +55,6 @@ export const gitlabGetRequest = (url, params) =>
   getRequest(url, params, {
     externalBase: 'https://coursework.cs.duke.edu/api/v4',
     additionalHeaders: {
-      Authorization: `Bearer ${window.auth.accessToken || ''}`
-    }
+      Authorization: `Bearer ${window.auth.accessToken || ''}`,
+    },
   });

@@ -21,24 +21,24 @@ export default [
     path: '/checklist',
     icon: 'check-circle-o',
     name: 'Checklist',
-    component: Checklist
+    component: Checklist,
   },
   {
     path: '/duplication',
     icon: 'switcher',
     name: 'Code Duplication',
-    component: Duplication
+    component: Duplication,
   },
   {
     path: '/statistics',
     icon: 'share-alt',
     name: 'Statistics',
-    component: Statistics
+    component: Statistics,
   },
   {
     path: '/graphs',
     icon: 'area-chart',
     name: 'Graphs',
-    component: Graphs
-  }
+    component: Graphs,
+  },
 ];

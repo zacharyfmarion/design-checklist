@@ -4,5 +4,5 @@ export const categories = [
   'Flexibility',
   'Modularity',
   'Code Smells',
-  'Java Notes'
+  'Java Notes',
 ];

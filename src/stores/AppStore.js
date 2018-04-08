@@ -66,8 +66,8 @@ class AppStore {
     localStorage.setItem(
       `${sessionStoragePrefix}_settings`,
       JSON.stringify({
-        primary: this.primaryColor
-      })
+        primary: this.primaryColor,
+      }),
     );
   };
 
@@ -87,7 +87,7 @@ class AppStore {
     this.projectName = name;
     sessionStorage.setItem(
       `${sessionStoragePrefix}_projectName`,
-      name ? name : ''
+      name ? name : '',
     );
   };
 
@@ -95,7 +95,7 @@ class AppStore {
     // intialize the default filters
     this.formatDefaultFilters();
     const projectName = sessionStorage.getItem(
-      `${sessionStoragePrefix}_projectName`
+      `${sessionStoragePrefix}_projectName`,
     );
     const app = localStorage.getItem(`${sessionStoragePrefix}_settings`);
     if (app) {
