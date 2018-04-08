@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Collapse, Tag, Icon } from 'antd';
 import styled from 'styled-components';
@@ -10,13 +11,13 @@ const Panel = Collapse.Panel;
 
 type Props = {
   errors: Object,
-  category: string
+  category: string,
 };
 
 @observer
 class ErrorList extends React.Component<Props> {
   state = {
-    activeColumns: []
+    activeColumns: [],
   };
 
   renderSubcategories = (subcategory: string, i: number) => {
@@ -37,13 +38,15 @@ class ErrorList extends React.Component<Props> {
         }
         key={`${category}_${i}`}
       >
-        {subErrors.length > 0
-          ? subErrors.map((error, j) =>
-              <StyledError error={error} type="error" key={j} />
-            )
-          : <Flex>
-              <CheckIcon type="check-circle-o" />All done!
-            </Flex>}
+        {subErrors.length > 0 ? (
+          subErrors.map((error, j) => (
+            <StyledError error={error} type="error" key={j} />
+          ))
+        ) : (
+          <Flex>
+            <CheckIcon type="check-circle-o" />All done!
+          </Flex>
+        )}
       </Panel>
     );
   };
@@ -64,13 +67,15 @@ class ErrorList extends React.Component<Props> {
         }
         key={`${category}_0`}
       >
-        {categoryErrors.length > 0
-          ? categoryErrors.map((error, i) =>
-              <StyledError error={error} type="error" key={i} />
-            )
-          : <Flex>
-              <CheckIcon type="check-circle-o" />All done!
-            </Flex>}
+        {categoryErrors.length > 0 ? (
+          categoryErrors.map((error, i) => (
+            <StyledError error={error} type="error" key={i} />
+          ))
+        ) : (
+          <Flex>
+            <CheckIcon type="check-circle-o" />All done!
+          </Flex>
+        )}
       </Panel>
     );
   };
@@ -79,7 +84,7 @@ class ErrorList extends React.Component<Props> {
     const { category, errors } = this.props;
     const noSubcategories = errors instanceof Array;
     const columnsClicked = activeColumns.filter(
-      col => !this.state.activeColumns.includes(col)
+      col => !this.state.activeColumns.includes(col),
     );
     if (columnsClicked.length > 0) {
       const col = columnsClicked[0];
@@ -89,7 +94,7 @@ class ErrorList extends React.Component<Props> {
       GoogleAnalytics.event({
         category: 'Interaction',
         action: 'Subcategory expanded',
-        label
+        label,
       });
     }
     this.setState({ activeColumns });

@@ -1,3 +1,4 @@
+// @flow
 import { action, observable } from 'mobx';
 
 class WelcomePageStore {

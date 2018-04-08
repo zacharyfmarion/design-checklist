@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Table } from 'antd';
 import { inject, observer } from 'mobx-react';
@@ -11,38 +12,38 @@ import Panel from 'components/Panel';
 import StatisticsStore from './StatisticsStore';
 
 type Props = {
-  app: AppStore
+  app: AppStore,
 };
 
 const columns = [
   {
     title: 'Metric',
     dataIndex: 'metric',
-    key: 'metric'
+    key: 'metric',
   },
   {
     title: 'Value',
     dataIndex: 'value',
-    key: 'value'
-  }
+    key: 'value',
+  },
 ];
 
 const longestMethodsColumns = [
   {
     title: 'File Name',
     dataIndex: 'path',
-    key: 'path'
+    key: 'path',
   },
   {
     title: 'Method Name',
     dataIndex: 'methodname',
-    key: 'methodname'
+    key: 'methodname',
   },
   {
     title: 'Length',
     dataIndex: 'methodlen',
-    key: 'methodlen'
-  }
+    key: 'methodlen',
+  },
 ];
 
 @observer
@@ -91,11 +92,13 @@ class Statistics extends React.Component<Props> {
     return (
       <Layout>
         <Panel>
-          {this.store.loading
-            ? <LoadingContainer auto justify="center">
-                <Spin />
-              </LoadingContainer>
-            : this.renderStatistics()}
+          {this.store.loading ? (
+            <LoadingContainer auto justify="center">
+              <Spin />
+            </LoadingContainer>
+          ) : (
+            this.renderStatistics()
+          )}
         </Panel>
       </Layout>
     );
@@ -118,7 +121,7 @@ const StyledTable = styled(Table)`
     .ant-table-row td {
       font-family: monospace;
     }
-  `}
+  `};
 `;
 
 export default inject('app')(Statistics);

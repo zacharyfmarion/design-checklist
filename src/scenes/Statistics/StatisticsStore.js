@@ -1,3 +1,4 @@
+// @flow
 import { action, computed, observable } from 'mobx';
 import { getRequest } from 'helpers/api';
 import AppStore from 'stores/AppStore';
@@ -15,7 +16,7 @@ class StatisticsStore {
     'classes',
     'functions',
     'comment_lines',
-    'comment_lines_density'
+    'comment_lines_density',
   ];
   @observable
   nameMap: Object = {
@@ -24,7 +25,7 @@ class StatisticsStore {
     comment_lines: 'Number of comment lines',
     comment_lines_density: 'Density of comment lines',
     classes: 'Number of classes',
-    ncloc: 'Number of lines of code'
+    ncloc: 'Number of lines of code',
   };
 
   @computed
@@ -38,7 +39,7 @@ class StatisticsStore {
         value:
           key === 'comment_lines_density'
             ? this.data.measures[key].toString() + '%'
-            : this.data.measures[key]
+            : this.data.measures[key],
       }));
   }
 
@@ -48,7 +49,7 @@ class StatisticsStore {
       .map(({ path, methodlen, code, methodname, startline }) => ({
         path: `${this.stripFilename(path)}:${startline}`,
         methodlen,
-        methodname
+        methodname,
       }))
       .sort((a, b) => b.methodlen - a.methodlen);
   }
@@ -61,7 +62,7 @@ class StatisticsStore {
   getStatistics = async (): Promise<*> => {
     try {
       const data = await getRequest('/statistics', {
-        project: this.app.projectName
+        project: this.app.projectName,
       });
       this.data = data;
       this.loading = false;
@@ -69,7 +70,7 @@ class StatisticsStore {
       console.log(err);
       this.error = {
         title: 'Server Error',
-        message: `Your code's statistics could not be loaded from the server.`
+        message: `Your code's statistics could not be loaded from the server.`,
       };
       this.loading = false;
     }

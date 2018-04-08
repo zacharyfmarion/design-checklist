@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
@@ -6,7 +7,7 @@ import Text from 'components/Text';
 import styled from 'styled-components';
 
 const ServerError = inject('app')(
-  observer(({ app }) =>
+  observer(({ app }) => (
     <Server
       viewBox="-155 247 300 300"
       primaryColor={app.primaryColor}
@@ -229,19 +230,15 @@ const ServerError = inject('app')(
         </g>
       </g>
     </Server>
-  )
+  )),
 );
 
 const ErrorMessage = ({ title, message }) => {
   return (
     <Flex auto justify="center" align="center" column>
       <ServerError />
-      <h2>
-        {title}
-      </h2>
-      <Text>
-        {message}
-      </Text>
+      <h2>{title}</h2>
+      <Text>{message}</Text>
     </Flex>
   );
 };

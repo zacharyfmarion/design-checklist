@@ -1,3 +1,4 @@
+// @flow
 import { observable, computed, action } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
@@ -16,7 +17,7 @@ class ChecklistStore {
   @computed
   get activeSeverities() {
     return Object.keys(this.app.filters).filter(
-      severity => this.app.filters[severity]
+      severity => this.app.filters[severity],
     );
   }
 
@@ -43,7 +44,9 @@ class ChecklistStore {
     Object.keys(issues).forEach(key => {
       res[key] = {
         ...issues[key],
-        detail: issues[key].detail.sort(this.errorSort).filter(this.errorFilter)
+        detail: issues[key].detail
+          .sort(this.errorSort)
+          .filter(this.errorFilter),
       };
     });
     return res;
@@ -125,15 +128,15 @@ class ChecklistStore {
         `${sessionStoragePrefix}_overview`,
         JSON.stringify({
           data: res,
-          activeCategory: this.activeCategory
-        })
+          activeCategory: this.activeCategory,
+        }),
       );
     } catch (err) {
       console.log(err);
       this.error = 'Your project could not be found.';
       notification.open({
         message: 'Server Error',
-        description: `There was an error attempting to load your project's analysis. Please contact the developers for support.`
+        description: `There was an error attempting to load your project's analysis. Please contact the developers for support.`,
       });
       this.app.setProjectName(undefined);
       this.app.unconfirmProject();
@@ -151,7 +154,7 @@ class ChecklistStore {
       this.loading = false;
       app.confirmProject();
       message.warning(
-        'Using cached project data. Presh refresh to check for the latest analysis.'
+        'Using cached project data. Presh refresh to check for the latest analysis.',
       );
     }
   }

@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
@@ -7,11 +8,14 @@ const PrivateRoute = ({ component: Component, authed, ...rest }) => {
     <Route
       {...rest}
       render={props =>
-        authed === true
-          ? <Component {...props} />
-          : <Redirect
-              to={{ pathname: '/checklist', state: { from: props.location } }}
-            />}
+        authed === true ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{ pathname: '/checklist', state: { from: props.location } }}
+          />
+        )
+      }
     />
   );
 };

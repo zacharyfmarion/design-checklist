@@ -1,3 +1,4 @@
+// @flow
 /**
  * Function to help with making calls to the api - basically wraps fetch with some
  * API specific things

@@ -1,3 +1,4 @@
+// @flow
 /**
  * Configuration file for managing static details of the application
  */

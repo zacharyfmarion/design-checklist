@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Switch as AntSwitch } from 'antd';
 import { inject, observer } from 'mobx-react';

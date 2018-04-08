@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import styled from 'styled-components';
 import { Flex } from 'reflexbox';
@@ -15,7 +16,7 @@ import InfoModal from './components/InfoModal';
 
 type Props = {
   error: ?Object,
-  onConfirm: Function
+  onConfirm: Function,
 };
 
 @observer
@@ -60,13 +61,15 @@ class WelcomePage extends React.Component<Props> {
             icon="search"
             size="large"
           />
-          {this.store.tutorialVisible &&
+          {this.store.tutorialVisible && (
             <TutorialModal
               onClose={this.store.hideTutorial}
               fromError={!!error}
-            />}
-          {this.store.infoModalVisible &&
-            <InfoModal onClose={this.store.hideInfoModal} />}
+            />
+          )}
+          {this.store.infoModalVisible && (
+            <InfoModal onClose={this.store.hideInfoModal} />
+          )}
         </Flex>
       </PaddedLayout>
     );

@@ -1,3 +1,4 @@
+// @flow
 /**
  * App store. Code here deals with global application state (use with disgression!)
  */

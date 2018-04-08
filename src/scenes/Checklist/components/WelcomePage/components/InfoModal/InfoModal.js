@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import styled from 'styled-components';
 import Text from 'components/Text';
@@ -5,7 +6,7 @@ import Modal, { ModalHeader, ModalBody } from 'components/Modal';
 
 type Props = {
   onClose: Function,
-  fromError: boolean
+  fromError: boolean,
 };
 
 class InfoModal extends React.Component<Props> {

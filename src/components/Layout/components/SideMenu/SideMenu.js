@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Menu, Icon } from 'antd';
 import { Flex } from 'reflexbox';
@@ -14,13 +15,13 @@ type Props = {
   toggleCollapsed: Function,
   toggleCollapsed: Function,
   title: string,
-  location: Object
+  location: Object,
 };
 
 @observer
 class SideMenu extends React.Component<Props> {
   state = {
-    collapsed: false
+    collapsed: false,
   };
 
   getBasePath = () => {
@@ -55,10 +56,7 @@ class SideMenu extends React.Component<Props> {
           collapsed={collapsed}
         >
           <HeaderIcon type="code-o" collapsed={collapsed} />
-          {!collapsed &&
-            <ProjectTitle>
-              {title}
-            </ProjectTitle>}
+          {!collapsed && <ProjectTitle>{title}</ProjectTitle>}
         </SidebarHeader>
         <Flex auto>
           <StyledMenu
@@ -69,26 +67,25 @@ class SideMenu extends React.Component<Props> {
             inlineCollapsed={ui.isDesktop ? collapsed : false}
             primary={app.primaryColor}
           >
-            {scenes.map((scene, i) =>
+            {scenes.map((scene, i) => (
               <Menu.Item key={scene.path}>
                 <Link to={scene.path} onClick={this.handleItemClick}>
                   <Icon type={scene.icon} />
-                  <span>
-                    {scene.name}
-                  </span>
+                  <span>{scene.name}</span>
                 </Link>
               </Menu.Item>
-            )}
+            ))}
           </StyledMenu>
         </Flex>
-        {ui.isDesktop &&
+        {ui.isDesktop && (
           <CollapseButton
             onClick={toggleCollapsed}
             icon={collapsed ? 'menu-unfold' : 'menu-fold'}
             primaryColor={app.primaryColor}
           >
             {!collapsed ? `Collapse Menu` : ``}
-          </CollapseButton>}
+          </CollapseButton>
+        )}
       </SidebarContainer>
     );
   }
@@ -106,11 +103,11 @@ const HeaderIcon = styled(Icon)`
     !collapsed &&
     `
     margin-right: 10px;
-  `}
+  `};
 `;
 
 const SidebarHeader = styled(Flex)`
-  height: 75px; 
+  height: 75px;
   z-index: 2;
   background: white;
   box-shadow: ${shadow};
@@ -118,7 +115,7 @@ const SidebarHeader = styled(Flex)`
     !collapsed &&
     `
     padding: 0 15px;
-  `}
+  `};
 `;
 
 const CollapseButton = styled(Button)`
@@ -143,7 +140,7 @@ const CollapseButton = styled(Button)`
     border-color: ${primaryColor};
     color: ${primaryColor};
   }
-  `}
+  `};
 `;
 
 const StyledMenu = styled(Menu)`
@@ -163,7 +160,7 @@ const StyledMenu = styled(Menu)`
         line-height: 52px;
       } 
     `}
-  `}
+  `};
 `;
 
 const SidebarContainer = styled(Flex)`

@@ -1,3 +1,4 @@
+// @flow
 import { action, computed, observable } from 'mobx';
 import { getRequest } from 'helpers/api';
 import { sessionStoragePrefix } from 'constants/app';
@@ -22,7 +23,7 @@ class DuplicationStore {
         for (let duplication of entry.duplications) {
           res.push({
             ...entry,
-            duplications: [duplication]
+            duplications: [duplication],
           });
         }
       }
@@ -41,19 +42,19 @@ class DuplicationStore {
   getDuplications = async (): Promise<*> => {
     try {
       const data = await getRequest('/duplications', {
-        project: this.app.projectName
+        project: this.app.projectName,
       });
       this.data = data;
       sessionStorage.setItem(
         `${sessionStoragePrefix}_duplications`,
-        JSON.stringify(data)
+        JSON.stringify(data),
       );
       this.loading = false;
     } catch (err) {
       console.log(err);
       this.error = {
         title: 'Server Error',
-        message: 'Your code duplications could not be loaded from the server.'
+        message: 'Your code duplications could not be loaded from the server.',
       };
       this.loading = false;
     }
@@ -62,14 +63,14 @@ class DuplicationStore {
   constructor(app: AppStore) {
     this.app = app;
     const cached = sessionStorage.getItem(
-      `${sessionStoragePrefix}_duplications`
+      `${sessionStoragePrefix}_duplications`,
     );
     if (cached) {
       const data = JSON.parse(cached);
       this.data = data;
       this.loading = false;
       message.warning(
-        'Using cached project data. Presh refresh to check for the latest analysis.'
+        'Using cached project data. Presh refresh to check for the latest analysis.',
       );
     }
   }

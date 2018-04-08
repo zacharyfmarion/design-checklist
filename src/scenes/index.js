@@ -1,3 +1,4 @@
+// @flow
 /**
  * Defines all the scences that will be active and also assigns
  * each scene useful information that is used in other places,

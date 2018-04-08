@@ -1,3 +1,4 @@
+// @flow
 const capitalize = (string: string) =>
   string
     .split(' ')

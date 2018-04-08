@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Icon } from 'antd';
 import styled from 'styled-components';
@@ -12,12 +13,12 @@ type Props = {
   onEnter?: Function,
   action?: React.Node,
   placeholder?: string,
-  className?: string
+  className?: string,
 };
 
 const fontSizes = {
   normal: '14px',
-  large: '20px'
+  large: '20px',
 };
 
 class Input extends React.Component<Props> {
@@ -38,14 +39,15 @@ class Input extends React.Component<Props> {
       action,
       placeholder,
       size = 'normal',
-      className
+      className,
     } = this.props;
     return (
       <InputContainer className={className}>
-        {icon &&
+        {icon && (
           <IconContainer justify="center" align="center">
             <StyledIcon type={icon} size={size} />
-          </IconContainer>}
+          </IconContainer>
+        )}
         <StyledInput
           type="text"
           hasIcon={!!icon}
@@ -56,10 +58,7 @@ class Input extends React.Component<Props> {
           onChange={this.handleChange}
           className="input-instance"
         />
-        {action &&
-          <ActionContainer>
-            {action}
-          </ActionContainer>}
+        {action && <ActionContainer>{action}</ActionContainer>}
       </InputContainer>
     );
   }
@@ -79,7 +78,9 @@ const IconContainer = styled(Flex)`
   bottom: 0;
 `;
 
-const InputContainer = styled.div`position: relative;`;
+const InputContainer = styled.div`
+  position: relative;
+`;
 
 const StyledIcon = styled(Icon)`
   font-size: 19px;

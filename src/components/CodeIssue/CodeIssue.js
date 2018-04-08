@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
@@ -9,10 +10,10 @@ const TabPane = Tabs.TabPane;
 const Panel = Collapse.Panel;
 
 type Props = {
-  shadowed: boolean
+  shadowed: boolean,
 };
 
-const Expand = ({ className }) =>
+const Expand = ({ className }) => (
   <Flex align="center" justify="center" className={className}>
     <svg
       aria-hidden="true"
@@ -26,7 +27,8 @@ const Expand = ({ className }) =>
         d="M11.5 7.5L14 10c0 .55-.45 1-1 1H9v-1h3.5l-2-2h-7l-2 2H5v1H1c-.55 0-1-.45-1-1l2.5-2.5L0 5c0-.55.45-1 1-1h4v1H1.5l2 2h7l2-2H9V4h4c.55 0 1 .45 1 1l-2.5 2.5zM6 6h2V3h2L7 0 4 3h2v3zm2 3H6v3H4l3 3 3-3H8V9z"
       />
     </svg>
-  </Flex>;
+  </Flex>
+);
 
 @observer
 class CodeIssue extends React.Component<Props> {
@@ -63,7 +65,7 @@ class CodeIssue extends React.Component<Props> {
     return duplications[0].map((file, i) => {
       return Math.max.apply(
         Math,
-        duplications.map(duplication => duplication[i].endLine)
+        duplications.map(duplication => duplication[i].endLine),
       );
     });
   }
@@ -85,7 +87,7 @@ class CodeIssue extends React.Component<Props> {
         if (!lines[j]) lines.push([]);
         lines[j].push({
           lineNumber: startLine + j,
-          code
+          code,
         });
       }
     }
@@ -107,13 +109,13 @@ class CodeIssue extends React.Component<Props> {
   renderDuplication = (dup, maxLines, dupNumber) => {
     const { ui, error: { duplications } } = this.props;
     const leastWhitespaces = duplications[dupNumber].map(item =>
-      this.getDupLeastWhitespace(item.code)
+      this.getDupLeastWhitespace(item.code),
     );
     return (
       <Flex column auto>
-        {dup.map((lines, i) =>
+        {dup.map((lines, i) => (
           <Flex auto>
-            {lines.map((line, j) =>
+            {lines.map((line, j) => (
               <LineWrapper numFiles={ui.isDesktop ? dup[0].length : 1}>
                 <LineNumber
                   align="center"
@@ -130,13 +132,13 @@ class CodeIssue extends React.Component<Props> {
                   auto
                   key={[i, j]}
                   dangerouslySetInnerHTML={{
-                    __html: line.code.substring(leastWhitespaces[j])
+                    __html: line.code.substring(leastWhitespaces[j]),
                   }}
                 />
               </LineWrapper>
-            )}
+            ))}
           </Flex>
-        )}
+        ))}
       </Flex>
     );
   };
@@ -146,7 +148,7 @@ class CodeIssue extends React.Component<Props> {
     const leastWhitespace = this.getLeastWhitespace(
       duplications.map(duplication => {
         return { code: duplication[fileIndex].code };
-      })
+      }),
     );
     return (
       <Flex column auto>
@@ -154,7 +156,7 @@ class CodeIssue extends React.Component<Props> {
           const code = duplication[fileIndex].code;
           return (
             <Flex column auto>
-              {code.map((line, j) =>
+              {code.map((line, j) => (
                 <LineWrapper numFiles={ui.isDesktop ? duplication.length : 1}>
                   <LineNumber
                     align="center"
@@ -167,16 +169,17 @@ class CodeIssue extends React.Component<Props> {
                     auto
                     key={[i, j]}
                     dangerouslySetInnerHTML={{
-                      __html: line.substring(leastWhitespace)
+                      __html: line.substring(leastWhitespace),
                     }}
                   />
                 </LineWrapper>
-              )}
-              {i < duplications.length - 1 &&
+              ))}
+              {i < duplications.length - 1 && (
                 <DuplicationSeparator>
                   <PaddedExpand width={maxLine.toString.length * 5 + 30} />
                   <SeparatorMessage>Collapsed lines...</SeparatorMessage>
-                </DuplicationSeparator>}
+                </DuplicationSeparator>
+              )}
             </Flex>
           );
         })}
@@ -192,14 +195,14 @@ class CodeIssue extends React.Component<Props> {
         onNextClick={() => console.log('next')}
         onPrevClick={() => console.log('prev')}
       >
-        {duplications[0].map((dup, i) =>
+        {duplications[0].map((dup, i) => (
           <DuplicationTabPane
             tab={this.stripFilenameMobile(dup.loc)}
             key={`${i}`}
           >
             {this.renderMobileDuplication(i, maxLines[i])}
           </DuplicationTabPane>
-        )}
+        ))}
       </DuplicationTabs>
     );
   };
@@ -219,11 +222,12 @@ class CodeIssue extends React.Component<Props> {
               <Duplication>
                 {this.renderDuplication(duplication, maxLines, i)}
               </Duplication>
-              {i < processedDups.length - 1 &&
+              {i < processedDups.length - 1 && (
                 <DuplicationSeparator>
                   <PaddedExpand width={maxLines[0].toString.length * 5 + 30} />
                   <SeparatorMessage>Collapsed lines...</SeparatorMessage>
-                </DuplicationSeparator>}
+                </DuplicationSeparator>
+              )}
             </Flex>
           );
         })}
@@ -238,7 +242,7 @@ class CodeIssue extends React.Component<Props> {
     return code.map((issue, i) => {
       return (
         <Flex column key={i}>
-          {issue.code.map((line, j) =>
+          {issue.code.map((line, j) => (
             <Flex key={`${i}-${j}`}>
               <LineNumber
                 align="center"
@@ -250,18 +254,19 @@ class CodeIssue extends React.Component<Props> {
               <Line
                 key={issue.textRange.startLine + j}
                 dangerouslySetInnerHTML={{
-                  __html: line.substring(this.getLeastWhitespace(code))
+                  __html: line.substring(this.getLeastWhitespace(code)),
                 }}
               />
             </Flex>
-          )}
+          ))}
           {i + 1 < code.length &&
             code[i + 1].textRange.startLine !==
-              code[i].textRange.startLine + 1 &&
-            <DuplicationSeparator>
-              <PaddedExpand width={maxLine.toString().length * 5 + 30} />
-              <SeparatorMessage>Collapsed lines...</SeparatorMessage>
-            </DuplicationSeparator>}
+              code[i].textRange.startLine + 1 && (
+              <DuplicationSeparator>
+                <PaddedExpand width={maxLine.toString().length * 5 + 30} />
+                <SeparatorMessage>Collapsed lines...</SeparatorMessage>
+              </DuplicationSeparator>
+            )}
         </Flex>
       );
     });
@@ -272,7 +277,7 @@ class CodeIssue extends React.Component<Props> {
       error: { path, severity, message, code, duplications },
       shadowed,
       className,
-      ui
+      ui,
     } = this.props;
     return (
       <CodeCollapse
@@ -286,26 +291,29 @@ class CodeIssue extends React.Component<Props> {
           header={
             <RuleHeader column>
               <Pathname>
-                {duplications
-                  ? <Flex column={!ui.isDesktop || duplications[0].length > 3}>
-                      {duplications[0].map(file =>
-                        <PathTitle
-                          numFiles={
-                            ui.isDesktop && !duplications[0].length > 3
-                              ? duplications[0].length
-                              : 1
-                          }
-                        >
-                          {this.stripFilename(file.loc)}
-                        </PathTitle>
-                      )}
-                    </Flex>
-                  : `${this.stripFilename(path)} - ${severity.toUpperCase()}`}
+                {duplications ? (
+                  <Flex column={!ui.isDesktop || duplications[0].length > 3}>
+                    {duplications[0].map(file => (
+                      <PathTitle
+                        numFiles={
+                          ui.isDesktop && !duplications[0].length > 3
+                            ? duplications[0].length
+                            : 1
+                        }
+                      >
+                        {this.stripFilename(file.loc)}
+                      </PathTitle>
+                    ))}
+                  </Flex>
+                ) : (
+                  `${this.stripFilename(path)} - ${severity.toUpperCase()}`
+                )}
               </Pathname>
               <ErrorMessage>
                 {duplications
-                  ? `${duplications[0]
-                      .length} duplicated blocks of code must be removed.`
+                  ? `${
+                      duplications[0].length
+                    } duplicated blocks of code must be removed.`
                   : message}
               </ErrorMessage>
             </RuleHeader>
@@ -333,8 +341,7 @@ const StyledPanel = styled(Panel)`
   }
 `;
 
-const DuplicationTabPane = styled(TabPane)`
-`;
+const DuplicationTabPane = styled(TabPane)``;
 
 const DuplicationTabs = styled(Tabs)`
   .ant-tabs-nav-scroll {
@@ -375,13 +382,13 @@ const DuplicationSeparator = styled(Flex)`
   background: #f1f8ff;
 `;
 
-const Duplication = styled(Flex)`
+const Duplication = styled(Flex)``;
+
+const ErrorMessage = styled.span`
+  color: #f4766e;
 `;
 
-const ErrorMessage = styled.span`color: #f4766e;`;
-
-const RuleHeader = styled(Flex)`
-`;
+const RuleHeader = styled(Flex)``;
 
 const LineNumber = styled(Flex)`
   font-family: monospace;

@@ -1,3 +1,4 @@
+// @flow
 // https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
 export function shadeColor(color, percent) {
   var f = parseInt(color.slice(1), 16),

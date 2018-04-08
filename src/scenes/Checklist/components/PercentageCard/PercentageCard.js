@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { shadeColor } from 'helpers/colors';
@@ -26,13 +27,11 @@ const PercentageCard = ({
   onClick,
   numIssues,
   ui,
-  app
+  app,
 }) => {
   const mapping = percentMappings(percent);
   const categoryTitle = (
-    <CategoryTitle active={active}>
-      {category}
-    </CategoryTitle>
+    <CategoryTitle active={active}>{category}</CategoryTitle>
   );
   return (
     <PercentContainer
@@ -54,16 +53,16 @@ const PercentageCard = ({
           color={mapping.color}
         />
         {percent < 100 &&
-          ui.isDesktop &&
-          <StyledRate
-            disabled
-            defaultValue={mapping.stars}
-            color={mapping.color}
-          />}
-        {ui.isDesktop > 0 &&
-          <NumIssues borderColor={app.primaryColor}>
-            {numIssues}
-          </NumIssues>}
+          ui.isDesktop && (
+            <StyledRate
+              disabled
+              defaultValue={mapping.stars}
+              color={mapping.color}
+            />
+          )}
+        {ui.isDesktop > 0 && (
+          <NumIssues borderColor={app.primaryColor}>{numIssues}</NumIssues>
+        )}
       </ProgressWrapper>
       {ui.isDesktop && categoryTitle}
     </PercentContainer>
@@ -92,7 +91,10 @@ const StyledRate = styled(Rate)`
   }
 `;
 
-const ProgressWrapper = styled(Flex)`position: relative; width: 100%;`;
+const ProgressWrapper = styled(Flex)`
+  position: relative;
+  width: 100%;
+`;
 
 const StyledProgress = styled(Progress)`
   .ant-progress-text {
@@ -107,7 +109,9 @@ const StyledProgress = styled(Progress)`
   }
 `;
 
-const CategoryTitle = styled.h2`margin-top: 5px;`;
+const CategoryTitle = styled.h2`
+  margin-top: 5px;
+`;
 
 const PercentContainer = styled(Flex)`
   cursor: pointer;
@@ -132,7 +136,7 @@ const PercentContainer = styled(Flex)`
       `
       background: #e8e8e8;
     `}
-  `}
+  `};
 `;
 
 export default inject('ui', 'app')(observer(PercentageCard));

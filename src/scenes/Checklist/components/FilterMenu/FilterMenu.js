@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Popover } from 'antd';
 import { Flex } from 'reflexbox';
@@ -8,7 +9,7 @@ import Switch from 'components/Switch';
 import Text from 'components/Text';
 
 type Props = {
-  className?: string
+  className?: string,
 };
 
 @observer
@@ -21,9 +22,7 @@ class FilterMenu extends React.Component<Props> {
           const handleChange = checked => app.changeFilter(severity, checked);
           return (
             <OptionRow justify="space-between" key={i}>
-              <Text>
-                {severity.toUpperCase()}
-              </Text>
+              <Text>{severity.toUpperCase()}</Text>
               <Switch checked={app.filters[severity]} onChange={handleChange} />
             </OptionRow>
           );

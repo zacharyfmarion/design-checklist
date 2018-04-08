@@ -1,3 +1,4 @@
+// @flow
 import { action, computed, observable } from 'mobx';
 import { getRequest } from 'helpers/api';
 import AppStore from 'stores/AppStore';
@@ -15,7 +16,7 @@ class GraphsStore {
     return Object.keys(authors).map(author => {
       return {
         name: author,
-        commits: authors[author].numofcommits
+        commits: authors[author].numofcommits,
       };
     });
   }
@@ -29,7 +30,7 @@ class GraphsStore {
   getCommits = async (): Promise<*> => {
     try {
       const data = await getRequest('/commitsonar', {
-        project: this.app.projectName
+        project: this.app.projectName,
       });
       this.commits = data;
       this.loading = false;
@@ -38,7 +39,7 @@ class GraphsStore {
       this.loading = false;
       this.error = {
         title: 'Server Error',
-        message: 'Your commit data could not be loaded from the server.'
+        message: 'Your commit data could not be loaded from the server.',
       };
     }
   };

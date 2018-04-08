@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import Layout from 'components/Layout';
 import styled from 'styled-components';
@@ -14,7 +15,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend
+  Legend,
 } from 'recharts';
 import GraphsStore from './GraphsStore';
 
@@ -40,22 +41,23 @@ class Graphs extends React.Component<{}> {
       return <ErrorMessage title={error.title} message={error.message} />;
     }
     return (
-      this.store.commits &&
-      <ChartWrapper column>
-        <Flex justify="center" align="center">
-          <h2 color={app.primaryColor}>Number of Commits</h2>
-        </Flex>
-        <ResponsiveContainer>
-          <BarChart width={600} height={300} data={this.store.data}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="commits" fill={app.primaryColor} />
-          </BarChart>
-        </ResponsiveContainer>
-      </ChartWrapper>
+      this.store.commits && (
+        <ChartWrapper column>
+          <Flex justify="center" align="center">
+            <h2 color={app.primaryColor}>Number of Commits</h2>
+          </Flex>
+          <ResponsiveContainer>
+            <BarChart width={600} height={300} data={this.store.data}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="commits" fill={app.primaryColor} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartWrapper>
+      )
     );
   };
 
@@ -63,11 +65,13 @@ class Graphs extends React.Component<{}> {
     return (
       <Layout>
         <Panel column auto>
-          {this.store.loading
-            ? <LoadingContainer auto justify="center">
-                <Spin />
-              </LoadingContainer>
-            : this.renderGraph()}
+          {this.store.loading ? (
+            <LoadingContainer auto justify="center">
+              <Spin />
+            </LoadingContainer>
+          ) : (
+            this.renderGraph()
+          )}
         </Panel>
       </Layout>
     );

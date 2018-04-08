@@ -1,3 +1,4 @@
+// @flow
 export const severities = ['fail', 'high', 'medium', 'low', 'info'];
 export const categories = [
   'Communication',

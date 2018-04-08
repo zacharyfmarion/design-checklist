@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Tabs } from 'antd';
 import styled from 'styled-components';
@@ -12,7 +13,7 @@ const TabPane = Tabs.TabPane;
 
 type Props = {
   onClose: Function,
-  fromError: boolean
+  fromError: boolean,
 };
 
 class TutorialModal extends React.Component<Props> {
@@ -33,7 +34,7 @@ class TutorialModal extends React.Component<Props> {
             complete.
           </p>
           <CodeTabs defaultActiveKey={'0'}>
-            {files.map((file, i) =>
+            {files.map((file, i) => (
               <TabPane tab={file.name} key={`${i}`}>
                 <AceEditor
                   mode={file.mode}
@@ -45,7 +46,7 @@ class TutorialModal extends React.Component<Props> {
                   value={file.code}
                 />
               </TabPane>
-            )}
+            ))}
           </CodeTabs>
         </ModalBody>
       </Modal>
@@ -53,7 +54,9 @@ class TutorialModal extends React.Component<Props> {
   }
 }
 
-const Mono = styled.span`font-family: monospace;`;
+const Mono = styled.span`
+  font-family: monospace;
+`;
 
 const CodeTabs = styled(Tabs)`
   .ant-tabs-bar {

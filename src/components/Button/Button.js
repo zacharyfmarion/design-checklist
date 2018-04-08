@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { Button as AntButton } from 'antd';
 import { observer, inject } from 'mobx-react';
@@ -10,7 +11,7 @@ type Props = {
   action?: string,
   label?: string,
   value?: string,
-  children: React.Node
+  children: React.Node,
 };
 
 const Button = ({
@@ -28,7 +29,7 @@ const Button = ({
         category: 'Interaction',
         action,
         label,
-        value
+        value,
       });
     }
     if (onClick) {
@@ -49,7 +50,7 @@ const Button = ({
 const StyledButton = styled(AntButton)`
   height: 38px;
   padding: 0 20px;
-  box-shadow: ${shadow}; 
+  box-shadow: ${shadow};
   text-transform: uppercase;
   font-size: 14px;
   ${({ primary, primaryColor }) =>
@@ -71,7 +72,7 @@ const StyledButton = styled(AntButton)`
       border-color: ${primaryColor};
       color: ${primaryColor};
     }
-  `}
+  `};
 `;
 
 export default inject('app')(observer(Button));

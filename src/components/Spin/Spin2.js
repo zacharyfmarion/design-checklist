@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import styled from 'styled-components';
 
@@ -8,7 +9,7 @@ import styled from 'styled-components';
     pumpkin spice (orange): #FD971F 
 */
 
-const Spin = () =>
+const Spin = () => (
   <Container className="loader-container">
     <div className="group-1">
       <div className="line line1">
@@ -61,7 +62,8 @@ const Spin = () =>
         <div className="dash dash-1 div" />
       </div>
     </div>
-  </Container>;
+  </Container>
+);
 
 const colors = {
   orchid: '#f92672',
@@ -69,7 +71,7 @@ const colors = {
   henn1nk: '#a6e22e',
   spice: '#fd971f',
   classColour: '#ffe792',
-  parColour: '#f8f8f2'
+  parColour: '#f8f8f2',
 };
 
 const Container = styled.div`

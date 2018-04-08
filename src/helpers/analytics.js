@@ -1,3 +1,4 @@
+// @flow
 import GoogleAnalytics from 'react-ga';
 // Fake analytics class with stubbed methods so that data is
 // not sent in dev mode

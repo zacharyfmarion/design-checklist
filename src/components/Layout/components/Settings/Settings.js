@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import styled from 'styled-components';
 import { Select, Popover } from 'antd';
@@ -13,19 +14,19 @@ const Option = Select.Option;
 @observer
 class Settings extends React.Component<Props> {
   state = {
-    customHex: ''
+    customHex: '',
   };
 
   handleCustomHexChange = (value: string) => {
     this.setState({
-      customHex: value
+      customHex: value,
     });
   };
 
   renderContent = () => {
     const { app } = this.props;
     const activeColor = themeColors.find(
-      theme => theme.color === app.primaryColor
+      theme => theme.color === app.primaryColor,
     );
     const changeCustom = () => app.changeTheme(this.state.customHex);
     return (
@@ -35,19 +36,18 @@ class Settings extends React.Component<Props> {
           value={activeColor ? activeColor.color : 'custom'}
           onChange={app.changeTheme}
         >
-          {themeColors.map((theme, i) =>
+          {themeColors.map((theme, i) => (
             <Option value={theme.color} key={i}>
               <ColorSwab color={theme.color} />
-              <span>
-                {theme.title}
-              </span>
+              <span>{theme.title}</span>
             </Option>
-          )}
-          {!activeColor &&
+          ))}
+          {!activeColor && (
             <Option value="custom" key={100}>
               <ColorSwab color={app.primaryColor} />
               <span>Custom</span>
-            </Option>}
+            </Option>
+          )}
         </ThemeSelect>
         <Header primary={app.primaryColor}>Custom Theme</Header>
         <HexInput

@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { inject, observer } from 'mobx-react';
@@ -21,7 +22,7 @@ import PercentageCard from './components/PercentageCard';
 
 type Props = {
   ui: UiStore,
-  app: AppStore
+  app: AppStore,
 };
 
 @observer
@@ -44,19 +45,20 @@ class Checklist extends React.Component<Props> {
   renderHeaderActions = () => {
     const { ui } = this.props;
     return (
-      !this.store.loading &&
-      <Flex>
-        <StyledFilterMenu />
-        <Button
-          primary
-          onClick={this.store.refreshProject}
-          icon="reload"
-          action="clicked refresh"
-          label="Checklist"
-        >
-          {ui.isDesktop && `Refresh`}
-        </Button>
-      </Flex>
+      !this.store.loading && (
+        <Flex>
+          <StyledFilterMenu />
+          <Button
+            primary
+            onClick={this.store.refreshProject}
+            icon="reload"
+            action="clicked refresh"
+            label="Checklist"
+          >
+            {ui.isDesktop && `Refresh`}
+          </Button>
+        </Flex>
+      )
     );
   };
 
@@ -64,7 +66,7 @@ class Checklist extends React.Component<Props> {
     GoogleAnalytics.event({
       category: 'Interaction',
       action: 'clicked cateogory',
-      label: key
+      label: key,
     });
     this.store.changeCategory(key);
   };
@@ -74,7 +76,7 @@ class Checklist extends React.Component<Props> {
     GoogleAnalytics.event({
       category: 'Interaction',
       action: 'entered project name',
-      label: app.projectName
+      label: app.projectName,
     });
     this.store.confirmProject();
   };
@@ -100,12 +102,13 @@ class Checklist extends React.Component<Props> {
               );
             })}
         </PercentageRow>
-        {this.store.data &&
+        {this.store.data && (
           <StyledErrorList
             category={this.store.activeCategory}
             active={this.store.activeCategory}
             errors={this.store.activeCategoryIssues}
-          />}
+          />
+        )}
       </div>
     );
   };
@@ -142,7 +145,7 @@ const PercentageRow = styled(Flex)`
     box-shadow: ${shadow};
     margin: 0 10px 20px 10px;
     padding: 8px 0;
-  `}
+  `};
 `;
 
 const LoadingWrapper = styled(Flex)`

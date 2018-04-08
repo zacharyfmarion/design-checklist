@@ -1,3 +1,4 @@
+// @flow
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
@@ -28,18 +29,19 @@ class Duplication extends React.Component<Props> {
   renderHeaderActions = () => {
     const { ui } = this.props;
     return (
-      !this.store.loading &&
-      <Flex>
-        <Button
-          primary
-          onClick={this.store.refresh}
-          icon="reload"
-          action="clicked refresh"
-          label="Duplication"
-        >
-          {ui.isDesktop && `Refresh`}
-        </Button>
-      </Flex>
+      !this.store.loading && (
+        <Flex>
+          <Button
+            primary
+            onClick={this.store.refresh}
+            icon="reload"
+            action="clicked refresh"
+            label="Duplication"
+          >
+            {ui.isDesktop && `Refresh`}
+          </Button>
+        </Flex>
+      )
     );
   };
 
@@ -48,13 +50,15 @@ class Duplication extends React.Component<Props> {
     if (error) {
       return <ErrorMessage title={error.title} message={error.message} />;
     }
-    return this.store.duplications.length > 0
-      ? this.store.duplications.map(error =>
-          <StyledError error={error} shadowed />
-        )
-      : <Flex auto align="center" justify="center">
-          <Title>No duplications</Title>
-        </Flex>;
+    return this.store.duplications.length > 0 ? (
+      this.store.duplications.map(error => (
+        <StyledError error={error} shadowed />
+      ))
+    ) : (
+      <Flex auto align="center" justify="center">
+        <Title>No duplications</Title>
+      </Flex>
+    );
   };
 
   render() {
@@ -63,11 +67,13 @@ class Duplication extends React.Component<Props> {
     return (
       <Layout actions={this.renderHeaderActions()}>
         <Wrapper column>
-          {this.store.loading
-            ? <LoadingContainer auto justify="center">
-                <Spin />
-              </LoadingContainer>
-            : this.renderDuplications()}
+          {this.store.loading ? (
+            <LoadingContainer auto justify="center">
+              <Spin />
+            </LoadingContainer>
+          ) : (
+            this.renderDuplications()
+          )}
         </Wrapper>
       </Layout>
     );
