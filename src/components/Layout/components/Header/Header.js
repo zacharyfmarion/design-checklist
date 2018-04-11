@@ -112,7 +112,7 @@ class Header extends React.Component<Props, State> {
                 icon="rollback"
                 action="clicked new project"
               >
-                {!ui.isMobile && `New Project`}
+                {!ui.isMobile && `Change Project`}
               </ClearButton>
               <VerticalBar />
               <Settings />

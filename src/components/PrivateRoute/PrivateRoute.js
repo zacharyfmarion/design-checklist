@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
 type Props = {
-  component: React.Component,
+  component: React.Node,
   authed: boolean,
 };
 

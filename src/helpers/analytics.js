@@ -4,8 +4,8 @@ import GoogleAnalytics from 'react-ga';
 // not sent in dev mode
 class FakeAnalytics {
   static initialize(id: string, options: Object) {}
-  static set() {}
-  static pageview() {}
+  static set(options: Object) {}
+  static pageview(page: string) {}
   static event(options: Object) {}
 }
 

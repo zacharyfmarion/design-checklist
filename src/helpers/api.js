@@ -20,8 +20,8 @@ const encodeParams = params => {
 
 export const getRequest = (
   url: string,
-  params = {},
-  options = {},
+  params: Object = {},
+  options: Object = {},
 ): Promise<*> => {
   const opts = options || {};
   const base = opts.externalBase || baseUrl;
@@ -39,8 +39,8 @@ export const getRequest = (
 
 export const postRequest = (
   url: string,
-  params = {},
-  options = {},
+  params: Object = {},
+  options: Object = {},
 ): Promise<*> => {
   const opts = options || {};
   const base = opts.externalBase || baseUrl;

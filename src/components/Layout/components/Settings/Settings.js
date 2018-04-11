@@ -11,8 +11,12 @@ import Input from 'components/Input';
 
 const Option = Select.Option;
 
+type State = {
+  customHex: string,
+};
+
 @observer
-class Settings extends React.Component<Props> {
+class Settings extends React.Component<Props, State> {
   state = {
     customHex: '',
   };
