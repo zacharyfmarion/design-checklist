@@ -14,8 +14,12 @@ type Props = {
   category: string,
 };
 
+type State = {
+  activeColumns: Array<string>,
+};
+
 @observer
-class ErrorList extends React.Component<Props> {
+class ErrorList extends React.Component<Props, State> {
   state = {
     activeColumns: [],
   };

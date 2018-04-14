@@ -3,11 +3,23 @@ import { action, computed, observable } from 'mobx';
 import { getRequest } from 'helpers/api';
 import AppStore from 'stores/AppStore';
 
+type Data = {
+  measures: {
+    classes: string,
+    comment_lines: string,
+    comment_lines_density: string,
+    directories: string,
+    functions: string,
+    lmethods: Array<Object>,
+    ncloc: string,
+  },
+};
+
 class StatisticsStore {
   app: AppStore;
 
   @observable loading: boolean = true;
-  @observable data: boolean = true;
+  @observable data: Data;
   @observable error: Object;
   @observable
   statOrder: Array<string> = [
@@ -29,10 +41,10 @@ class StatisticsStore {
   };
 
   @computed
-  get statistics() {
+  get statistics(): Array<Object> {
     return Object.keys(this.data.measures)
       .filter(key => !(key === 'lmethods'))
-      .sort((a, b) => this.statOrder.indexOf(a) > this.statOrder.indexOf(b))
+      .sort((a, b) => this.statOrder.indexOf(a) - this.statOrder.indexOf(b))
       .map((key, i) => ({
         key: i,
         metric: this.nameMap.hasOwnProperty(key) ? this.nameMap[key] : key,
@@ -44,7 +56,7 @@ class StatisticsStore {
   }
 
   @computed
-  get longestMethods() {
+  get longestMethods(): Array<Object> {
     return this.data.measures.lmethods
       .map(({ path, methodlen, code, methodname, startline }) => ({
         path: `${this.stripFilename(path)}:${startline}`,

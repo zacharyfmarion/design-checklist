@@ -5,8 +5,9 @@ import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import { Tabs, Collapse } from 'antd';
 import { shadow } from 'constants/styles';
-const TabPane = Tabs.TabPane;
+import UiStore from 'stores/UiStore';
 
+const TabPane = Tabs.TabPane;
 const Panel = Collapse.Panel;
 
 type Issue = {
@@ -60,7 +61,7 @@ class CodeIssue extends React.Component<Props> {
     return Math.min.apply(Math, vals);
   };
 
-  getLeastWhitespace = (code: Object) => {
+  getLeastWhitespace = (code: Array<Object>) => {
     const vals = code.map(issue => {
       const lastIndices = issue.code.map(this.getLastTabIndex);
       return Math.min.apply(Math, lastIndices);
@@ -70,6 +71,7 @@ class CodeIssue extends React.Component<Props> {
 
   // get the max line number from an array
   getMaxLineNumbers(duplications) {
+    if (!duplications || duplications.length < 1) return [];
     return duplications[0].map((file, i) => {
       return Math.max.apply(
         Math,
@@ -116,6 +118,7 @@ class CodeIssue extends React.Component<Props> {
   // for each file
   renderDuplication = (dup, maxLines, dupNumber) => {
     const { ui, error: { duplications } } = this.props;
+    if (!duplications) return null;
     const leastWhitespaces = duplications[dupNumber].map(item =>
       this.getDupLeastWhitespace(item.code),
     );
@@ -197,6 +200,7 @@ class CodeIssue extends React.Component<Props> {
 
   renderMobileDuplications = (maxLines: Array) => {
     const { error: { duplications } } = this.props;
+    if (!duplications) return null;
     return (
       <DuplicationTabs
         defaultActiveKey="0"
@@ -217,6 +221,7 @@ class CodeIssue extends React.Component<Props> {
 
   renderDuplications = () => {
     const { ui, error: { duplications } } = this.props;
+    if (!duplications) return null;
     const processedDups = this.processDuplications(duplications);
     const maxLines = this.getMaxLineNumbers(duplications);
     if (!ui.isDesktop || duplications[0].length > 3) {

@@ -4,10 +4,15 @@ import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
 import { shadeColor } from 'helpers/colors';
 import Text from 'components/Text';
+import AppStore from 'stores/AppStore';
 import styled from 'styled-components';
 
+type Props = {
+  app: AppStore,
+};
+
 const ServerError = inject('app')(
-  observer(({ app }) => (
+  observer(({ app }: Props) => (
     <Server
       viewBox="-155 247 300 300"
       primaryColor={app.primaryColor}
@@ -233,7 +238,13 @@ const ServerError = inject('app')(
   )),
 );
 
-const ErrorMessage = ({ title, message }) => {
+const ErrorMessage = ({
+  title,
+  message,
+}: {
+  title: string,
+  message: string,
+}) => {
   return (
     <Flex auto justify="center" align="center" column>
       <ServerError />

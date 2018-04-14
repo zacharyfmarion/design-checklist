@@ -6,10 +6,15 @@ import { observer, inject } from 'mobx-react';
 import { themeColors } from 'constants/styles';
 import { validHex } from 'helpers/colors';
 import { Flex } from 'reflexbox';
+import AppStore from 'stores/AppStore';
 import Button from 'components/Button';
 import Input from 'components/Input';
 
 const Option = Select.Option;
+
+type Props = {
+  app: AppStore,
+};
 
 type State = {
   customHex: string,

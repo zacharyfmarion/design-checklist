@@ -5,6 +5,10 @@ import AppStore from 'stores/AppStore';
 import { createDateRange, formatDate } from 'helpers/dates';
 
 type Statistic = 'insertions' | 'deletions' | 'files changed';
+type Error = {
+  title: string,
+  message: string,
+};
 
 class GraphsStore {
   app: AppStore;
@@ -14,10 +18,10 @@ class GraphsStore {
   @observable activeStatistic: Statistic = 'insertions';
   @observable
   statistics: Array<Statistic> = ['insertions', 'deletions', 'files changed'];
-  @observable error: string;
+  @observable error: Error;
 
   @computed
-  get processedDataByCommits() {
+  get processedDataByCommits(): Array<Object> {
     if (!this.dataByCommits) return [];
     const authors = this.dataByCommits.authors;
     return Object.keys(authors).map(author => {
@@ -29,7 +33,7 @@ class GraphsStore {
   }
 
   @computed
-  get processedDataByLinesOverview() {
+  get processedDataByLinesOverview(): Array<Object> {
     if (!this.dataByLines) return [];
     const res = [];
     for (let author in this.dataByLines) {
@@ -43,7 +47,7 @@ class GraphsStore {
   }
 
   @computed
-  get processedDataByLines() {
+  get processedDataByLines(): Array<Object> {
     if (!this.dataByLines) return [];
     // contrived start and end dates until they are added to the API
     let { left, right } = this.dataByLines.bounds;

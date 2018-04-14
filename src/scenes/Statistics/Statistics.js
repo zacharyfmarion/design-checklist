@@ -48,6 +48,8 @@ const longestMethodsColumns = [
 
 @observer
 class Statistics extends React.Component<Props> {
+  store: StatisticsStore;
+
   constructor(props: Props) {
     super(props);
     this.store = new StatisticsStore(props.app);

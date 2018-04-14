@@ -22,11 +22,11 @@ const fontSizes = {
 };
 
 class Input extends React.Component<Props> {
-  handleChange = event => {
-    this.props.onChange(event.target.value);
+  handleChange = (e: Event) => {
+    this.props.onChange(e.target.value);
   };
 
-  handleKeyPress = e => {
+  handleKeyPress = (e: Event) => {
     if (e.key === 'Enter' && !!this.props.onEnter) {
       this.props.onEnter();
     }

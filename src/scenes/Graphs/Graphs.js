@@ -22,12 +22,19 @@ import {
 } from 'recharts';
 import { shadeColor } from 'helpers/colors';
 import GraphsStore from './GraphsStore';
+import AppStore from 'stores/AppStore';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
+type Props = {
+  app: AppStore,
+};
+
 @observer
-class Graphs extends React.Component<{}> {
+class Graphs extends React.Component<Props> {
+  store: GraphsStore;
+
   constructor(props: Props) {
     super(props);
     this.store = new GraphsStore(props.app);

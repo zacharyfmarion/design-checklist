@@ -8,7 +8,7 @@ import { severities } from 'constants/general';
 import { sessionStoragePrefix } from 'constants/app';
 
 class AppStore {
-  @observable projectName: string;
+  @observable projectName: ?string;
   @observable projectConfirmed = false;
   @observable sidebarCollapsed: boolean = false;
   @observable primaryColor: string = colors.primary;
@@ -20,7 +20,7 @@ class AppStore {
   @observable sidebarVisible: boolean = false;
 
   @action
-  formatDefaultFilters(filterList: Array<string>) {
+  formatDefaultFilters() {
     this.filters = this.severityList.reduce((result, item, index, array) => {
       result[item] = true; //a, b, c
       return result;
@@ -28,7 +28,7 @@ class AppStore {
   }
 
   @action
-  setSeverityList(list) {
+  setSeverityList(list: Array<string>) {
     this.severityList = list;
     this.formatDefaultFilters();
   }
@@ -73,7 +73,7 @@ class AppStore {
   };
 
   @action
-  changeFilter = (severity, checked) => {
+  changeFilter = (severity: string, checked: boolean) => {
     this.filters[severity] = checked;
     this.updateCache();
   };

@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react';
 import Layout from 'components/Layout';
 import Panel from 'components/Panel';
 import { ResponsiveContainer, Treemap } from 'recharts';
+import AppStore from 'stores/AppStore';
 
 const data = [
   {
@@ -138,7 +139,9 @@ const data = [
   },
 ];
 
-type Props = {};
+type Props = {
+  app: AppStore,
+};
 
 @observer
 class Overview extends React.Component<Props> {

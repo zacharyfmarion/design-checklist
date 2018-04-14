@@ -7,7 +7,7 @@ type Props = {
   children: React.Node,
   className?: string,
   color?: Color,
-  size: FontSize,
+  size?: FontSize,
 };
 
 const Text = ({
@@ -15,10 +15,11 @@ const Text = ({
   className,
   size = 'normal',
   color = 'black',
-}: Props) =>
+}: Props) => (
   <Span size={size} color={color} className={className}>
     {children}
-  </Span>;
+  </Span>
+);
 
 const Span = styled.span`
   font-size: ${({ size }) => fontSizes[size]};

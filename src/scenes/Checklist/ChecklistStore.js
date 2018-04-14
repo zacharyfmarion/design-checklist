@@ -6,32 +6,39 @@ import { categories } from 'constants/general';
 import { message, notification } from 'antd';
 import AppStore from 'stores/AppStore';
 
+type Data = {
+  error: Object,
+  percentage: Object,
+  severitylist: Array,
+};
+
 class ChecklistStore {
   app: AppStore;
 
-  @observable data: ?Object;
+  @observable data: Data;
   @observable error: ?string;
   @observable loading: boolean = false;
   @observable activeCategory: string = categories[0];
 
   @computed
-  get activeSeverities() {
+  get activeSeverities(): Array<string> {
     return Object.keys(this.app.filters).filter(
       severity => this.app.filters[severity],
     );
   }
 
-  errorSort = (a, b) => {
+  errorSort = (a: Object, b: Object) => {
     return (
       this.app.severityList.indexOf(a.severity) -
       this.app.severityList.indexOf(b.severity)
     );
   };
 
-  errorFilter = error => this.activeSeverities.includes(error.severity);
+  errorFilter = (error: Object) =>
+    this.activeSeverities.includes(error.severity);
 
   // Get all category issues (filtered and sorted)
-  getCategoryIssues = category => {
+  getCategoryIssues = (category: string) => {
     if (!this.data) return null;
     const issues = this.data.error[category];
     if (issues instanceof Array) {
@@ -54,7 +61,7 @@ class ChecklistStore {
 
   // get issues for all categories
   @computed
-  get allIssues() {
+  get allIssues(): Object {
     if (!this.data) return null;
     let res = {};
     for (let category of categories) {
@@ -65,12 +72,12 @@ class ChecklistStore {
 
   // Get the active category errors and filter them
   @computed
-  get activeCategoryIssues() {
+  get activeCategoryIssues(): Array<Object> {
     return this.allIssues[this.activeCategory];
   }
 
   @computed
-  get numCategoryIssues() {
+  get numCategoryIssues(): Object {
     let res = {};
     for (let category of categories) {
       const issues = this.allIssues[category];
@@ -85,25 +92,25 @@ class ChecklistStore {
   }
 
   @action
-  confirmProject = () => {
+  confirmProject = (): void => {
     this.app.confirmProject();
     this.loading = true;
     this.getRules();
   };
 
   @action
-  refreshProject = () => {
+  refreshProject = (): void => {
     this.loading = true;
     this.getRules();
   };
 
   @action
-  changeCategory = (category: string) => {
+  changeCategory = (category: string): void => {
     this.activeCategory = category;
   };
 
   @action
-  clearError = () => {
+  clearError = (): void => {
     this.error = undefined;
   };
 

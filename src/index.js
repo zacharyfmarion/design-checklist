@@ -13,6 +13,7 @@ import { analyticsId } from 'constants/app';
 import scenes from 'scenes';
 import NotFound from 'scenes/NotFound';
 import PrivateRoute from 'components/PrivateRoute';
+import Checklist from 'scenes/Checklist';
 
 // Initialize google analytics
 GoogleAnalytics.initialize(analyticsId, {});
@@ -28,10 +29,8 @@ history.listen((location, action) => {
   sendPageAnalytics(location);
 });
 
-const Checklist = scenes.find(scene => scene.path === '/checklist').component;
-
 const App = inject('app')(
-  observer(({ app }) =>
+  observer(({ app }) => (
     <Router history={history}>
       <div>
         <Switch>
@@ -43,20 +42,21 @@ const App = inject('app')(
           <Route exact path="/checklist" component={Checklist} />
           {scenes.map(
             (scene, i) =>
-              scene.path !== '/checklist' &&
-              <PrivateRoute
-                exact
-                path={scene.path}
-                component={scene.component}
-                authed={!!app.projectName}
-                key={i}
-              />
+              scene.path !== '/checklist' && (
+                <PrivateRoute
+                  exact
+                  path={scene.path}
+                  component={scene.component}
+                  authed={!!app.projectName}
+                  key={i}
+                />
+              ),
           )}
           <Route path="*" exact component={NotFound} />
         </Switch>
       </div>
     </Router>
-  )
+  )),
 );
 
 ReactDOM.render(
@@ -65,6 +65,6 @@ ReactDOM.render(
       <App />
     </StoreProvider>
   </LocaleProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 // registerServiceWorker();
