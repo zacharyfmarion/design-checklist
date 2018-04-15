@@ -72,7 +72,9 @@ class GraphsStore {
   }
 
   @action
-  changeActiveStatistic = (event: Event) => {
+  changeActiveStatistic = (
+    event: { target: EventTarget } & { target: EventTarget },
+  ) => {
     this.activeStatistic = event.target.value;
   };
 
