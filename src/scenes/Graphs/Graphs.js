@@ -21,8 +21,8 @@ import {
   Legend,
 } from 'recharts';
 import { shadeColor } from 'helpers/colors';
-import GraphsStore from './GraphsStore';
 import AppStore from 'stores/AppStore';
+import GraphsStore from './GraphsStore';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;

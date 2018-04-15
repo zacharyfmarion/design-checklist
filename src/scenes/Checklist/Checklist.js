@@ -26,7 +26,6 @@ import Spin from 'components/Spin';
 
 // local components
 import ChecklistStore from './ChecklistStore';
-import WelcomePage from './components/WelcomePage';
 import FilterMenu from './components/FilterMenu';
 import PercentageCard from './components/PercentageCard';
 
@@ -42,6 +41,10 @@ class Checklist extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
     this.store = new ChecklistStore(this.props.app);
+  }
+
+  componentWillMount() {
+    this.store.getRulesIfNotCached();
   }
 
   renderLoading = () => {
@@ -81,16 +84,6 @@ class Checklist extends React.Component<Props> {
     this.store.changeCategory(key);
   };
 
-  confirmProject = () => {
-    const { app } = this.props;
-    GoogleAnalytics.event({
-      category: 'Interaction',
-      action: 'entered project name',
-      label: app.projectName,
-    });
-    this.store.confirmProject();
-  };
-
   renderErrors = () => {
     const { ui } = this.props;
     return (
@@ -124,15 +117,8 @@ class Checklist extends React.Component<Props> {
   };
 
   render() {
-    const { app } = this.props;
-    if (!app.projectConfirmed) {
-      return <WelcomePage onConfirm={this.confirmProject} />;
-    }
     return (
-      <PaddedLayout
-        actions={this.renderHeaderActions()}
-        showSidebar={app.projectConfirmed && !this.store.loading}
-      >
+      <PaddedLayout actions={this.renderHeaderActions()}>
         {this.store.loading ? this.renderLoading() : this.renderErrors()}
       </PaddedLayout>
     );

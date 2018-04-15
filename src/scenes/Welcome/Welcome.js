@@ -3,6 +3,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
+import { withRouter } from 'react-router';
+import GoogleAnalytics from 'helpers/analytics';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import Layout from 'components/Layout';
@@ -10,30 +12,40 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 
 // store
-import WelcomePageStore from './WelcomePageStore';
+import WelcomeStore from './WelcomeStore';
 
 // Modals
 import TutorialModal from './components/TutorialModal';
 import InfoModal from './components/InfoModal';
 
 type Props = {
-  error: ?Object,
-  onConfirm: Function,
   ui: UiStore,
   app: AppStore,
+  history: Object,
 };
 
 @observer
-class WelcomePage extends React.Component<Props> {
-  store: WelcomePageStore;
+class Welcome extends React.Component<Props> {
+  store: WelcomeStore;
 
   constructor(props) {
     super(props);
-    this.store = new WelcomePageStore();
+    const { app, history } = this.props;
+    this.store = new WelcomeStore({ app, history });
   }
 
+  confirmProject = () => {
+    const { app } = this.props;
+    GoogleAnalytics.event({
+      category: 'Interaction',
+      action: 'entered project name',
+      label: app.projectName,
+    });
+    this.store.confirmProject();
+  };
+
   render() {
-    const { error, onConfirm, app, ui } = this.props;
+    const { app, ui } = this.props;
     return (
       <PaddedLayout
         showSidebar={false}
@@ -61,14 +73,14 @@ class WelcomePage extends React.Component<Props> {
             onChange={app.setProjectName}
             value={app.projectName}
             placeholder="Enter Project Name..."
-            onEnter={onConfirm}
+            onEnter={this.confirmProject}
             icon="search"
             size="large"
           />
           {this.store.tutorialVisible && (
             <TutorialModal
               onClose={this.store.hideTutorial}
-              fromError={!!error}
+              fromError={false}
             />
           )}
           {this.store.infoModalVisible && (
@@ -97,4 +109,4 @@ const PaddedLayout = styled(Layout)`
   flex-direction: column;
 `;
 
-export default inject('ui', 'app')(WelcomePage);
+export default inject('ui', 'app')(withRouter(Welcome));

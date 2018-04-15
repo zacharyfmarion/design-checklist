@@ -9,7 +9,16 @@ import Checklist from './Checklist';
 import Graphs from './Graphs';
 import Statistics from './Statistics';
 import Duplication from './Duplication';
+import Welcome from './Welcome';
 import Overview from './Overview';
+
+// welcome is the route that shows up first to the user
+export const defaultRoute = {
+  path: '/welcome',
+  icon: null,
+  name: 'Welcome',
+  component: Welcome,
+};
 
 export default [
   // {

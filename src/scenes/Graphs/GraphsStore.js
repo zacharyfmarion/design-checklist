@@ -72,18 +72,15 @@ class GraphsStore {
   }
 
   @action
-  changeActiveStatistic = (event: SyntheticEvent<*>) => {
-    // https://github.com/facebook/flow/issues/2099
-    const { target } = event;
-    if (!(target instanceof window.HTMLInputElement)) return;
-    this.activeStatistic = target.value;
+  changeActiveStatistic = (event: Event) => {
+    this.activeStatistic = event.target.value;
   };
 
   @action
   getDataByCommits = (): Promise<*> => {
     return new Promise(async (resolve, reject) => {
       try {
-        const data = await getRequest('/commitsonar', {
+        const data = await getRequest('/commit', {
           project: this.app.projectName,
           group: 'CompSci308_2018Spring',
         });

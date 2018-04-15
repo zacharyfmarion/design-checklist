@@ -1,0 +1,103 @@
+{
+  "severitylist": ["fail", "high", "medium", "low", "info"],
+  "error": {
+    "Duplications": {
+      "category description":
+        "DRY: no duplicated code, either exactly (from cutting and pasting), structurally (in flow of control or decisions), or in setup (\"boilerplate\" code)",
+      "detail": [
+        {
+          "path": [
+            "duke-compsci308:slogo_team08:src/interpreter/CommandTreeInterpreter.java"
+          ],
+          "message":
+            "Define a constant instead of duplicating this literal \"CommandHeaderError\" 3 times.",
+          "code": [
+            {
+              "msg": "Duplication",
+              "code": [
+                "\t\t\tAlerts.createAlert( <span class=\"k\">new</span> CommandException(Resources.getString( <span class=\"s\">\"CommandHeaderError\"</span>)), <span class=\"s\">\"CommandMessageError1\"</span>);"
+              ],
+              "textRange": {
+                "endLine": 201,
+                "startLine": 201,
+                "startOffset": 63,
+                "endOffset": 83
+              }
+            },
+            {
+              "msg": "Duplication",
+              "code": [
+                "\t\t\t\tAlerts.createAlert( <span class=\"k\">new</span> CommandException(Resources.getString( <span class=\"s\">\"CommandHeaderError\"</span>)), <span class=\"s\">\"CommandMessageError8\"</span>);"
+              ],
+              "textRange": {
+                "endLine": 215,
+                "startLine": 215,
+                "startOffset": 64,
+                "endOffset": 84
+              }
+            },
+            {
+              "msg": "Duplication",
+              "code": [
+                "\t\t\tAlerts.createAlert( <span class=\"k\">new</span> CommandException(Resources.getString( <span class=\"s\">\"CommandHeaderError\"</span>)), <span class=\"s\">\"CommandMessageError7\"</span>);"
+              ],
+              "textRange": {
+                "endLine": 220,
+                "startLine": 220,
+                "startOffset": 63,
+                "endOffset": 83
+              }
+            }
+          ],
+          "severity": "high",
+          "rule": "String literals should not be duplicated"
+        },
+        {
+          "path": ["duke-compsci308:slogo_team08:src/parser/Parser.java"],
+          "message":
+            "Define a constant instead of duplicating this literal \"CommandHeaderError\" 3 times.",
+          "code": [
+            {
+              "msg": "Duplication",
+              "code": [
+                "\t\t\tAlerts.createAlert( <span class=\"k\">new</span> CommandException(Resources.getString( <span class=\"s\">\"CommandHeaderError\"</span>)), <span class=\"s\">\"CommandMessageError4\"</span>);"
+              ],
+              "textRange": {
+                "endLine": 74,
+                "startLine": 74,
+                "startOffset": 63,
+                "endOffset": 83
+              }
+            },
+            {
+              "msg": "Duplication",
+              "code": [
+                "\t\t\tAlerts.createAlert( <span class=\"k\">new</span> CommandException(Resources.getString( <span class=\"s\">\"CommandHeaderError\"</span>)), <span class=\"s\">\"CommandMessageError1\"</span>);"
+              ],
+              "textRange": {
+                "endLine": 134,
+                "startLine": 134,
+                "startOffset": 63,
+                "endOffset": 83
+              }
+            },
+            {
+              "msg": "Duplication",
+              "code": [
+                "\t\t\t <span class=\"k\">throw</span> <span class=\"k\">new</span> CommandException(Resources.getString( <span class=\"s\">\"CommandHeaderError\"</span>));"
+              ],
+              "textRange": {
+                "endLine": 135,
+                "startLine": 135,
+                "startOffset": 50,
+                "endOffset": 70
+              }
+            }
+          ],
+          "severity": "high",
+          "rule": "String literals should not be duplicated"
+        }
+      ]
+    }
+  }
+}

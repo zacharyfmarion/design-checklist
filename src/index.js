@@ -13,14 +13,14 @@ import { Switch } from 'react-router';
 import { inject, observer } from 'mobx-react';
 import createHistory from 'history/createBrowserHistory';
 import GoogleAnalytics from 'helpers/analytics';
+import registerServiceWorker from './registerServiceWorker';
 import StoreProvider from 'stores';
 import { LocaleProvider } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import { analyticsId } from 'constants/app';
-import scenes from 'scenes';
+import scenes, { defaultRoute } from 'scenes';
 import NotFound from 'scenes/NotFound';
 import PrivateRoute from 'components/PrivateRoute';
-import Checklist from 'scenes/Checklist';
 
 // Initialize google analytics
 GoogleAnalytics.initialize(analyticsId, {});
@@ -40,6 +40,8 @@ history.listen((location, action) => {
   sendPageAnalytics(location);
 });
 
+const defaultPath = defaultRoute.path;
+
 // Render an component wrapped in the app store so that we can ensure a user
 // cannot go to any scene but Checklist if they have not entered a project
 // name on the first page. Note that the prop is called 'authed' because this
@@ -52,21 +54,18 @@ const App = inject('app')(
           <Route
             exact
             path="/"
-            component={() => <Redirect to="/checklist" />}
+            component={() => <Redirect to={defaultPath} />}
           />
-          <Route exact path="/checklist" component={Checklist} />
-          {scenes.map(
-            (scene, i) =>
-              scene.path !== '/checklist' && (
-                <PrivateRoute
-                  exact
-                  path={scene.path}
-                  component={scene.component}
-                  authed={!!app.projectName}
-                  key={i}
-                />
-              ),
-          )}
+          <Route exact path={defaultPath} component={defaultRoute.component} />
+          {scenes.map((scene, i) => (
+            <PrivateRoute
+              exact
+              path={scene.path}
+              component={scene.component}
+              authed={!!app.projectName}
+              key={i}
+            />
+          ))}
           <Route path="*" exact component={NotFound} />
         </Switch>
       </div>
@@ -82,4 +81,5 @@ ReactDOM.render(
   </LocaleProvider>,
   document.getElementById('root'),
 );
-// registerServiceWorker();
+
+registerServiceWorker();

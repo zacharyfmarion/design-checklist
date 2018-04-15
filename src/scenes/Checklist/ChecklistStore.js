@@ -93,13 +93,6 @@ class ChecklistStore {
   }
 
   @action
-  confirmProject = (): void => {
-    this.app.confirmProject();
-    this.loading = true;
-    this.getRules();
-  };
-
-  @action
   refreshProject = (): void => {
     this.loading = true;
     this.getRules();
@@ -124,10 +117,18 @@ class ChecklistStore {
   };
 
   @action
+  getRulesIfNotCached = (): void => {
+    if (!this.data) {
+      this.getRules();
+    }
+  };
+
+  @action
   getRules = async (): Promise<*> => {
     if (!this.app.projectName || this.app.projectName === '') {
       throw new Error('Project name not defined');
     }
+    this.loading = true;
     try {
       const res = await getRequest(`/show`, { project: this.app.projectName });
       // If the project could not be found return to the project selection view
