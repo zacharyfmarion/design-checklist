@@ -33,9 +33,6 @@ class GraphsStore {
   // a = [{ a: 7 }, { a: 8 }], b = [{ b: 12 }, { b: 4 }]
   // => [{a: 7, b: 12}, { a: 8, b: 4 }]
   stitch = (a: Array<Object>, b: Array<Object>) => {
-    if (a.length !== b.length) {
-      console.log('a and b are not the same length');
-    }
     let res = [];
     for (let i = 0; i < Math.min(a.length, b.length); i++) {
       res.push({
