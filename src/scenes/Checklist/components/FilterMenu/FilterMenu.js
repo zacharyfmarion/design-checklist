@@ -4,11 +4,15 @@ import { Popover } from 'antd';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
+import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
 import Button from 'components/Button';
 import Switch from 'components/Switch';
 import Text from 'components/Text';
 
 type Props = {
+  ui: UiStore,
+  app: AppStore,
   className?: string,
 };
 

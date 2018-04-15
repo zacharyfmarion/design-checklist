@@ -89,7 +89,7 @@ class Checklist extends React.Component<Props> {
           {this.store.data &&
             categories.map((key, i) => {
               const handleCategoryChange = () => this.changeCategory(key);
-              const percent = Math.round(this.store.data.percentage[key], 1);
+              const percent = Math.round(this.store.data.percentage[key]);
               return (
                 <PercentageCard
                   percent={percent}
@@ -116,9 +116,7 @@ class Checklist extends React.Component<Props> {
   render() {
     const { app } = this.props;
     if (!app.projectConfirmed) {
-      return (
-        <WelcomePage error={this.store.error} onConfirm={this.confirmProject} />
-      );
+      return <WelcomePage onConfirm={this.confirmProject} />;
     }
     return (
       <PaddedLayout

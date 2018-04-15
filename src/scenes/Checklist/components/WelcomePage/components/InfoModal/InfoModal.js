@@ -6,7 +6,6 @@ import Modal, { ModalHeader, ModalBody } from 'components/Modal';
 
 type Props = {
   onClose: Function,
-  fromError: boolean,
 };
 
 class InfoModal extends React.Component<Props> {

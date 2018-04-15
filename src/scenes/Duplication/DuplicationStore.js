@@ -5,15 +5,25 @@ import { sessionStoragePrefix } from 'constants/app';
 import AppStore from 'stores/AppStore';
 import { message } from 'antd';
 
+type Data = {
+  error: {
+    Duplications: {
+      'category description': string,
+      detail: Array<Object>,
+    },
+  },
+  severitylist: Array<string>,
+};
+
 class DuplicationStore {
   app: AppStore;
 
   @observable loading: boolean = true;
-  @observable data: boolean = true;
+  @observable data: Data;
   @observable error: Object;
 
   @computed
-  get duplications() {
+  get duplications(): Array<Object> {
     const dups = this.data.error.Duplications.detail;
     const res = [];
     for (let entry of dups) {

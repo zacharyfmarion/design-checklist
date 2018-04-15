@@ -12,7 +12,11 @@ const Panel = Collapse.Panel;
 
 type Issue = {
   duplications?: Array<Array<Object>>,
+  code?: Array<Object>,
   error?: Array<Object>,
+  message: string,
+  severity: string,
+  path: string,
 };
 
 type Props = {
@@ -141,7 +145,7 @@ class CodeIssue extends React.Component<Props> {
                 </LineNumber>
                 <Line
                   auto
-                  key={[i, j]}
+                  key={`${i},${j}`}
                   dangerouslySetInnerHTML={{
                     __html: line.code.substring(leastWhitespaces[j]),
                   }}
@@ -156,6 +160,7 @@ class CodeIssue extends React.Component<Props> {
 
   renderMobileDuplication = (fileIndex: number, maxLine: number) => {
     const { ui, error: { duplications } } = this.props;
+    if (!duplications) return null;
     const leastWhitespace = this.getLeastWhitespace(
       duplications.map(duplication => {
         return { code: duplication[fileIndex].code };
@@ -178,7 +183,7 @@ class CodeIssue extends React.Component<Props> {
                   </LineNumber>
                   <Line
                     auto
-                    key={[i, j]}
+                    key={`${i},${j}`}
                     dangerouslySetInnerHTML={{
                       __html: line.substring(leastWhitespace),
                     }}
@@ -198,7 +203,7 @@ class CodeIssue extends React.Component<Props> {
     );
   };
 
-  renderMobileDuplications = (maxLines: Array) => {
+  renderMobileDuplications = (maxLines: Array<number>) => {
     const { error: { duplications } } = this.props;
     if (!duplications) return null;
     return (
@@ -250,7 +255,7 @@ class CodeIssue extends React.Component<Props> {
 
   renderCode = () => {
     const { error: { code } } = this.props;
-    if (code.length === 0) return null;
+    if (!code || code.length === 0) return null;
     const maxLine = code[code.length - 1].textRange.endLine;
     return code.map((issue, i) => {
       return (
@@ -292,6 +297,8 @@ class CodeIssue extends React.Component<Props> {
       className,
       ui,
     } = this.props;
+    const moreThanThreeDups =
+      duplications && duplications.length > 0 && duplications[0].length > 3;
     return (
       <CodeCollapse
         defaultActiveKey={'0'}
@@ -305,11 +312,11 @@ class CodeIssue extends React.Component<Props> {
             <RuleHeader column>
               <Pathname>
                 {duplications ? (
-                  <Flex column={!ui.isDesktop || duplications[0].length > 3}>
+                  <Flex column={!ui.isDesktop || moreThanThreeDups}>
                     {duplications[0].map(file => (
                       <PathTitle
                         numFiles={
-                          ui.isDesktop && !duplications[0].length > 3
+                          ui.isDesktop && !moreThanThreeDups
                             ? duplications[0].length
                             : 1
                         }

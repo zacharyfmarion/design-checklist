@@ -9,7 +9,7 @@ import AppStore from 'stores/AppStore';
 type Data = {
   error: Object,
   percentage: Object,
-  severitylist: Array,
+  severitylist: Array<string>,
 };
 
 class ChecklistStore {
@@ -62,7 +62,7 @@ class ChecklistStore {
   // get issues for all categories
   @computed
   get allIssues(): Object {
-    if (!this.data) return null;
+    if (!this.data) return {};
     let res = {};
     for (let category of categories) {
       res[category] = this.getCategoryIssues(category);
@@ -115,6 +115,14 @@ class ChecklistStore {
   };
 
   @action
+  showError = (description: string): void => {
+    notification.open({
+      message: 'Server Error',
+      description,
+    });
+  };
+
+  @action
   getRules = async (): Promise<*> => {
     if (!this.app.projectName || this.app.projectName === '') {
       throw new Error('Project name not defined');
@@ -123,8 +131,8 @@ class ChecklistStore {
       const res = await getRequest(`/show`, { project: this.app.projectName });
       if (res['err']) {
         this.error = 'Your project could not be found.';
-        this.showTutorial();
         this.app.setProjectName(undefined);
+        this.showError(res['err']);
         this.app.unconfirmProject();
         return;
       }
@@ -141,10 +149,9 @@ class ChecklistStore {
     } catch (err) {
       console.log(err);
       this.error = 'Your project could not be found.';
-      notification.open({
-        message: 'Server Error',
-        description: `There was an error attempting to load your project's analysis. Please contact the developers for support.`,
-      });
+      this.showError(
+        `There was an error attempting to load your project's analysis. Please contact the developers for support.`,
+      );
       this.app.setProjectName(undefined);
       this.app.unconfirmProject();
       return;

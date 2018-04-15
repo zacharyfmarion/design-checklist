@@ -72,8 +72,11 @@ class GraphsStore {
   }
 
   @action
-  changeActiveStatistic = (e: Event) => {
-    this.activeStatistic = e.target.value;
+  changeActiveStatistic = (event: SyntheticEvent<*>) => {
+    // https://github.com/facebook/flow/issues/2099
+    const { target } = event;
+    if (!(target instanceof window.HTMLInputElement)) return;
+    this.activeStatistic = target.value;
   };
 
   @action

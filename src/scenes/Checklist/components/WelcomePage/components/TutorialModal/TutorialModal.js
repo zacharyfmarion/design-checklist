@@ -13,7 +13,7 @@ const TabPane = Tabs.TabPane;
 
 type Props = {
   onClose: Function,
-  fromError: boolean,
+  fromError?: boolean,
 };
 
 class TutorialModal extends React.Component<Props> {

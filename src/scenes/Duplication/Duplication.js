@@ -9,9 +9,14 @@ import ErrorMessage from 'components/ErrorMessage';
 import Button from 'components/Button';
 import CodeIssue from 'components/CodeIssue';
 import Spin from 'components/Spin';
+import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
 import DuplicationStore from './DuplicationStore';
 
-type Props = {};
+type Props = {
+  ui: UiStore,
+  app: AppStore,
+};
 
 @observer
 class Duplication extends React.Component<Props> {

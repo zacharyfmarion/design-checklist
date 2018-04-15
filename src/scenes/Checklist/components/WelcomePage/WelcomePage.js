@@ -3,6 +3,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
+import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
 import Layout from 'components/Layout';
 import Button from 'components/Button';
 import Input from 'components/Input';
@@ -17,6 +19,8 @@ import InfoModal from './components/InfoModal';
 type Props = {
   error: ?Object,
   onConfirm: Function,
+  ui: UiStore,
+  app: AppStore,
 };
 
 @observer

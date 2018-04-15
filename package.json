@@ -60,6 +60,7 @@
     "eslint-plugin-jsx-a11y": "5.1.1",
     "eslint-plugin-react": "7.1.0",
     "flow-bin": "^0.53.1",
+    "flow-typed": "^2.4.0",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.6",
     "prettier": "1.11.1",
@@ -88,7 +89,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "flow": "flow"
+    "flow": "flow",
+    "flow-typed": "flow-typed install --overwrite"
   },
   "jest": {
     "collectCoverageFrom": [

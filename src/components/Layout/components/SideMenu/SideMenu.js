@@ -152,22 +152,24 @@ const CollapseButton = styled(Button)`
 `;
 
 const StyledMenu = styled(Menu)`
-  ${({ primary }) => `
+  ${({ primary, isDesktop }) => `
     .ant-menu-item:hover, .ant-menu-item > a:hover, .ant-menu-item-selected, .ant-menu-item-selected > a {
       color: ${primary};
     }
     .ant-menu-item:after {
       border-right: 3px solid ${primary} !important;
     }
-    ${({ isDesktop }) =>
-      !isDesktop &&
+    .ant-menu-item {
+        ${
+          !isDesktop
+            ? `
+          font-size: 18px;
+          height: 52px;
+          line-height: 52px;
       `
-      .ant-menu-item {
-        font-size: 18px;
-        height: 52px;
-        line-height: 52px;
-      } 
-    `}
+            : ''
+        }
+    } 
   `};
 `;
 
