@@ -1,7 +1,7 @@
 // @flow
 import { observable, computed, action } from 'mobx';
 import { getRequest } from 'helpers/api';
-import { sessionStoragePrefix } from 'constants/app';
+import { applicationPrefix } from 'constants/app';
 import { categories } from 'constants/general';
 import { message, notification } from 'antd';
 import AppStore from 'stores/AppStore';
@@ -76,6 +76,7 @@ class ChecklistStore {
     return this.allIssues[this.activeCategory];
   }
 
+  // Number of issues for each category
   @computed
   get numCategoryIssues(): Object {
     let res = {};
@@ -129,6 +130,8 @@ class ChecklistStore {
     }
     try {
       const res = await getRequest(`/show`, { project: this.app.projectName });
+      // If the project could not be found return to the project selection view
+      // and basically just reset everything
       if (res['err']) {
         this.error = 'Your project could not be found.';
         this.app.setProjectName(undefined);
@@ -139,8 +142,10 @@ class ChecklistStore {
       this.data = res;
       this.app.setSeverityList(res.severitylist);
       this.loading = false;
+      // Cache the API response since it takes a long time and you don't want to
+      // do it more times than you have to
       sessionStorage.setItem(
-        `${sessionStoragePrefix}_overview`,
+        `${applicationPrefix}_overview`,
         JSON.stringify({
           data: res,
           activeCategory: this.activeCategory,
@@ -148,7 +153,9 @@ class ChecklistStore {
       );
     } catch (err) {
       console.log(err);
-      this.error = 'Your project could not be found.';
+      this.error = 'internal server error';
+      // This should be an internal server error as opposed to simply not being able to
+      // find the project in sonarqube
       this.showError(
         `There was an error attempting to load your project's analysis. Please contact the developers for support.`,
       );
@@ -160,7 +167,7 @@ class ChecklistStore {
 
   constructor(app: AppStore) {
     this.app = app;
-    const cached = sessionStorage.getItem(`${sessionStoragePrefix}_overview`);
+    const cached = sessionStorage.getItem(`${applicationPrefix}_overview`);
     if (cached) {
       const { data, activeCategory } = JSON.parse(cached);
       this.data = data;

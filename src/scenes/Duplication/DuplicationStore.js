@@ -1,7 +1,7 @@
 // @flow
 import { action, computed, observable } from 'mobx';
 import { getRequest } from 'helpers/api';
-import { sessionStoragePrefix } from 'constants/app';
+import { applicationPrefix } from 'constants/app';
 import AppStore from 'stores/AppStore';
 import { message } from 'antd';
 
@@ -56,7 +56,7 @@ class DuplicationStore {
       });
       this.data = data;
       sessionStorage.setItem(
-        `${sessionStoragePrefix}_duplications`,
+        `${applicationPrefix}_duplications`,
         JSON.stringify(data),
       );
       this.loading = false;
@@ -72,9 +72,7 @@ class DuplicationStore {
 
   constructor(app: AppStore) {
     this.app = app;
-    const cached = sessionStorage.getItem(
-      `${sessionStoragePrefix}_duplications`,
-    );
+    const cached = sessionStorage.getItem(`${applicationPrefix}_duplications`);
     if (cached) {
       const data = JSON.parse(cached);
       this.data = data;

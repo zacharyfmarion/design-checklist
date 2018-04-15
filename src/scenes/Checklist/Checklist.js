@@ -1,4 +1,14 @@
 // @flow
+
+/**
+ * <Checklist /> contains the code for the first application scene. The user is
+ * first presented with the <WelcomePage /> component and once they enter a
+ * projectName they go the actual checklist which displays offending errors in
+ * their code in an attractive and readable format. Note that in the future the
+ * <WelcomePage /> component should proabably just become it's own scene and this
+ * would make more sense.
+ */
+
 import * as React from 'react';
 import Layout from 'components/Layout';
 import { inject, observer } from 'mobx-react';

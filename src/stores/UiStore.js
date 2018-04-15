@@ -1,4 +1,11 @@
 // @flow
+
+/**
+ * UiStore handles most of the applications global state regarding the
+ * UI. It also contains responsivity helpers in the form of computed
+ * propterties that tell when a screen is at a certain size
+ */
+
 import { observable, computed, action } from 'mobx';
 import { breakpoints } from 'constants/styles';
 

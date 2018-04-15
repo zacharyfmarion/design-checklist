@@ -7,7 +7,8 @@ import styled from 'styled-components';
 import { Flex } from 'reflexbox';
 import { colors, shadow } from 'constants/styles';
 
-const percentMappings = percent => {
+// Map a percentage to a number stars and color
+const percentMappings = (percent: number) => {
   if (percent === 100) {
     return { stars: 5, color: colors.good };
   } else if (percent < 100 && percent >= 90) {

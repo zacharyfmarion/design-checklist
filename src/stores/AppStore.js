@@ -1,11 +1,17 @@
 // @flow
+
 /**
- * App store. Code here deals with global application state (use with disgression!)
+ * App store. Code here deals with global application state (use with disgression!). It
+ * should be noted that some of the things that are currently in here should maybe be
+ * someplace else (e.g. primaryColor should arguably be in UiStore) but since I decided
+ * that all the global application state should go here I just threw in in the same
+ * place as everything else
  */
+
 import { observable, action } from 'mobx';
 import { colors } from 'constants/styles';
 import { severities } from 'constants/general';
-import { sessionStoragePrefix } from 'constants/app';
+import { applicationPrefix } from 'constants/app';
 
 class AppStore {
   @observable projectName: ?string;
@@ -47,8 +53,8 @@ class AppStore {
   clearProject = () => {
     this.setProjectName(undefined);
     this.projectConfirmed = false;
-    sessionStorage.setItem(`${sessionStoragePrefix}_overview`, '');
-    sessionStorage.setItem(`${sessionStoragePrefix}_duplications`, '');
+    sessionStorage.setItem(`${applicationPrefix}_overview`, '');
+    sessionStorage.setItem(`${applicationPrefix}_duplications`, '');
   };
 
   @action
@@ -65,7 +71,7 @@ class AppStore {
   @action
   updateCache = () => {
     localStorage.setItem(
-      `${sessionStoragePrefix}_settings`,
+      `${applicationPrefix}_settings`,
       JSON.stringify({
         primary: this.primaryColor,
       }),
@@ -87,7 +93,7 @@ class AppStore {
   setProjectName = (name: ?string) => {
     this.projectName = name;
     sessionStorage.setItem(
-      `${sessionStoragePrefix}_projectName`,
+      `${applicationPrefix}_projectName`,
       name ? name : '',
     );
   };
@@ -96,9 +102,9 @@ class AppStore {
     // intialize the default filters
     this.formatDefaultFilters();
     const projectName = sessionStorage.getItem(
-      `${sessionStoragePrefix}_projectName`,
+      `${applicationPrefix}_projectName`,
     );
-    const app = localStorage.getItem(`${sessionStoragePrefix}_settings`);
+    const app = localStorage.getItem(`${applicationPrefix}_settings`);
     if (app) {
       const { primary } = JSON.parse(app);
       this.primaryColor = primary;
