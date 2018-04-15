@@ -44,24 +44,6 @@ class Graphs extends React.Component<Props> {
     this.store.getData();
   }
 
-  renderCommitChart = () => {
-    const { app } = this.props;
-    return (
-      <StyledBarChart
-        width={600}
-        height={400}
-        data={this.store.processedDataByCommits}
-      >
-        <XAxis dataKey="name" />
-        <YAxis />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="commits" fill={app.primaryColor} />
-      </StyledBarChart>
-    );
-  };
-
   // Remove the date key so just the authors are left
   getAuthors = entry => {
     const copy = { ...entry };
@@ -69,20 +51,21 @@ class Graphs extends React.Component<Props> {
     return Object.keys(copy);
   };
 
-  renderStatsOverviewChart = () => {
+  renderNormalizedChart = () => {
     const { app } = this.props;
     return (
-      <StyledBarChart
-        width={600}
-        height={400}
-        data={this.store.processedDataByLinesOverview}
-      >
+      <StyledBarChart width={600} height={400} data={this.store.normalizedData}>
         <XAxis dataKey="name" />
         <YAxis />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
         <Legend />
-        <Bar dataKey={this.store.activeStatistic} fill={app.primaryColor} />
+        <Bar dataKey="average" stackId="a" fill={app.primaryColor} />
+        <Bar
+          dataKey="commits"
+          stackId="a"
+          fill={shadeColor(app.primaryColor, 0.25)}
+        />
       </StyledBarChart>
     );
   };
@@ -148,27 +131,10 @@ class Graphs extends React.Component<Props> {
           <HorizontalLine />
           <ChartBounds column justify="center" align="center">
             <ChartTitle color={app.primaryColor}>
-              Aggregated Group Statistics
+              Normailized Statistics
             </ChartTitle>
-            <StyledRadioGroup
-              onChange={this.store.changeActiveStatistic}
-              value={this.store.activeStatistic}
-            >
-              {this.store.statistics.map(stat => (
-                <RadioButton key={stat} value={stat}>
-                  {stat}
-                </RadioButton>
-              ))}
-            </StyledRadioGroup>
             <ResponsiveContainer>
-              {this.renderStatsOverviewChart()}
-            </ResponsiveContainer>
-          </ChartBounds>
-          <HorizontalLine />
-          <ChartBounds column justify="center" align="center">
-            <ChartTitle color={app.primaryColor}>Number of Commits</ChartTitle>
-            <ResponsiveContainer>
-              {this.renderCommitChart()}
+              {this.renderNormalizedChart()}
             </ResponsiveContainer>
           </ChartBounds>
         </Flex>

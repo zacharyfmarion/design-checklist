@@ -1,5 +1,5 @@
 {
-  "name": "oranizr",
+  "name": "design-checkup",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -139,7 +139,7 @@
       "eslint-plugin-flow-header"
     ],
     "rules": {
-      "flow-header/flow-header": 2
+      "flow-header/flow-header": 0
     }
   }
 }
