@@ -209,6 +209,7 @@ class GraphsStore {
         title: 'Server Error',
         message: 'Your commit data could not be loaded from the server.',
       };
+      this.loading = false;
     }
   };
 
