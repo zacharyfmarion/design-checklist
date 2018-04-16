@@ -164,7 +164,6 @@ class GraphsStore {
       try {
         const data = await getRequest('/commit', {
           project: this.app.projectName,
-          group: 'CompSci308_2018Spring',
         });
         resolve(data);
       } catch (err) {
@@ -179,7 +178,6 @@ class GraphsStore {
       try {
         const data = await getRequest('/commitstat', {
           project: this.app.projectName,
-          group: 'CompSci308_2018Spring',
         });
         resolve(data);
       } catch (err) {
