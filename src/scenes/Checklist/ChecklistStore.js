@@ -6,7 +6,7 @@ import { categories } from 'constants/general';
 import { message, notification } from 'antd';
 import AppStore from 'stores/AppStore';
 
-type Data = {
+type ByCategoryData = {
   error: Object,
   percentage: Object,
   severitylist: Array<string>,
@@ -15,10 +15,38 @@ type Data = {
 class ChecklistStore {
   app: AppStore;
 
-  @observable data: Data;
-  @observable error: ?string;
-  @observable loading: boolean = false;
+  @observable byCategoryData: ByCategoryData;
+  @observable fileError: ?string;
+  @observable categoryError: ?string;
+  @observable categoryLoading: boolean = false;
+  @observable fileLoading: boolean = false;
   @observable activeCategory: string = categories[0];
+
+  // Perform a bfs to format the data in a nested way that actually matches
+  // the directory structure of the project itself
+  directoryBfs = (directory: string) => {
+    if (
+      !this.byFileData.hasOwnProperty(directory) ||
+      !this.byFileData[directory].hasOwnProperty('directories')
+    ) {
+      return {};
+    }
+    let res = {
+      directories: {},
+      files: this.byFileData[directory].files,
+    };
+    // iterate over each directory in file
+    Object.keys(this.byFileData[directory].directories).forEach(dir => {
+      res.directories[dir] = this.directoryBfs(dir);
+    });
+    return res;
+  };
+
+  @computed
+  get processedIssuesByFile(): ?Object {
+    if (!this.byFileData) return null;
+    return this.directoryBfs('.');
+  }
 
   @computed
   get activeSeverities(): Array<string> {
@@ -39,10 +67,10 @@ class ChecklistStore {
 
   // Get all category issues (filtered and sorted)
   getCategoryIssues = (category: string) => {
-    if (!this.data) return null;
-    const issues = this.data.error[category];
+    if (!this.byCategoryData) return null;
+    const issues = this.byCategoryData.error[category];
     if (issues instanceof Array) {
-      return this.data.error[category]
+      return this.byCategoryData.error[category]
         .sort(this.errorSort)
         .filter(this.errorFilter);
     }
@@ -62,7 +90,7 @@ class ChecklistStore {
   // get issues for all categories
   @computed
   get allIssues(): Object {
-    if (!this.data) return {};
+    if (!this.byCategoryData) return {};
     let res = {};
     for (let category of categories) {
       res[category] = this.getCategoryIssues(category);
@@ -94,7 +122,8 @@ class ChecklistStore {
 
   @action
   refreshProject = (): void => {
-    this.loading = true;
+    this.categoryLoading = true;
+    this.fileLoading = true;
     this.getRules();
   };
 
@@ -109,7 +138,7 @@ class ChecklistStore {
   };
 
   @action
-  showError = (description: string): void => {
+  showCategoryError = (description: string): void => {
     notification.open({
       message: 'Server Error',
       description,
@@ -117,18 +146,25 @@ class ChecklistStore {
   };
 
   @action
-  getRulesIfNotCached = (): void => {
-    if (!this.data) {
-      this.getRules();
+  getIssuesByCategoryIfNotCached = (): void => {
+    if (!this.byCategoryData) {
+      this.getIssuesByCategory();
     }
   };
 
   @action
-  getRules = async (): Promise<*> => {
+  getIssuesByFileIfNotCached = (): void => {
+    if (!this.byFileData) {
+      this.getIssuesByFile();
+    }
+  };
+
+  @action
+  getIssuesByCategory = async (): Promise<*> => {
     if (!this.app.projectName || this.app.projectName === '') {
       throw new Error('Project name not defined');
     }
-    this.loading = true;
+    this.categoryLoading = true;
     try {
       const res = await getRequest(`/show`, { project: this.app.projectName });
       // If the project could not be found return to the project selection view
@@ -136,13 +172,13 @@ class ChecklistStore {
       if (res['err']) {
         this.error = 'Your project could not be found.';
         this.app.setProjectName(undefined);
-        this.showError(res['err']);
+        this.showCategoryError(res['err']);
         this.app.unconfirmProject();
         return;
       }
-      this.data = res;
+      this.byCategoryData = res;
       this.app.setSeverityList(res.severitylist);
-      this.loading = false;
+      this.categoryLoading = false;
       // Cache the API response since it takes a long time and you don't want to
       // do it more times than you have to
       sessionStorage.setItem(
@@ -157,7 +193,7 @@ class ChecklistStore {
       this.error = 'internal server error';
       // This should be an internal server error as opposed to simply not being able to
       // find the project in sonarqube
-      this.showError(
+      this.showCategoryError(
         `There was an error attempting to load your project's analysis. Please contact the developers for support.`,
       );
       this.app.setProjectName(undefined);
@@ -166,15 +202,52 @@ class ChecklistStore {
     }
   };
 
+  @action
+  getIssuesByFile = async (): Promise<*> => {
+    this.fileLoading = true;
+    try {
+      const data = await getRequest('/directory', {
+        project: this.app.projectName,
+      });
+      this.byFileData = data;
+      this.fileLoading = false;
+      // Cache the API response since it takes a long time and you don't want to
+      // do it more times than you have to
+      sessionStorage.setItem(
+        `${applicationPrefix}_overview_by_file`,
+        JSON.stringify(data),
+      );
+    } catch (err) {
+      console.log(err);
+      this.fileError = {
+        title: 'Server Error',
+        message: 'Your commit data could not be loaded from the server.',
+      };
+      this.fileLoading = false;
+    }
+  };
+
   constructor(app: AppStore) {
     this.app = app;
-    const cached = sessionStorage.getItem(`${applicationPrefix}_overview`);
-    if (cached) {
-      const { data, activeCategory } = JSON.parse(cached);
-      this.data = data;
+    const categoryCached = sessionStorage.getItem(
+      `${applicationPrefix}_overview`,
+    );
+    const fileCached = sessionStorage.getItem(
+      `${applicationPrefix}_overview_by_file`,
+    );
+    if (categoryCached) {
+      const { data, activeCategory } = JSON.parse(categoryCached);
+      this.byCategoryData = data;
       this.activeCategory = activeCategory;
-      this.loading = false;
+      this.categoryLoading = false;
       app.confirmProject();
+    }
+    if (fileCached) {
+      const data = JSON.parse(fileCached);
+      this.byFileData = data;
+      this.fileLoading = false;
+    }
+    if (categoryCached || fileCached) {
       message.warning(
         'Using cached project data. Presh refresh to check for the latest analysis.',
       );

@@ -43,7 +43,7 @@ class FilterMenu extends React.Component<Props> {
   };
 
   render() {
-    const { ui, className } = this.props;
+    const { className } = this.props;
     return (
       <Popover
         title="Filter Issues"
@@ -51,9 +51,7 @@ class FilterMenu extends React.Component<Props> {
         trigger="click"
         placement="bottom"
       >
-        <Button primary icon="filter" className={className}>
-          {ui.isDesktop && 'Filter Issues'}
-        </Button>
+        <Button primary icon="filter" className={className} />
       </Popover>
     );
   }

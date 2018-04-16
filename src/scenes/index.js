@@ -5,12 +5,11 @@
  * like icon and the route path it is mapped to
  */
 
-import Checklist from './Checklist';
+import Checklist, { scenes as checklistScenes } from './Checklist';
 import Graphs from './Graphs';
 import Statistics from './Statistics';
 import Duplication from './Duplication';
 import Welcome from './Welcome';
-import Overview from './Overview';
 
 // welcome is the route that shows up first to the user
 export const defaultRoute = {
@@ -21,34 +20,32 @@ export const defaultRoute = {
 };
 
 export default [
-  // {
-  //   path: '/overview',
-  //   icon: 'appstore-o',
-  //   name: 'Overview',
-  //   component: Overview,
-  // },
   {
     path: '/checklist',
     icon: 'check-circle-o',
     name: 'Checklist',
     component: Checklist,
+    scenes: checklistScenes,
   },
   {
     path: '/duplication',
     icon: 'switcher',
     name: 'Code Duplication',
     component: Duplication,
+    scenes: [],
   },
   {
     path: '/statistics',
     icon: 'share-alt',
     name: 'Statistics',
     component: Statistics,
+    scenes: [],
   },
   {
     path: '/graphs',
     icon: 'area-chart',
     name: 'Graphs',
     component: Graphs,
+    scenes: [],
   },
 ];

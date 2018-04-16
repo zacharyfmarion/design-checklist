@@ -43,7 +43,7 @@ class WelcomeStore {
     try {
       await getRequest('/statistics', { project: this.app.projectName });
       this.app.confirmProject();
-      this.history.push('/checklist');
+      this.history.push('/overview');
     } catch (err) {
       console.log(err);
       this.app.unconfirmProject();

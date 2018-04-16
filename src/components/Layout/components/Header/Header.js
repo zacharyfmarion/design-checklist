@@ -109,7 +109,7 @@ class Header extends React.Component<Props, State> {
               <ClearButton
                 primary
                 onClick={app.clearProject}
-                icon="rollback"
+                icon="edit"
                 action="clicked new project"
               >
                 {!ui.isMobile && `Change Project`}

@@ -59,7 +59,6 @@ const App = inject('app')(
           <Route exact path={defaultPath} component={defaultRoute.component} />
           {scenes.map((scene, i) => (
             <PrivateRoute
-              exact
               path={scene.path}
               component={scene.component}
               authed={!!app.projectName}
