@@ -50,7 +50,7 @@ class GraphsStore {
     const max = Math.max.apply(null, data.map(item => item[key]));
     return data.map(item => ({
       ...item,
-      [key]: item[key] / max,
+      [key]: (item[key] / max).toFixed(2),
     }));
   };
 
@@ -144,9 +144,6 @@ class GraphsStore {
     const normalizedNumberOfCommits = this.normalize(
       this.processedDataByCommits,
       'commits',
-    );
-    console.log(
-      this.stitch(normalizedAverageLinesChanged, normalizedNumberOfCommits),
     );
     return this.stitch(
       normalizedAverageLinesChanged,

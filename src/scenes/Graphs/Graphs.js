@@ -60,8 +60,14 @@ class Graphs extends React.Component<Props> {
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
         <Legend />
-        <Bar dataKey="average" stackId="a" fill={app.primaryColor} />
         <Bar
+          name="Average lines changed per commit"
+          dataKey="average"
+          stackId="a"
+          fill={app.primaryColor}
+        />
+        <Bar
+          name="Number of commits"
           dataKey="commits"
           stackId="a"
           fill={shadeColor(app.primaryColor, 0.25)}
@@ -131,7 +137,7 @@ class Graphs extends React.Component<Props> {
           <HorizontalLine />
           <ChartBounds column justify="center" align="center">
             <ChartTitle color={app.primaryColor}>
-              Normailized Statistics
+              Normalized Statistics
             </ChartTitle>
             <ResponsiveContainer>
               {this.renderNormalizedChart()}

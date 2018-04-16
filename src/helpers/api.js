@@ -1,9 +1,8 @@
 // @flow
-/**
- * Function to help with making calls to the api - basically wraps fetch with some
- * API specific things
- */
+import { GITLAB_GROUP } from 'constants/app';
 
+// Function to help with making calls to the api - basically wraps fetch with some
+// API specific things
 const baseUrl =
   process.env.NODE_ENV === 'production'
     ? 'http://compsci308.colab.duke.edu:5000/api'
@@ -25,7 +24,8 @@ export const getRequest = (
 ): Promise<*> => {
   const opts = options || {};
   const base = opts.externalBase || baseUrl;
-  const path = base + url + '?' + encodeParams(params);
+  const path =
+    base + url + '?' + encodeParams({ ...params, group: GITLAB_GROUP });
   return new Promise((resolve, reject) => {
     fetch(path, {
       method: 'GET',
@@ -52,7 +52,7 @@ export const postRequest = (
         'Content-Type': 'application/x-www-form-urlencoded',
         ...opts.additionalHeaders,
       },
-      body: encodeParams(params),
+      body: encodeParams({ ...params, group: GITLAB_GROUP }),
     })
       .then(res => res.json())
       .then(json => resolve(json))
