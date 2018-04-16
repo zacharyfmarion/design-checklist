@@ -5,7 +5,7 @@ import { GITLAB_GROUP } from 'constants/app';
 // API specific things
 const baseUrl =
   process.env.NODE_ENV === 'production'
-    ? 'http://compsci308.colab.duke.edu:5000/api'
+    ? 'http://compsci308.colab.duke.edu:3050/api'
     : 'http://localhost:5000/api';
 
 // https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
