@@ -1,13 +1,6 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-  Tooltip,
-} from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { colorRange } from 'helpers/colors';
 
 type Props = {

@@ -163,9 +163,10 @@ class ByFile extends React.Component<Props> {
           <GraphPanel column>
             {this.renderChart()}
             <Controls align="center" primaryColor={app.primaryColor}>
-              <RadioGroup
+              <StyledRadioGroup
                 onChange={this.handleGraphTypeChange}
                 defaultValue={store.byFileGraphType}
+                primaryColor={app.primaryColor}
               >
                 <StyledRadioButton value="treemap">Treemap</StyledRadioButton>
                 <StyledRadioButton value="barchart">
@@ -174,7 +175,7 @@ class ByFile extends React.Component<Props> {
                 <StyledRadioButton value="piechart">
                   Pie Chart
                 </StyledRadioButton>
-              </RadioGroup>
+              </StyledRadioGroup>
               {/* <VerticalBar /> */}
               <Flex auto />
               <ControlButton flat onClick={store.zoomOut}>
@@ -211,6 +212,22 @@ const VerticalBar = styled.div`
   height: 38px;
   margin: 0 5px;
   border-right: 1px solid lightgray;
+`;
+
+const StyledRadioGroup = styled(RadioGroup)`
+  ${({ primaryColor }) => `
+    .ant-radio-button-wrapper:hover, .ant-radio-button-wrapper-focused {
+      color: ${primaryColor};
+    }
+    .ant-radio-button-wrapper-checked {
+      border-color: ${primaryColor};
+      color: ${primaryColor};
+      box-shadow: -1px 0 0 0 ${primaryColor};
+    }
+    .ant-radio-button-wrapper-checked:first-child {
+      border-color: ${primaryColor};
+    }
+  `};
 `;
 
 const StyledRadioButton = styled(RadioButton)`
