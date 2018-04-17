@@ -117,7 +117,7 @@ const ModeIcon = styled(Icon)`
 
 const ModeLink = styled(Link)`
   display: flex;
-  flex: 1 1 auto;
+  flex: 1;
   height: 250px;
   background: #fff;
   border-radius: 3px;
