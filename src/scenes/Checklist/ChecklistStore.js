@@ -165,9 +165,10 @@ class ChecklistStore {
   @computed
   get byFileGraphData(): Array<Object> {
     if (!this.byFileData) return [];
+    console.log(this.byFileData);
     // we basically traverse each root folder and check how many issues
     // are contained in each one
-    return Object.keys(this.processedIssuesByFile.directories).map(dir => {
+    return Object.keys(this.byFileData[this.treeRoot].directories).map(dir => {
       return {
         name: dir,
         numIssues: this.directoryGraphBfs(dir),

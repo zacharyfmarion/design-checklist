@@ -2,16 +2,6 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Collapse, Radio, Icon, Tag } from 'antd';
-import {
-  ResponsiveContainer,
-  Bar,
-  BarChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from 'recharts';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import Panel from 'components/Panel';
@@ -22,7 +12,10 @@ import Spin from 'components/Spin';
 import AppStore from 'stores/AppStore';
 import UiStore from 'stores/UiStore';
 import ChecklistStore from '../../ChecklistStore';
+
+// local components
 import ByFileTreemap from './components/ByFileTreemap';
+import ByFileBarChart from './components/ByFileBarChart';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -114,24 +107,21 @@ class ByFile extends React.Component<Props> {
     );
   };
 
-  renderBarChart = () => {
-    const { store, app } = this.props;
+  renderChart = () => {
+    const { store } = this.props;
     if (!store.byFileData) return null;
-    return (
-      <ResponsiveContainer>
-        <BarChart width={600} height={300} data={store.byFileGraphData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar
-            name="Number of Issues"
-            dataKey="numIssues"
-            fill={app.primaryColor}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+    return store.byFileGraphType === 'treemap' ? (
+      <ByFileTreemap
+        data={store.byFileTreemapData.children}
+        canExpand={store.canExpandTree}
+        onExpand={store.changeTreeRoot}
+      />
+    ) : (
+      <ByFileBarChart
+        data={store.byFileGraphData}
+        canExpand={store.canExpandTree}
+        onExpand={store.changeTreeRoot}
+      />
     );
   };
 
@@ -142,7 +132,6 @@ class ByFile extends React.Component<Props> {
 
   render() {
     const { store, app } = this.props;
-    console.log(store.processedIssuesByFile);
     return store.fileLoading ? (
       this.renderLoading()
     ) : (
@@ -156,15 +145,7 @@ class ByFile extends React.Component<Props> {
           </Panel>
         ) : (
           <GraphPanel column>
-            {store.byFileGraphType === 'treemap' ? (
-              <ByFileTreemap
-                data={store.byFileTreemapData.children}
-                canExpand={store.canExpandTree}
-                onExpand={store.changeTreeRoot}
-              />
-            ) : (
-              this.renderBarChart()
-            )}
+            {this.renderChart()}
             <Controls align="center" primaryColor={app.primaryColor}>
               <RadioGroup
                 onChange={this.handleGraphTypeChange}
@@ -177,16 +158,12 @@ class ByFile extends React.Component<Props> {
               </RadioGroup>
               {/* <VerticalBar /> */}
               <Flex auto />
-              {store.byFileGraphType === 'treemap' && (
-                <div>
-                  <ControlButton flat onClick={store.zoomOut}>
-                    Zoom Out
-                  </ControlButton>
-                  <ControlButton flat onClick={store.resetTreemap}>
-                    Reset
-                  </ControlButton>
-                </div>
-              )}
+              <ControlButton flat onClick={store.zoomOut}>
+                Zoom Out
+              </ControlButton>
+              <ControlButton flat onClick={store.resetTreemap}>
+                Reset
+              </ControlButton>
             </Controls>
           </GraphPanel>
         )}
