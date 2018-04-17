@@ -12,6 +12,8 @@ type ByCategoryData = {
   severitylist: Array<string>,
 };
 
+type GraphType = 'treemap' | 'barchart';
+
 class ChecklistStore {
   app: AppStore;
 
@@ -21,39 +23,17 @@ class ChecklistStore {
   @observable categoryLoading: boolean = false;
   @observable fileLoading: boolean = false;
   @observable activeCategory: string = categories[0];
+  @observable treeRoot: string = 'src';
+  @observable byFileGraphType: GraphType = 'treemap';
 
-  // Perform a bfs to format the data in a nested way that actually matches
-  // the directory structure of the project itself
-  directoryBfs = (directory: string) => {
-    if (
-      !this.byFileData.hasOwnProperty(directory) ||
-      !this.byFileData[directory].hasOwnProperty('directories')
-    ) {
-      return {};
-    }
-    let res = {
-      directories: {},
-      files: this.byFileData[directory].files,
-    };
-    // iterate over each directory in file
-    Object.keys(this.byFileData[directory].directories).forEach(dir => {
-      res.directories[dir] = this.directoryBfs(dir);
-    });
-    return res;
+  // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
+  isEmptyObject = (obj: Object) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
   };
 
-  @computed
-  get processedIssuesByFile(): ?Object {
-    if (!this.byFileData) return null;
-    return this.directoryBfs('.');
-  }
-
-  @computed
-  get activeSeverities(): Array<string> {
-    return Object.keys(this.app.filters).filter(
-      severity => this.app.filters[severity],
-    );
-  }
+  isEmptyArray = (array: Array<*>) => {
+    return array.length === 0 && array.constructor === Array;
+  };
 
   errorSort = (a: Object, b: Object) => {
     return (
@@ -86,6 +66,126 @@ class ChecklistStore {
     });
     return res;
   };
+
+  // Get all issues associated with files
+  getAllIssues = (files: Object) => {
+    let res = [];
+    Object.keys(files).forEach(file => {
+      res = [...res, ...files[file]];
+    });
+    return res;
+  };
+
+  canExpandTree = (dir: string): boolean => {
+    return (
+      this.byFileData[dir] &&
+      Object.keys(this.byFileData[dir].directories).length > 0
+    );
+  };
+
+  // Perform a bfs to format the data in a nested way that actually matches
+  // the directory structure of the project itself
+  directoryBfs = (directory: string) => {
+    if (
+      !this.byFileData.hasOwnProperty(directory) ||
+      !this.byFileData[directory].hasOwnProperty('directories')
+    ) {
+      return {};
+    }
+    let res = {
+      directories: {},
+      files: this.byFileData[directory].files,
+    };
+    // iterate over each directory in file
+    Object.keys(this.byFileData[directory].directories).forEach(dir => {
+      res.directories[dir] = this.directoryBfs(dir);
+      // if there are no more children
+      if (this.isEmptyObject(res.directories[dir])) {
+        res.size = this.getAllIssues(this.byFileData[directory].files);
+      }
+    });
+    return res;
+  };
+
+  directoryGraphBfs = (directory: string) => {
+    if (
+      !this.byFileData.hasOwnProperty(directory) ||
+      !this.byFileData[directory].hasOwnProperty('files')
+    ) {
+      return 0;
+    }
+    let total = this.getAllIssues(this.byFileData[directory].files).length;
+    // iterate over each directory in file
+    Object.keys(this.byFileData[directory].directories).forEach(dir => {
+      total += this.directoryGraphBfs(dir);
+    });
+    return total;
+  };
+
+  directoryTreemapBfs = (directory: string): [?Object, number] => {
+    if (
+      !this.byFileData.hasOwnProperty(directory) ||
+      !this.byFileData[directory].hasOwnProperty('directories')
+    ) {
+      return [null, 0];
+    }
+    let res = {
+      name: directory,
+      children: [],
+    };
+    let total = this.getAllIssues(this.byFileData[directory].files).length;
+    let hasValidChildren = false;
+    // iterate over each directory in file
+    Object.keys(this.byFileData[directory].directories).forEach(dir => {
+      const [child, childTotal] = this.directoryTreemapBfs(dir);
+      // if there are no more children
+      total += childTotal;
+      if (child) {
+        res.children.push(child);
+        hasValidChildren = true;
+      }
+    });
+    if (!hasValidChildren) {
+      res.size = this.getAllIssues(this.byFileData[directory].files).length;
+      delete res.children;
+    }
+    res.size = total;
+    return [res, total];
+  };
+
+  // Data for the bar chart displayed on the byFile page
+  @computed
+  get byFileGraphData(): Array<Object> {
+    if (!this.byFileData) return [];
+    // we basically traverse each root folder and check how many issues
+    // are contained in each one
+    return Object.keys(this.processedIssuesByFile.directories).map(dir => {
+      return {
+        name: dir,
+        numIssues: this.directoryGraphBfs(dir),
+      };
+    });
+  }
+
+  // Data for the treemap displayed on the byFile page
+  @computed
+  get byFileTreemapData(): Array<Object> {
+    if (!this.byFileData) return [];
+    return this.directoryTreemapBfs(this.treeRoot)[0];
+  }
+
+  @computed
+  get processedIssuesByFile(): ?Object {
+    if (!this.byFileData) return null;
+    return this.directoryBfs('src');
+  }
+
+  @computed
+  get activeSeverities(): Array<string> {
+    return Object.keys(this.app.filters).filter(
+      severity => this.app.filters[severity],
+    );
+  }
 
   // get issues for all categories
   @computed
@@ -121,10 +221,25 @@ class ChecklistStore {
   }
 
   @action
+  changeByFileGraphType = (type: GraphType): void => {
+    this.byFileGraphType = type;
+  };
+
+  @action
+  changeTreeRoot = (root: string) => {
+    if (this.canExpandTree(root)) {
+      this.treeRoot = root;
+    }
+  };
+
+  @action
   refreshProject = (): void => {
-    this.categoryLoading = true;
-    this.fileLoading = true;
-    this.getRules();
+    const path = window.location.hash.substring(1);
+    if (path === '/checklist/by-file') {
+      this.getIssuesByFile();
+    } else if (path === '/checklist/by-category') {
+      this.getIssuesByCategory();
+    }
   };
 
   @action

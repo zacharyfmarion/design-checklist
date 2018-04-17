@@ -3,14 +3,14 @@ import ByFile from './ByFile';
 
 export default [
   {
-    path: 'checklist/by-category',
-    icon: 'check-circle-o',
+    path: '/checklist/by-category',
+    icon: 'appstore-o',
     name: 'By Category',
     component: ByCategory,
   },
   {
-    path: 'checklist/by-file',
-    icon: 'check-circle-o',
+    path: '/checklist/by-file',
+    icon: 'file-text',
     name: 'By File',
     component: ByFile,
   },

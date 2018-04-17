@@ -12,6 +12,7 @@ type Props = {
   action?: string,
   label?: string,
   value?: string,
+  flat?: boolean,
   children: React.Node,
   app: AppStore,
 };
@@ -21,6 +22,7 @@ const Button = ({
   action,
   label,
   app,
+  flat,
   value,
   children,
   ...other
@@ -42,6 +44,7 @@ const Button = ({
     <StyledButton
       onClick={handleClick}
       primaryColor={app.primaryColor}
+      flat={flat}
       {...other}
     >
       {children}
@@ -52,16 +55,16 @@ const Button = ({
 const StyledButton = styled(AntButton)`
   height: 38px;
   padding: 0 20px;
-  box-shadow: ${shadow};
   text-transform: uppercase;
   font-size: 14px;
-  ${({ primary, primaryColor }) =>
+  ${({ primary, flat, primaryColor }) =>
     `
     ${primary &&
       `
       background-color: ${primaryColor}; 
       color: #fff;
     `}
+    ${!flat && `box-shadow: ${shadow}`};
     &:hover {
       border-color: ${primaryColor};
       color: ${primaryColor};

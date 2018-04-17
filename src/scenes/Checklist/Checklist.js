@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
 import styled from 'styled-components';
-import { Icon } from 'antd';
+import { Icon, Tooltip } from 'antd';
 import { withRouter } from 'react-router';
 import { Flex } from 'reflexbox';
 import Layout from 'components/Layout';
@@ -52,26 +52,30 @@ class Checklist extends React.Component<Props> {
     return (
       !this.store.loading && (
         <Flex>
-          <HeaderButton primary onClick={goBack} icon="rollback" />
+          <Tooltip placement="bottom" title="Go Back">
+            <HeaderButton primary onClick={goBack} icon="rollback" />
+          </Tooltip>
           <StyledFilterMenu />
-          <Button
-            primary
-            onClick={this.store.refreshProject}
-            icon="reload"
-            action="clicked refresh"
-            label="Checklist"
-          />
+          <Tooltip placement="bottom" title="Refresh">
+            <Button
+              primary
+              onClick={this.store.refreshProject}
+              icon="reload"
+              action="clicked refresh"
+              label="Checklist"
+            />
+          </Tooltip>
         </Flex>
       )
     );
   };
 
   render() {
-    const { match } = this.props;
+    const { ui, match } = this.props;
     return (
-      <Layout actions={this.renderHeaderActions()}>
+      <PaddedLayout actions={this.renderHeaderActions()}>
         {match.isExact && (
-          <Flex auto>
+          <Flex auto column={ui.isMobile}>
             <ModeSelect
               path="/checklist/by-category"
               title="Issues by Category"
@@ -92,10 +96,14 @@ class Checklist extends React.Component<Props> {
           path="/checklist/by-file"
           component={() => <ByFile store={this.store} />}
         />
-      </Layout>
+      </PaddedLayout>
     );
   }
 }
+
+const PaddedLayout = styled(Layout)`
+  padding: 10px 15px;
+`;
 
 const ModeTitle = styled.h1`
   text-transform: uppercase;

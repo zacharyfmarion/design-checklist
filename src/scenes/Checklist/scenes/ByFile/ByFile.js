@@ -1,18 +1,31 @@
 // @flow
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Collapse, Icon } from 'antd';
-import { ResponsiveContainer, Treemap } from 'recharts';
+import { Collapse, Radio, Icon } from 'antd';
+import {
+  ResponsiveContainer,
+  Bar,
+  BarChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
+import Text from 'components/Text';
 import CodeIssue from 'components/CodeIssue';
 import Spin from 'components/Spin';
 import AppStore from 'stores/AppStore';
 import UiStore from 'stores/UiStore';
 import ChecklistStore from '../../ChecklistStore';
+import ByFileTreemap from './components/ByFileTreemap';
 
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 const CollapsePanel = Collapse.Panel;
 
 type Props = {
@@ -36,39 +49,10 @@ class ByFile extends React.Component<Props> {
     );
   };
 
-  renderTreemap = () => {
-    const { app } = this.props;
-    return (
-      <ResponsiveContainer>
-        <Treemap
-          width={400}
-          height={200}
-          data={[]}
-          dataKey="size"
-          ratio={4 / 3}
-          stroke="#fff"
-          fill={app.primaryColor}
-        />
-      </ResponsiveContainer>
-    );
-  };
-
-  // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
-  isEmptyObject = (obj: Object) => {
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
-  };
-
-  getAllIssues = (files: Object) => {
-    let res = [];
-    Object.keys(files).forEach(file => {
-      res = [...res, ...files[file]];
-    });
-    return res;
-  };
-
   renderCollapse = (data: Object) => {
-    if (this.isEmptyObject(data.directories)) {
-      const allIssues = this.getAllIssues(data.files);
+    const { store } = this.props;
+    if (store.isEmptyObject(data.directories)) {
+      const allIssues = store.getAllIssues(data.files);
       return allIssues.length > 0 ? (
         <Flex auto column>
           {allIssues.map(issue => {
@@ -119,17 +103,107 @@ class ByFile extends React.Component<Props> {
     );
   };
 
-  render() {
-    const { store } = this.props;
+  renderBarChart = () => {
+    const { store, app } = this.props;
+    if (!store.byFileData) return null;
     return (
+      <ResponsiveContainer>
+        <BarChart width={600} height={300} data={store.byFileGraphData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar
+            name="Number of Issues"
+            dataKey="numIssues"
+            fill={app.primaryColor}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    );
+  };
+
+  handleGraphTypeChange = (e: Event) => {
+    const { store } = this.props;
+    store.changeByFileGraphType(e.target.value);
+  };
+
+  render() {
+    const { store, app } = this.props;
+    return store.fileLoading ? (
+      this.renderLoading()
+    ) : (
       <Flex auto column>
-        <StyledPanel>
-          {store.fileLoading ? this.renderLoading() : this.renderDirectories()}
-        </StyledPanel>
+        <GraphPanel column>
+          {store.byFileGraphType === 'treemap' ? (
+            <ByFileTreemap
+              data={store.byFileTreemapData.children}
+              canExpand={store.canExpandTree}
+              onExpand={store.changeTreeRoot}
+            />
+          ) : (
+            this.renderBarChart()
+          )}
+          <Controls align="center" primaryColor={app.primaryColor}>
+            <RadioGroup
+              onChange={this.handleGraphTypeChange}
+              defaultValue={store.byFileGraphType}
+            >
+              <StyledRadioButton value="treemap">Treemap</StyledRadioButton>
+              <StyledRadioButton value="barchart">Bar Chart</StyledRadioButton>
+            </RadioGroup>
+            {/* <VerticalBar /> */}
+            <Flex auto />
+            {store.byFileGraphType === 'treemap' && (
+              <div>
+                <ControlButton flat>Zoom Out</ControlButton>
+                <ControlButton flat onClick={store.resetTreemap}>
+                  Reset
+                </ControlButton>
+              </div>
+            )}
+          </Controls>
+        </GraphPanel>
+        <StyledPanel>{this.renderDirectories()}</StyledPanel>
       </Flex>
     );
   }
 }
+
+const graphPanelHeight = 350;
+
+const GraphPanel = styled(Panel)`
+  height: ${graphPanelHeight}px;
+  min-height: ${graphPanelHeight}px;
+  max-height: ${graphPanelHeight}px;
+  margin-bottom: 0;
+`;
+
+const VerticalBar = styled.div`
+  height: 38px;
+  margin: 0 5px;
+  border-right: 1px solid lightgray;
+`;
+
+const StyledRadioButton = styled(RadioButton)`
+  height: 38px;
+  line-height: 38px;
+  padding: 0 20px;
+  text-transform: uppercase;
+  font-size: 14px;
+`;
+
+const ControlButton = styled(Button)`
+  margin-right: 5px;
+`;
+
+const Controls = styled(Flex)`
+  border-radius: 3px;
+  margin-top: 10px;
+  padding: 8px 0;
+  // background: ${({ primaryColor }) => primaryColor};
+`;
 
 const StyledPanel = styled(Panel)`
   display: block;

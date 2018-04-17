@@ -54,7 +54,9 @@ const App = inject('app')(
           <Route
             exact
             path="/"
-            component={() => <Redirect to={defaultPath} />}
+            component={() => (
+              <Redirect to={!app.projectName ? defaultPath : '/checklist'} />
+            )}
           />
           <Route exact path={defaultPath} component={defaultRoute.component} />
           {scenes.map((scene, i) => (

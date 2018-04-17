@@ -54,6 +54,7 @@ class AppStore {
     this.setProjectName(undefined);
     this.projectConfirmed = false;
     sessionStorage.setItem(`${applicationPrefix}_overview`, '');
+    sessionStorage.setItem(`${applicationPrefix}_overview_by_file`, '');
     sessionStorage.setItem(`${applicationPrefix}_duplications`, '');
   };
 

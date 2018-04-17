@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import styled from 'styled-components';
-import { Select, Popover } from 'antd';
+import { Select, Popover, Tooltip } from 'antd';
 import { observer, inject } from 'mobx-react';
 import { themeColors } from 'constants/styles';
 import { validHex } from 'helpers/colors';
@@ -75,14 +75,16 @@ class Settings extends React.Component<Props, State> {
   };
   render() {
     return (
-      <Popover
-        content={this.renderContent()}
-        title="App Settings"
-        trigger="click"
-        placement="bottomRight"
-      >
-        <SettingsButton primary icon="setting" />
-      </Popover>
+      <Tooltip placement="bottom" title="Settings">
+        <Popover
+          content={this.renderContent()}
+          title="App Settings"
+          trigger="click"
+          placement="bottomRight"
+        >
+          <SettingsButton primary icon="setting" />
+        </Popover>
+      </Tooltip>
     );
   }
 }

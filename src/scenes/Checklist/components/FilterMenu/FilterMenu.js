@@ -7,7 +7,7 @@
  */
 
 import * as React from 'react';
-import { Popover } from 'antd';
+import { Popover, Tooltip } from 'antd';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
@@ -45,14 +45,16 @@ class FilterMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     return (
-      <Popover
-        title="Filter Issues"
-        content={this.renderMenu()}
-        trigger="click"
-        placement="bottom"
-      >
-        <Button primary icon="filter" className={className} />
-      </Popover>
+      <Tooltip placement="bottom" title="Filter Issues">
+        <Popover
+          title="Filter Issues"
+          content={this.renderMenu()}
+          trigger="click"
+          placement="bottom"
+        >
+          <Button primary icon="filter" className={className} />
+        </Popover>
+      </Tooltip>
     );
   }
 }

@@ -68,21 +68,46 @@ class SideMenu extends React.Component<Props, State> {
         </SidebarHeader>
         <Flex auto>
           <StyledMenu
-            defaultSelectedKeys={[this.getBasePath()]}
-            defaultOpenKeys={['sub1']}
+            defaultSelectedKeys={[this.props.location.pathname]}
             mode="inline"
             isDesktop={ui.isDesktop}
             inlineCollapsed={ui.isDesktop ? collapsed : false}
             primary={app.primaryColor}
           >
-            {scenes.map((scene, i) => (
-              <Menu.Item key={scene.path}>
-                <Link to={scene.path} onClick={this.handleItemClick}>
-                  <Icon type={scene.icon} />
-                  <span>{scene.name}</span>
-                </Link>
-              </Menu.Item>
-            ))}
+            {scenes.map((scene, i) => {
+              if (scene.scenes.length > 0) {
+                return (
+                  <Menu.SubMenu
+                    key={scene.path}
+                    title={
+                      <span>
+                        <Link to={scene.path} onClick={this.handleItemClick}>
+                          <Icon type={scene.icon} />
+                          <span>{scene.name}</span>
+                        </Link>
+                      </span>
+                    }
+                  >
+                    {scene.scenes.map((subscene, j) => (
+                      <Menu.Item key={subscene.path}>
+                        <Link to={subscene.path} onClick={this.handleItemClick}>
+                          <Icon type={subscene.icon} />
+                          <span>{subscene.name}</span>
+                        </Link>
+                      </Menu.Item>
+                    ))}
+                  </Menu.SubMenu>
+                );
+              }
+              return (
+                <Menu.Item key={scene.path}>
+                  <Link to={scene.path} onClick={this.handleItemClick}>
+                    <Icon type={scene.icon} />
+                    <span>{scene.name}</span>
+                  </Link>
+                </Menu.Item>
+              );
+            })}
           </StyledMenu>
         </Flex>
         {ui.isDesktop && (
@@ -170,6 +195,9 @@ const StyledMenu = styled(Menu)`
             : ''
         }
     } 
+    .ant-menu-submenu-selected.ant-menu-submenu-title {
+      border-right: 3px solid ${primary} !important;
+    }
   `};
 `;
 
