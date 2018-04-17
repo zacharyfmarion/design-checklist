@@ -157,7 +157,9 @@ class ByFile extends React.Component<Props> {
             <Flex auto />
             {store.byFileGraphType === 'treemap' && (
               <div>
-                <ControlButton flat>Zoom Out</ControlButton>
+                <ControlButton flat onClick={store.zoomOut}>
+                  Zoom Out
+                </ControlButton>
                 <ControlButton flat onClick={store.resetTreemap}>
                   Reset
                 </ControlButton>

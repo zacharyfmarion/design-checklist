@@ -132,6 +132,7 @@ class ChecklistStore {
     let res = {
       name: directory,
       children: [],
+      parent: 'src',
     };
     let total = this.getAllIssues(this.byFileData[directory].files).length;
     let hasValidChildren = false;
@@ -141,6 +142,7 @@ class ChecklistStore {
       // if there are no more children
       total += childTotal;
       if (child) {
+        child.parent = directory;
         res.children.push(child);
         hasValidChildren = true;
       }
@@ -219,6 +221,21 @@ class ChecklistStore {
     }
     return res;
   }
+
+  @action
+  resetTreemap = (): void => {
+    this.treeRoot = 'src';
+  };
+
+  @action
+  zoomOut = (): void => {
+    // we basically strip the last slash off of the treeRoot, unless there
+    // isn't a slash in which case we leave it
+    const lastIndex = this.treeRoot.lastIndexOf('/');
+    if (lastIndex >= 0) {
+      this.treeRoot = this.treeRoot.substring(0, lastIndex);
+    }
+  };
 
   @action
   changeByFileGraphType = (type: GraphType): void => {
