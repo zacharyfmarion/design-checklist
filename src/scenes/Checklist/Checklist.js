@@ -2,16 +2,42 @@ import * as React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
 import styled from 'styled-components';
+import { Icon } from 'antd';
 import { withRouter } from 'react-router';
 import { Flex } from 'reflexbox';
 import Layout from 'components/Layout';
 import Button from 'components/Button';
 import ChecklistStore from './ChecklistStore';
 import FilterMenu from './components/FilterMenu';
+import { shadow } from 'constants/styles';
+import { shadeColor } from 'helpers/colors';
+import AppStore from 'stores/AppStore';
 
 // Importing scenes
 import ByCategory from './scenes/ByCategory';
 import ByFile from './scenes/ByFile';
+
+type Props = {};
+
+type ModeSelectProps = {
+  onClick: Function,
+  title: string,
+  icon: string,
+  app: AppStore,
+};
+
+const ModeSelect = inject('app')(
+  observer(({ app, path, title, icon }: ModeSelectProps) => {
+    return (
+      <ModeLink to={path}>
+        <Flex auto column justify="center" align="center">
+          <ModeIcon type={icon} color={shadeColor(app.primaryColor, 0.5)} />
+          <ModeTitle>{title}</ModeTitle>
+        </Flex>
+      </ModeLink>
+    );
+  }),
+);
 
 @observer
 class Checklist extends React.Component<Props> {
@@ -45,10 +71,18 @@ class Checklist extends React.Component<Props> {
     return (
       <Layout actions={this.renderHeaderActions()}>
         {match.isExact && (
-          <div>
-            <Link to="/checklist/by-category">By Category</Link>
-            <Link to="/checklist/by-file">By File</Link>
-          </div>
+          <Flex auto>
+            <ModeSelect
+              path="/checklist/by-category"
+              title="Issues by Category"
+              icon="appstore-o"
+            />
+            <ModeSelect
+              path="/checklist/by-file"
+              title="Issues by File"
+              icon="file-text"
+            />
+          </Flex>
         )}
         <Route
           path="/checklist/by-category"
@@ -62,6 +96,26 @@ class Checklist extends React.Component<Props> {
     );
   }
 }
+
+const ModeTitle = styled.h1`
+  text-transform: uppercase;
+  margin-top: 25px;
+`;
+
+const ModeIcon = styled(Icon)`
+  font-size: 100px;
+  color: ${({ color }) => color};
+`;
+
+const ModeLink = styled(Link)`
+  display: flex;
+  flex: 1 1 auto;
+  height: 250px;
+  background: #fff;
+  border-radius: 3px;
+  margin: 20px;
+  box-shadow: ${shadow};
+`;
 
 const HeaderButton = styled(Button)`
   margin-right: 8px;

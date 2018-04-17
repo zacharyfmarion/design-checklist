@@ -5,7 +5,6 @@ import { Collapse, Icon } from 'antd';
 import { ResponsiveContainer, Treemap } from 'recharts';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
-import Layout from 'components/Layout';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
 import CodeIssue from 'components/CodeIssue';
