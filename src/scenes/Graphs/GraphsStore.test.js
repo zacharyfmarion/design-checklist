@@ -51,7 +51,11 @@ describe('GraphsStore', () => {
   describe('#normalize', () => {
     it('Correctly normalizes an array of objects', () => {
       const array = [{ a: 2 }, { a: 5 }, { a: 6 }];
-      const res = [{ a: 2 / 6 }, { a: 5 / 6 }, { a: 6 / 6 }];
+      const res = [
+        { a: (2 / 6).toFixed(2) },
+        { a: (5 / 6).toFixed(2) },
+        { a: (6 / 6).toFixed(2) },
+      ];
       expect(JSON.stringify(store.normalize(array, 'a'))).toBe(
         JSON.stringify(res),
       );
