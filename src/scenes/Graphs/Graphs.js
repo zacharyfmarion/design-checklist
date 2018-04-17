@@ -3,10 +3,11 @@ import * as React from 'react';
 import Layout from 'components/Layout';
 import styled from 'styled-components';
 import { observer, inject } from 'mobx-react';
-import { Radio } from 'antd';
+import { Tooltip, Radio } from 'antd';
 import { Flex } from 'reflexbox';
 import Spin from 'components/Spin';
 import Panel from 'components/Panel';
+import Button from 'components/Button';
 import ErrorMessage from 'components/ErrorMessage';
 import {
   ResponsiveContainer,
@@ -17,7 +18,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   Legend,
 } from 'recharts';
 import { shadeColor } from 'helpers/colors';
@@ -41,7 +41,7 @@ class Graphs extends React.Component<Props> {
   }
 
   componentDidMount() {
-    this.store.getData();
+    this.store.getDataIfNotCached();
   }
 
   // Remove the date key so just the authors are left
@@ -148,9 +148,23 @@ class Graphs extends React.Component<Props> {
     );
   };
 
+  renderHeaderActions = () => {
+    return (
+      <Tooltip placement="bottom" title="Refresh">
+        <Button
+          primary
+          onClick={this.store.getData}
+          icon="reload"
+          action="clicked refresh"
+          label="Graphs"
+        />
+      </Tooltip>
+    );
+  };
+
   render() {
     return (
-      <Layout>
+      <Layout actions={this.renderHeaderActions()}>
         <Panel column auto>
           {this.store.loading ? (
             <LoadingContainer auto justify="center">

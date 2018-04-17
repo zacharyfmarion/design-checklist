@@ -1,7 +1,9 @@
 // @flow
 import { action, computed, observable } from 'mobx';
+import { message } from 'antd';
 import { getRequest } from 'helpers/api';
 import AppStore from 'stores/AppStore';
+import { applicationPrefix } from 'constants/app';
 import { createDateRange, formatDate } from 'helpers/dates';
 
 type Statistic = 'insertions' | 'deletions' | 'files changed';
@@ -186,14 +188,29 @@ class GraphsStore {
     });
   };
 
+  @action
+  getDataIfNotCached = () => {
+    if (!this.dataByCommits || !this.dataByLines) {
+      this.getData();
+    }
+  };
+
   // Get all the data needed to populate the charts
   // TODO: Change this to Promise.all as it is more performant. Only reason
   // it is not like that right now is that an error is randomly thrown.
   @action
   getData = async (): Promise<*> => {
     try {
+      this.loading = true;
       this.dataByCommits = await this.getDataByCommits();
       this.dataByLines = await this.getDataByLines();
+      sessionStorage.setItem(
+        `${applicationPrefix}_commits`,
+        JSON.stringify({
+          dataByCommits: this.dataByCommits,
+          dataByLines: this.dataByLines,
+        }),
+      );
       this.loading = false;
     } catch (err) {
       console.log(err);
@@ -207,6 +224,16 @@ class GraphsStore {
 
   constructor(app: AppStore) {
     this.app = app;
+    const cached = sessionStorage.getItem(`${applicationPrefix}_commits`);
+    if (cached) {
+      const { dataByCommits, dataByLines } = JSON.parse(cached);
+      this.dataByCommits = dataByCommits;
+      this.dataByLines = dataByLines;
+      this.loading = false;
+      message.warning(
+        'Using cached project data. Presh refresh to check for the latest analysis.',
+      );
+    }
   }
 }
 

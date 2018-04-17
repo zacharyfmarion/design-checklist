@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
+import { Tooltip } from 'antd';
 import styled from 'styled-components';
 import Layout from 'components/Layout';
 import Panel from 'components/Panel';
@@ -32,19 +33,18 @@ class Duplication extends React.Component<Props> {
   }
 
   renderHeaderActions = () => {
-    const { ui } = this.props;
     return (
       !this.store.loading && (
         <Flex>
-          <Button
-            primary
-            onClick={this.store.refresh}
-            icon="reload"
-            action="clicked refresh"
-            label="Duplication"
-          >
-            {ui.isDesktop && `Refresh`}
-          </Button>
+          <Tooltip placement="bottom" title="Refresh">
+            <Button
+              primary
+              onClick={this.store.refresh}
+              icon="reload"
+              action="clicked refresh"
+              label="Duplication"
+            />
+          </Tooltip>
         </Flex>
       )
     );

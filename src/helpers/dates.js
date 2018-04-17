@@ -22,7 +22,7 @@ const monthNames = [
  * @param {Date} endDate - Ending point
  */
 export function createDateRange(startDate: Date, endDate: Date): Array<Date> {
-  let range = [];
+  let range = [startDate];
   let currDate = startDate;
   let tomorrow;
   while (currDate < endDate) {
