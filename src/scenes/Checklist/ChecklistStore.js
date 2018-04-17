@@ -86,26 +86,31 @@ class ChecklistStore {
 
   // Perform a bfs to format the data in a nested way that actually matches
   // the directory structure of the project itself
-  directoryBfs = (directory: string) => {
+  directoryBfs = (directory: string): [Object, number] => {
     if (
       !this.byFileData.hasOwnProperty(directory) ||
       !this.byFileData[directory].hasOwnProperty('directories')
     ) {
-      return {};
+      return [{}, 0];
     }
     let res = {
       directories: {},
       files: this.byFileData[directory].files,
     };
+    let total = this.getAllIssues(this.byFileData[directory].files).length;
     // iterate over each directory in file
     Object.keys(this.byFileData[directory].directories).forEach(dir => {
       res.directories[dir] = this.directoryBfs(dir);
+      const [dirs, subtotal] = this.directoryBfs(dir);
+      total += subtotal;
+      res.directories[dir] = dirs;
       // if there are no more children
       if (this.isEmptyObject(res.directories[dir])) {
         res.size = this.getAllIssues(this.byFileData[directory].files);
       }
     });
-    return res;
+    res.numIssues = total;
+    return [res, total];
   };
 
   directoryGraphBfs = (directory: string) => {
@@ -180,7 +185,7 @@ class ChecklistStore {
   @computed
   get processedIssuesByFile(): ?Object {
     if (!this.byFileData) return null;
-    return this.directoryBfs('src');
+    return this.directoryBfs('src')[0];
   }
 
   @computed

@@ -69,6 +69,7 @@ class SideMenu extends React.Component<Props, State> {
         <Flex auto>
           <StyledMenu
             defaultSelectedKeys={[this.props.location.pathname]}
+            defaultOpenKeys={['/checklist']}
             mode="inline"
             isDesktop={ui.isDesktop}
             inlineCollapsed={ui.isDesktop ? collapsed : false}

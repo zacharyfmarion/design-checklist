@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Collapse, Radio, Icon } from 'antd';
+import { Collapse, Radio, Icon, Tag } from 'antd';
 import {
   ResponsiveContainer,
   Bar,
@@ -68,8 +68,19 @@ class ByFile extends React.Component<Props> {
     return (
       <StyledCollapse>
         {Object.keys(data.directories).map((dir, i) => {
+          const numIssues = data.directories[dir].numIssues;
           return (
-            <CollapsePanel header={dir} key={i}>
+            <CollapsePanel
+              header={
+                <span>
+                  {dir}
+                  <HeaderTag color={numIssues > 0 ? 'red' : 'green'}>
+                    {numIssues} {numIssues === 1 ? 'error' : 'errors'}
+                  </HeaderTag>{' '}
+                </span>
+              }
+              key={i}
+            >
               {this.renderCollapse(data.directories[dir])}
             </CollapsePanel>
           );
@@ -131,6 +142,7 @@ class ByFile extends React.Component<Props> {
 
   render() {
     const { store, app } = this.props;
+    console.log(store.processedIssuesByFile);
     return store.fileLoading ? (
       this.renderLoading()
     ) : (
@@ -180,6 +192,10 @@ const GraphPanel = styled(Panel)`
   min-height: ${graphPanelHeight}px;
   max-height: ${graphPanelHeight}px;
   margin-bottom: 0;
+`;
+
+const HeaderTag = styled(Tag)`
+  margin-left: 7px;
 `;
 
 const VerticalBar = styled.div`
