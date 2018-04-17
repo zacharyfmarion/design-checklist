@@ -16,7 +16,7 @@ import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
-import Text from 'components/Text';
+import ErrorMessage from 'components/ErrorMessage';
 import CodeIssue from 'components/CodeIssue';
 import Spin from 'components/Spin';
 import AppStore from 'stores/AppStore';
@@ -147,39 +147,52 @@ class ByFile extends React.Component<Props> {
       this.renderLoading()
     ) : (
       <Flex auto column>
-        <GraphPanel column>
-          {store.byFileGraphType === 'treemap' ? (
-            <ByFileTreemap
-              data={store.byFileTreemapData.children}
-              canExpand={store.canExpandTree}
-              onExpand={store.changeTreeRoot}
+        {store.fileError ? (
+          <Panel>
+            <ErrorMessage
+              title={store.fileError.title}
+              message={store.fileError.message}
             />
-          ) : (
-            this.renderBarChart()
-          )}
-          <Controls align="center" primaryColor={app.primaryColor}>
-            <RadioGroup
-              onChange={this.handleGraphTypeChange}
-              defaultValue={store.byFileGraphType}
-            >
-              <StyledRadioButton value="treemap">Treemap</StyledRadioButton>
-              <StyledRadioButton value="barchart">Bar Chart</StyledRadioButton>
-            </RadioGroup>
-            {/* <VerticalBar /> */}
-            <Flex auto />
-            {store.byFileGraphType === 'treemap' && (
-              <div>
-                <ControlButton flat onClick={store.zoomOut}>
-                  Zoom Out
-                </ControlButton>
-                <ControlButton flat onClick={store.resetTreemap}>
-                  Reset
-                </ControlButton>
-              </div>
+          </Panel>
+        ) : (
+          <GraphPanel column>
+            {store.byFileGraphType === 'treemap' ? (
+              <ByFileTreemap
+                data={store.byFileTreemapData.children}
+                canExpand={store.canExpandTree}
+                onExpand={store.changeTreeRoot}
+              />
+            ) : (
+              this.renderBarChart()
             )}
-          </Controls>
-        </GraphPanel>
-        <StyledPanel>{this.renderDirectories()}</StyledPanel>
+            <Controls align="center" primaryColor={app.primaryColor}>
+              <RadioGroup
+                onChange={this.handleGraphTypeChange}
+                defaultValue={store.byFileGraphType}
+              >
+                <StyledRadioButton value="treemap">Treemap</StyledRadioButton>
+                <StyledRadioButton value="barchart">
+                  Bar Chart
+                </StyledRadioButton>
+              </RadioGroup>
+              {/* <VerticalBar /> */}
+              <Flex auto />
+              {store.byFileGraphType === 'treemap' && (
+                <div>
+                  <ControlButton flat onClick={store.zoomOut}>
+                    Zoom Out
+                  </ControlButton>
+                  <ControlButton flat onClick={store.resetTreemap}>
+                    Reset
+                  </ControlButton>
+                </div>
+              )}
+            </Controls>
+          </GraphPanel>
+        )}
+        {!store.fileError && (
+          <StyledPanel>{this.renderDirectories()}</StyledPanel>
+        )}
       </Flex>
     );
   }
