@@ -5,15 +5,14 @@ import { colorRange } from 'helpers/colors';
 
 type Props = {
   data: Array<Object>,
+  onExpand: Function,
 };
 
 @observer
 class ByFilePieChart extends React.Component<Props> {
   handleClick = (data, index) => {
-    const { canExpand, onExpand } = this.props;
-    if (canExpand(data.name)) {
-      onExpand(data.name);
-    }
+    const { onExpand } = this.props;
+    onExpand(data.name);
   };
 
   render() {

@@ -25,6 +25,8 @@ class ChecklistStore {
   @observable activeCategory: string = categories[0];
   @observable treeRoot: string = 'src';
   @observable byFileGraphType: GraphType = 'treemap';
+  @observable issuesModalOpen: boolean = false;
+  @observable issuesModalDirectory: string;
 
   // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
   isEmptyObject = (obj: Object) => {
@@ -229,6 +231,22 @@ class ChecklistStore {
     return res;
   }
 
+  // issues that are displayed in the issues modal
+  @computed
+  get modalIssues(): Array<Object> {
+    return this.getAllIssues(this.byFileData[this.issuesModalDirectory].files);
+  }
+
+  @action
+  openIssuesModal = (): void => {
+    this.issuesModalOpen = true;
+  };
+
+  @action
+  closeIssuesModal = (): void => {
+    this.issuesModalOpen = false;
+  };
+
   @action
   resetTreemap = (): void => {
     this.treeRoot = 'src';
@@ -253,6 +271,9 @@ class ChecklistStore {
   changeTreeRoot = (root: string) => {
     if (this.canExpandTree(root)) {
       this.treeRoot = root;
+    } else {
+      this.issuesModalDirectory = root;
+      this.openIssuesModal();
     }
   };
 

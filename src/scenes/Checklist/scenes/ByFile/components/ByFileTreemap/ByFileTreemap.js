@@ -64,6 +64,7 @@ const CustomizedContent = ({
           strokeWidth: 2 / (depth + 1e-10),
           strokeOpacity: 1 / (depth + 1e-10),
         }}
+        onClick={handleExpand}
       />
       {depth === 1 ? (
         <text
@@ -83,15 +84,14 @@ const CustomizedContent = ({
               x={x + 4}
               y={y + 18}
               fill="#fff"
-              fontSize={16}
+              fontSize={14}
               fillOpacity={0.9}
-              onClick={handleExpand}
             >
               +
             </ExpandSvg>
           )}
           <text
-            x={x + (canExpand(name) ? 20 : 4)}
+            x={x + (canExpand(name) ? 25 : 4)}
             y={y + 18}
             fill="#fff"
             fontSize={16}

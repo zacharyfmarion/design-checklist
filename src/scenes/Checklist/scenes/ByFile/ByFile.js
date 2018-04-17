@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Collapse, Radio, Icon, Tag } from 'antd';
+import { Popover, Collapse, Radio, Icon, Tag } from 'antd';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import Panel from 'components/Panel';
@@ -17,6 +17,7 @@ import ChecklistStore from '../../ChecklistStore';
 import ByFileTreemap from './components/ByFileTreemap';
 import ByFileBarChart from './components/ByFileBarChart';
 import ByFilePieChart from './components/ByFilePieChart';
+import DirectoryIssuesModal from './components/DirectoryIssuesModal';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -40,6 +41,16 @@ class ByFile extends React.Component<Props> {
       <LoadingContainer auto justify="center">
         <Spin />
       </LoadingContainer>
+    );
+  };
+
+  renderHelp = () => {
+    return (
+      <HelpPopoverContent>
+        Click on a region of the graph to expand it. If the directory has no
+        child directories a modal will be opened containing the errors
+        corresponding to the files in the directory that was selected.
+      </HelpPopoverContent>
     );
   };
 
@@ -147,11 +158,18 @@ class ByFile extends React.Component<Props> {
   };
 
   render() {
-    const { store, app } = this.props;
+    const { store, ui, app } = this.props;
     return store.fileLoading ? (
       this.renderLoading()
     ) : (
       <Flex auto column>
+        {store.issuesModalOpen && (
+          <DirectoryIssuesModal
+            directory={store.issuesModalDirectory}
+            issues={store.modalIssues}
+            onClose={store.closeIssuesModal}
+          />
+        )}
         {store.fileError ? (
           <Panel>
             <ErrorMessage
@@ -162,11 +180,17 @@ class ByFile extends React.Component<Props> {
         ) : (
           <GraphPanel column>
             {this.renderChart()}
-            <Controls align="center" primaryColor={app.primaryColor}>
+            <Controls
+              align="center"
+              column={ui.isMobile}
+              justify="space-between"
+              primaryColor={app.primaryColor}
+            >
               <StyledRadioGroup
                 onChange={this.handleGraphTypeChange}
                 defaultValue={store.byFileGraphType}
                 primaryColor={app.primaryColor}
+                isMobile={ui.isMobile}
               >
                 <StyledRadioButton value="treemap">Treemap</StyledRadioButton>
                 <StyledRadioButton value="barchart">
@@ -177,13 +201,22 @@ class ByFile extends React.Component<Props> {
                 </StyledRadioButton>
               </StyledRadioGroup>
               {/* <VerticalBar /> */}
-              <Flex auto />
-              <ControlButton flat onClick={store.zoomOut}>
-                Zoom Out
-              </ControlButton>
-              <ControlButton flat onClick={store.resetTreemap}>
-                Reset
-              </ControlButton>
+              <div>
+                <HelpPopover
+                  title="Help"
+                  content={this.renderHelp()}
+                  trigger="click"
+                  placement="top"
+                >
+                  <ControlButton flat>Help?</ControlButton>
+                </HelpPopover>
+                <ControlButton flat onClick={store.zoomOut}>
+                  Zoom Out
+                </ControlButton>
+                <ControlButton flat onClick={store.resetTreemap}>
+                  Reset
+                </ControlButton>
+              </div>
             </Controls>
           </GraphPanel>
         )}
@@ -215,7 +248,8 @@ const VerticalBar = styled.div`
 `;
 
 const StyledRadioGroup = styled(RadioGroup)`
-  ${({ primaryColor }) => `
+  ${({ primaryColor, isMobile }) => `
+    ${isMobile && `margin-bottom: 10px;`}
     .ant-radio-button-wrapper:hover, .ant-radio-button-wrapper-focused {
       color: ${primaryColor};
     }
@@ -229,6 +263,12 @@ const StyledRadioGroup = styled(RadioGroup)`
     }
   `};
 `;
+
+const HelpPopoverContent = styled.div`
+  max-width: 250px;
+`;
+
+const HelpPopover = styled(Popover)``;
 
 const StyledRadioButton = styled(RadioButton)`
   height: 38px;

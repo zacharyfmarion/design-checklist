@@ -18,10 +18,8 @@ type Props = {
 @observer
 class ByFileBarChart extends React.Component<Props> {
   handleClick = (data, index) => {
-    const { canExpand, onExpand } = this.props;
-    if (canExpand(data.name)) {
-      onExpand(data.name);
-    }
+    const { onExpand } = this.props;
+    onExpand(data.name);
   };
 
   render() {
