@@ -78,26 +78,34 @@ class SideMenu extends React.Component<Props, State> {
             {scenes.map((scene, i) => {
               if (scene.scenes.length > 0) {
                 return (
-                  <Menu.SubMenu
+                  <StyledSubmenu
                     key={scene.path}
                     title={
                       <span>
-                        <Link to={scene.path} onClick={this.handleItemClick}>
+                        <SubmenuHeaderLink
+                          to={scene.path}
+                          onClick={this.handleItemClick}
+                          primaryColor={app.primaryColor}
+                        >
                           <Icon type={scene.icon} />
                           <span>{scene.name}</span>
-                        </Link>
+                        </SubmenuHeaderLink>
                       </span>
                     }
                   >
                     {scene.scenes.map((subscene, j) => (
-                      <Menu.Item key={subscene.path}>
-                        <Link to={subscene.path} onClick={this.handleItemClick}>
+                      <SubmenuItem key={subscene.path} collapsed={collapsed}>
+                        <SubmenuItemLink
+                          to={subscene.path}
+                          onClick={this.handleItemClick}
+                          collapsed={collapsed}
+                        >
                           <Icon type={subscene.icon} />
                           <span>{subscene.name}</span>
-                        </Link>
-                      </Menu.Item>
+                        </SubmenuItemLink>
+                      </SubmenuItem>
                     ))}
-                  </Menu.SubMenu>
+                  </StyledSubmenu>
                 );
               }
               return (
@@ -124,6 +132,21 @@ class SideMenu extends React.Component<Props, State> {
     );
   }
 }
+
+const StyledSubmenu = styled(Menu.SubMenu)``;
+
+const SubmenuItem = styled(Menu.Item)`
+  background: #fff;
+  ${({ collapsed }) => collapsed && `width: 200px`};
+`;
+
+const SubmenuItemLink = styled(Link)`
+  ${({ collapsed }) => collapsed && `margin-left: 70px`};
+`;
+
+const SubmenuHeaderLink = styled(Link)`
+  color: ${({ primaryColor }) => primaryColor};
+`;
 
 const ProjectTitle = styled.h2`
   text-overflow: ellipsis;
@@ -184,6 +207,9 @@ const StyledMenu = styled(Menu)`
     }
     .ant-menu-item:after {
       border-right: 3px solid ${primary} !important;
+    }
+    .ant-menu-submenu-title {
+      ${!isDesktop && `font-size: 18px`};
     }
     .ant-menu-item {
         ${
