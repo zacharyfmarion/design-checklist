@@ -16,6 +16,7 @@ import ChecklistStore from '../../ChecklistStore';
 // local components
 import ByFileTreemap from './components/ByFileTreemap';
 import ByFileBarChart from './components/ByFileBarChart';
+import ByFilePieChart from './components/ByFilePieChart';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -110,19 +111,34 @@ class ByFile extends React.Component<Props> {
   renderChart = () => {
     const { store } = this.props;
     if (!store.byFileData) return null;
-    return store.byFileGraphType === 'treemap' ? (
-      <ByFileTreemap
-        data={store.byFileTreemapData.children}
-        canExpand={store.canExpandTree}
-        onExpand={store.changeTreeRoot}
-      />
-    ) : (
-      <ByFileBarChart
-        data={store.byFileGraphData}
-        canExpand={store.canExpandTree}
-        onExpand={store.changeTreeRoot}
-      />
-    );
+    switch (store.byFileGraphType) {
+      case 'treemap':
+        return (
+          <ByFileTreemap
+            data={store.byFileTreemapData.children}
+            canExpand={store.canExpandTree}
+            onExpand={store.changeTreeRoot}
+          />
+        );
+      case 'barchart':
+        return (
+          <ByFileBarChart
+            data={store.byFileGraphData}
+            canExpand={store.canExpandTree}
+            onExpand={store.changeTreeRoot}
+          />
+        );
+      case 'piechart':
+        return (
+          <ByFilePieChart
+            data={store.byFileGraphData}
+            canExpand={store.canExpandTree}
+            onExpand={store.changeTreeRoot}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   handleGraphTypeChange = (e: Event) => {
@@ -155,6 +171,9 @@ class ByFile extends React.Component<Props> {
                 <StyledRadioButton value="barchart">
                   Bar Chart
                 </StyledRadioButton>
+                <StyledRadioButton value="piechart">
+                  Pie Chart
+                </StyledRadioButton>
               </RadioGroup>
               {/* <VerticalBar /> */}
               <Flex auto />
@@ -175,7 +194,7 @@ class ByFile extends React.Component<Props> {
   }
 }
 
-const graphPanelHeight = 350;
+const graphPanelHeight = 500;
 
 const GraphPanel = styled(Panel)`
   height: ${graphPanelHeight}px;

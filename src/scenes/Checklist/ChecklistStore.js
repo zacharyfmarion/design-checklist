@@ -12,7 +12,7 @@ type ByCategoryData = {
   severitylist: Array<string>,
 };
 
-type GraphType = 'treemap' | 'barchart';
+type GraphType = 'treemap' | 'barchart' | 'piechart';
 
 class ChecklistStore {
   app: AppStore;
