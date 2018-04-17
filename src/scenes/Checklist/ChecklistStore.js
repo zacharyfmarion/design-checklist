@@ -67,13 +67,14 @@ class ChecklistStore {
     return res;
   };
 
-  // Get all issues associated with files
+  // Get all issues associated with files. Note that we also make sure to
+  // apply the currently active filters
   getAllIssues = (files: Object) => {
     let res = [];
     Object.keys(files).forEach(file => {
       res = [...res, ...files[file]];
     });
-    return res;
+    return res.filter(this.errorFilter);
   };
 
   canExpandTree = (dir: string): boolean => {
