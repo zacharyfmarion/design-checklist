@@ -142,7 +142,9 @@ class ChecklistStore {
       children: [],
       parent: 'src',
     };
-    let total = this.getAllIssues(this.byFileData[directory].files).length;
+    let directoryIssues = this.getAllIssues(this.byFileData[directory].files)
+      .length;
+    let total = directoryIssues;
     let hasValidChildren = false;
     // iterate over each directory in file
     Object.keys(this.byFileData[directory].directories).forEach(dir => {
@@ -158,6 +160,16 @@ class ChecklistStore {
     if (!hasValidChildren) {
       res.size = this.getAllIssues(this.byFileData[directory].files).length;
       delete res.children;
+    } else {
+      // we add the current directory as a child because otherwise the treemap
+      // does not correctly display it
+      res.children.push({
+        // we add a slash to the end of the directory to denote that this represents
+        // the issues that are in the current directory, even though there are
+        // subdirectories of this folder with their own issues
+        name: directory + '/',
+        size: directoryIssues,
+      });
     }
     res.size = total;
     return [res, total];
@@ -170,12 +182,20 @@ class ChecklistStore {
     console.log(this.byFileData);
     // we basically traverse each root folder and check how many issues
     // are contained in each one
-    return Object.keys(this.byFileData[this.treeRoot].directories).map(dir => {
-      return {
-        name: dir,
-        numIssues: this.directoryGraphBfs(dir),
-      };
+    const obj = Object.keys(this.byFileData[this.treeRoot].directories).map(
+      dir => {
+        return {
+          name: dir,
+          numIssues: this.directoryGraphBfs(dir),
+        };
+      },
+    );
+    // make sure to include the issues in the treeRoot directory
+    obj.push({
+      name: this.treeRoot + '/',
+      numIssues: this.getAllIssues(this.byFileData[this.treeRoot].files).length,
     });
+    return obj;
   }
 
   // Data for the treemap displayed on the byFile page
@@ -269,7 +289,12 @@ class ChecklistStore {
 
   @action
   changeTreeRoot = (root: string) => {
-    if (this.canExpandTree(root)) {
+    // Check if we are in a "fake" directory that represents the issues
+    // of the parent directory
+    if (root.slice(-1) === '/') {
+      this.issuesModalDirectory = root.slice(0, -1);
+      this.openIssuesModal();
+    } else if (this.canExpandTree(root)) {
       this.treeRoot = root;
     } else {
       this.issuesModalDirectory = root;

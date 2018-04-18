@@ -31,7 +31,8 @@ type CustomizedContentProps = {
 
 // helper function to get filename
 const getFilename = (name: string): string => {
-  return /[^/]*$/.exec(name)[0];
+  if (name.slice(-1) === '/') return './';
+  return /[^/]*$/.exec(name)[0] + '/';
 };
 
 const CustomizedContent = ({
@@ -63,6 +64,7 @@ const CustomizedContent = ({
           stroke: '#fff',
           strokeWidth: 2 / (depth + 1e-10),
           strokeOpacity: 1 / (depth + 1e-10),
+          cursor: 'pointer',
         }}
         onClick={handleExpand}
       />
@@ -110,13 +112,18 @@ class ByFileTreemap extends React.Component<Props> {
   render() {
     const { app, onExpand, canExpand, data } = this.props;
     if (!data || data.constructor !== Array) return null;
-    const colors = colorRange(app.primaryColor, data.map(item => item.size));
+    const filteredData = data.filter(item => item.size > 0);
+    console.log(filteredData);
+    const colors = colorRange(
+      app.primaryColor,
+      filteredData.map(item => item.size),
+    );
     return (
       <ResponsiveContainer>
         <Treemap
           width={400}
           height={200}
-          data={data}
+          data={filteredData}
           dataKey="size"
           ratio={4 / 3}
           stroke="#fff"

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+import styled from 'styled-components';
 import { colorRange } from 'helpers/colors';
 
 type Props = {
@@ -23,7 +24,7 @@ class ByFilePieChart extends React.Component<Props> {
     );
     return (
       <ResponsiveContainer>
-        <PieChart width={800} height={400}>
+        <StyledPieChart width={800} height={400}>
           <Pie
             isAnimationActive={false}
             data={data}
@@ -35,9 +36,16 @@ class ByFilePieChart extends React.Component<Props> {
             {data.map((entry, index) => <Cell fill={colors[index]} />)}
           </Pie>
           <Tooltip />
-        </PieChart>
+        </StyledPieChart>
       </ResponsiveContainer>
     );
   }
 }
+
+const StyledPieChart = styled(PieChart)`
+  path {
+    cursor: pointer !important;
+  }
+`;
+
 export default inject('app')(ByFilePieChart);

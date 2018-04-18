@@ -200,7 +200,6 @@ class ByFile extends React.Component<Props> {
                   Pie Chart
                 </StyledRadioButton>
               </StyledRadioGroup>
-              {/* <VerticalBar /> */}
               <div>
                 <HelpPopover
                   title="Help"
@@ -239,12 +238,6 @@ const GraphPanel = styled(Panel)`
 
 const HeaderTag = styled(Tag)`
   margin-left: 7px;
-`;
-
-const VerticalBar = styled.div`
-  height: 38px;
-  margin: 0 5px;
-  border-right: 1px solid lightgray;
 `;
 
 const StyledRadioGroup = styled(RadioGroup)`
