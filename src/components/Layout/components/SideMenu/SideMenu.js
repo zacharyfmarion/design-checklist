@@ -205,6 +205,9 @@ const StyledMenu = styled(Menu)`
     .ant-menu-item:hover, .ant-menu-item > a:hover, .ant-menu-item-selected, .ant-menu-item-selected > a {
       color: ${primary};
     }
+    .ant-menu-sub.ant-menu-inline {
+      border-right: 1px solid #e9e9e9;
+    }
     .ant-menu-item:after {
       border-right: 3px solid ${primary} !important;
     }

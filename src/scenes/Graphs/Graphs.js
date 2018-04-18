@@ -14,6 +14,7 @@ import {
   BarChart,
   Bar,
   AreaChart,
+  Tooltip as ChartTooltip,
   Area,
   XAxis,
   YAxis,
@@ -58,7 +59,7 @@ class Graphs extends React.Component<Props> {
         <XAxis dataKey="name" />
         <YAxis />
         <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
+        <ChartTooltip />
         <Legend />
         <Bar
           name="Average lines changed per commit"
@@ -88,7 +89,7 @@ class Graphs extends React.Component<Props> {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
         <YAxis />
-        <Tooltip />
+        <ChartTooltip />
         <Legend />
         {authors.map((author, i) => {
           const color = shadeColor(app.primaryColor, i / authors.length - 0.25);
