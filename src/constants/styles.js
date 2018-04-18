@@ -25,6 +25,10 @@ const themeColors = [
     color: '#f57c00',
   },
   {
+    title: 'Red',
+    color: '#f44336',
+  },
+  {
     title: 'Pink',
     color: '#ec407a',
   },
