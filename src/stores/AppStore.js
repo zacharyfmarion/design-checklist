@@ -56,6 +56,7 @@ class AppStore {
     sessionStorage.setItem(`${applicationPrefix}_overview`, '');
     sessionStorage.setItem(`${applicationPrefix}_overview_by_file`, '');
     sessionStorage.setItem(`${applicationPrefix}_duplications`, '');
+    sessionStorage.setItem(`${applicationPrefix}_commits`, '');
   };
 
   @action
