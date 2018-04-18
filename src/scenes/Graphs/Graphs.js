@@ -124,6 +124,7 @@ class Graphs extends React.Component<Props> {
             <StyledRadioGroup
               onChange={this.store.changeActiveStatistic}
               value={this.store.activeStatistic}
+              primaryColor={app.primaryColor}
             >
               {this.store.statistics.map(stat => (
                 <RadioButton key={stat} value={stat}>
@@ -181,7 +182,20 @@ class Graphs extends React.Component<Props> {
 }
 
 const StyledRadioGroup = styled(RadioGroup)`
-  margin-bottom: 15px;
+  ${({ primaryColor }) => `
+    margin-bottom: 15px;
+    .ant-radio-button-wrapper:hover, .ant-radio-button-wrapper-focused {
+      color: ${primaryColor};
+    }
+    .ant-radio-button-wrapper-checked {
+      border-color: ${primaryColor};
+      color: ${primaryColor};
+      box-shadow: -1px 0 0 0 ${primaryColor};
+    }
+    .ant-radio-button-wrapper-checked:first-child {
+      border-color: ${primaryColor};
+    }
+  `};
 `;
 
 const StyledBarChart = styled(BarChart)`

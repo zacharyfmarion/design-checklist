@@ -9,6 +9,10 @@ const themeColors = [
     color: '#25b47d',
   },
   {
+    title: 'Teal',
+    color: '#00BCD4',
+  },
+  {
     title: 'Blue',
     color: '#1565c0',
   },
