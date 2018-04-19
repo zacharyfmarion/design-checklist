@@ -27,6 +27,7 @@ class ChecklistStore {
   @observable byFileGraphType: GraphType = 'treemap';
   @observable issuesModalOpen: boolean = false;
   @observable issuesModalDirectory: string;
+  @observable issuesModalFile: string;
 
   // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
   isEmptyObject = (obj: Object) => {
@@ -82,7 +83,8 @@ class ChecklistStore {
   canExpandTree = (dir: string): boolean => {
     return (
       this.byFileData[dir] &&
-      Object.keys(this.byFileData[dir].directories).length > 0
+      (Object.keys(this.byFileData[dir].directories).length > 0 ||
+        this.getAllIssues(this.byFileData[dir].files).length > 0)
     );
   };
 
@@ -142,34 +144,35 @@ class ChecklistStore {
       children: [],
       parent: 'src',
     };
-    let directoryIssues = this.getAllIssues(this.byFileData[directory].files)
-      .length;
-    let total = directoryIssues;
+    let total = 0;
     let hasValidChildren = false;
-    // iterate over each directory in file
+    // iterate over each directory
     Object.keys(this.byFileData[directory].directories).forEach(dir => {
       const [child, childTotal] = this.directoryTreemapBfs(dir);
       // if there are no more children
       total += childTotal;
-      if (child) {
+      if (child && child.size > 0) {
         child.parent = directory;
         res.children.push(child);
+        hasValidChildren = true;
+      }
+    });
+    // iterate over each file in directory and add if it has more than 0 issues
+    Object.keys(this.byFileData[directory].files).forEach(file => {
+      const numIssues = this.byFileData[directory].files[file].length;
+      if (numIssues > 0) {
+        res.children.push({
+          name: file,
+          parent: directory,
+          size: numIssues,
+        });
+        total += numIssues;
         hasValidChildren = true;
       }
     });
     if (!hasValidChildren) {
       res.size = this.getAllIssues(this.byFileData[directory].files).length;
       delete res.children;
-    } else {
-      // we add the current directory as a child because otherwise the treemap
-      // does not correctly display it
-      res.children.push({
-        // we add a slash to the end of the directory to denote that this represents
-        // the issues that are in the current directory, even though there are
-        // subdirectories of this folder with their own issues
-        name: directory + '/',
-        size: directoryIssues,
-      });
     }
     res.size = total;
     return [res, total];
@@ -179,21 +182,25 @@ class ChecklistStore {
   @computed
   get byFileGraphData(): Array<Object> {
     if (!this.byFileData) return [];
-    console.log(this.byFileData);
     // we basically traverse each root folder and check how many issues
     // are contained in each one
-    const obj = Object.keys(this.byFileData[this.treeRoot].directories).map(
-      dir => {
+    const obj = Object.keys(this.byFileData[this.treeRoot].directories)
+      .map(dir => {
         return {
           name: dir,
           numIssues: this.directoryGraphBfs(dir),
         };
-      },
-    );
-    // make sure to include the issues in the treeRoot directory
-    obj.push({
-      name: this.treeRoot + '/',
-      numIssues: this.getAllIssues(this.byFileData[this.treeRoot].files).length,
+      })
+      .filter(item => item.numIssues > 0);
+    // We also push all the files in the root directory
+    Object.keys(this.byFileData[this.treeRoot].files).forEach(file => {
+      const numIssues = this.byFileData[this.treeRoot].files[file].length;
+      if (numIssues > 0) {
+        obj.push({
+          name: file,
+          numIssues,
+        });
+      }
     });
     return obj;
   }
@@ -254,7 +261,9 @@ class ChecklistStore {
   // issues that are displayed in the issues modal
   @computed
   get modalIssues(): Array<Object> {
-    return this.getAllIssues(this.byFileData[this.issuesModalDirectory].files);
+    return this.byFileData[this.issuesModalDirectory].files[
+      this.issuesModalFile
+    ];
   }
 
   @action
@@ -289,16 +298,16 @@ class ChecklistStore {
 
   @action
   changeTreeRoot = (root: string) => {
-    // Check if we are in a "fake" directory that represents the issues
-    // of the parent directory
-    if (root.slice(-1) === '/') {
-      this.issuesModalDirectory = root.slice(0, -1);
-      this.openIssuesModal();
-    } else if (this.canExpandTree(root)) {
+    if (this.canExpandTree(root)) {
       this.treeRoot = root;
     } else {
-      this.issuesModalDirectory = root;
-      this.openIssuesModal();
+      const slash = root.lastIndexOf('/');
+      const directory = root.slice(0, slash);
+      if (this.byFileData.hasOwnProperty(directory)) {
+        this.issuesModalFile = root;
+        this.issuesModalDirectory = directory;
+        this.openIssuesModal();
+      }
     }
   };
 

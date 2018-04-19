@@ -2,7 +2,7 @@ import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import styled from 'styled-components';
-import { colorRange } from 'helpers/colors';
+import { colorSeverity } from 'helpers/colors';
 
 type Props = {
   data: Array<Object>,
@@ -18,10 +18,7 @@ class ByFilePieChart extends React.Component<Props> {
 
   render() {
     const { app, data } = this.props;
-    const colors = colorRange(
-      app.primaryColor,
-      data.map(item => item.numIssues),
-    );
+    const colors = colorSeverity(data.map(item => item.numIssues));
     return (
       <ResponsiveContainer>
         <StyledPieChart width={800} height={400}>

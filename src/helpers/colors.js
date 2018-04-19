@@ -1,4 +1,10 @@
 // @flow
+
+import { colors } from 'constants/styles';
+
+// Get the severity colors
+const { good, average, bad, terrible } = colors;
+
 // https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
 export function shadeColor(color: string, percent: number): string {
   var f = parseInt(color.slice(1), 16),
@@ -32,4 +38,24 @@ export function colorRange(color: string, range: Array<number>): Array<string> {
   // first normalize the range between 0 and 1
   const max = Math.max.apply(null, range);
   return range.map(intensity => shadeColor(color, (1 - intensity / max) / 2));
+}
+
+const severityMap = (percent: number) => {
+  if (percent === 1) {
+    return terrible;
+  } else if (percent < 1 && percent >= 0.75) {
+    return terrible;
+  } else if (percent < 0.75 && percent >= 0.5) {
+    return bad;
+  } else if (percent < 0.5 && percent >= 0.25) {
+    return average;
+  }
+  return good;
+};
+
+// Given an array of numbers return an array of colors based on the normalized
+// severity of each color
+export function colorSeverity(range: Array<number>) {
+  const max = Math.max.apply(null, range);
+  return range.map(count => severityMap(count / max));
 }

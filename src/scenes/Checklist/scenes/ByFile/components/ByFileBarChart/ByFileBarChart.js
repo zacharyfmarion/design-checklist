@@ -6,10 +6,12 @@ import {
   BarChart,
   XAxis,
   YAxis,
+  Cell,
   CartesianGrid,
   Tooltip,
   Legend,
 } from 'recharts';
+import { colorSeverity } from 'helpers/colors';
 
 type Props = {
   data: Array<Object>,
@@ -24,6 +26,7 @@ class ByFileBarChart extends React.Component<Props> {
 
   render() {
     const { app, data } = this.props;
+    const colors = colorSeverity(data.map(item => item.numIssues));
     return (
       <ResponsiveContainer>
         <BarChart width={600} height={300} data={data}>
@@ -31,13 +34,16 @@ class ByFileBarChart extends React.Component<Props> {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Legend />
           <Bar
             name="Number of Issues"
             dataKey="numIssues"
             fill={app.primaryColor}
             onClick={this.handleClick}
-          />
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index]} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     );

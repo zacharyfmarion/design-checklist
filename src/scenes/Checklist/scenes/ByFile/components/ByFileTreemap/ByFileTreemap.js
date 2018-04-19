@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Treemap, ResponsiveContainer } from 'recharts';
-import { colorRange } from 'helpers/colors';
+import { colorSeverity } from 'helpers/colors';
 import styled from 'styled-components';
 
 type Props = {
@@ -31,8 +31,8 @@ type CustomizedContentProps = {
 
 // helper function to get filename
 const getFilename = (name: string): string => {
-  if (name.slice(-1) === '/') return './';
-  return /[^/]*$/.exec(name)[0] + '/';
+  const shortName = /[^/]*$/.exec(name)[0];
+  return shortName.indexOf('.') > -1 ? shortName : shortName + '/';
 };
 
 const CustomizedContent = ({
@@ -69,15 +69,16 @@ const CustomizedContent = ({
         onClick={handleExpand}
       />
       {depth === 1 ? (
-        <text
+        <NameText
           x={x + width / 2}
           y={y + height / 2 + 7}
           textAnchor="middle"
           fill="#fff"
           fontSize={14}
+          onClick={handleExpand}
         >
           {getFilename(name)}
-        </text>
+        </NameText>
       ) : null}
       {depth === 1 ? (
         <g>
@@ -112,18 +113,13 @@ class ByFileTreemap extends React.Component<Props> {
   render() {
     const { app, onExpand, canExpand, data } = this.props;
     if (!data || data.constructor !== Array) return null;
-    const filteredData = data.filter(item => item.size > 0);
-    console.log(filteredData);
-    const colors = colorRange(
-      app.primaryColor,
-      filteredData.map(item => item.size),
-    );
+    const colors = colorSeverity(data.map(item => item.size));
     return (
       <ResponsiveContainer>
         <Treemap
           width={400}
           height={200}
-          data={filteredData}
+          data={data}
           dataKey="size"
           ratio={4 / 3}
           stroke="#fff"
@@ -141,6 +137,10 @@ class ByFileTreemap extends React.Component<Props> {
     );
   }
 }
+
+const NameText = styled.text`
+  cursor: pointer;
+`;
 
 const ExpandSvg = styled.text`
   cursor: pointer;

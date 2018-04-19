@@ -165,7 +165,7 @@ class ByFile extends React.Component<Props> {
       <Flex auto column>
         {store.issuesModalOpen && (
           <DirectoryIssuesModal
-            directory={store.issuesModalDirectory}
+            file={store.issuesModalFile}
             issues={store.modalIssues}
             onClose={store.closeIssuesModal}
           />
@@ -178,7 +178,7 @@ class ByFile extends React.Component<Props> {
             />
           </Panel>
         ) : (
-          <GraphPanel column>
+          <GraphPanel fluid={ui.isMobile} column>
             {this.renderChart()}
             <Controls
               align="center"
@@ -220,7 +220,9 @@ class ByFile extends React.Component<Props> {
           </GraphPanel>
         )}
         {!store.fileError && (
-          <StyledPanel>{this.renderDirectories()}</StyledPanel>
+          <StyledPanel fluid={ui.isMobile}>
+            {this.renderDirectories()}
+          </StyledPanel>
         )}
       </Flex>
     );
@@ -233,7 +235,13 @@ const GraphPanel = styled(Panel)`
   height: ${graphPanelHeight}px;
   min-height: ${graphPanelHeight}px;
   max-height: ${graphPanelHeight}px;
-  margin-bottom: 0;
+  ${({ fluid }) =>
+    fluid
+      ? `
+    margin-bottom: 10px;
+    border: 1px solid lightslategray;
+  `
+      : `margin-bottom: 0px`};
 `;
 
 const HeaderTag = styled(Tag)`

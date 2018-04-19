@@ -6,20 +6,26 @@ import { Flex } from 'reflexbox';
 
 type Props = {
   children: React.Node,
+  fluid: string,
 };
 
-const Panel = ({ children, ...other }: Props) => (
-  <Container auto {...other}>
+const Panel = ({ children, fluid, ...other }: Props) => (
+  <Container auto fluid={fluid} {...other}>
     {children}
   </Container>
 );
 
 const Container = styled(Flex)`
-  margin: 15px 30px 30px 30px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 2px;
-  box-shadow: ${shadow};
+  ${({ fluid }) => `
+    margin: ${fluid ? `15px` : `15px 30px 30px 30px`};
+    ${!fluid &&
+      `
+      padding: 20px;
+      background: #fff;
+      box-shadow: ${shadow};
+      border-radius: 2px;
+    `};
+  `};
 `;
 
 export default Panel;

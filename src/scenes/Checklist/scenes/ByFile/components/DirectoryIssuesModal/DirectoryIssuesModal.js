@@ -6,15 +6,16 @@ import CodeIssue from 'components/CodeIssue';
 import SuccessMessage from 'components/SuccessMessage';
 
 type Props = {
-  directory: string,
+  file: string,
   issues: Array<Object>,
   onClose: Function,
 };
 
-const DirectoryIssuesModal = ({ issues, directory, onClose }: Props) => {
+const DirectoryIssuesModal = ({ issues, file, onClose }: Props) => {
+  if (!issues) return null;
   return (
     <Modal onClose={onClose}>
-      <ModalHeader title={`Issues in ${directory}`} />
+      <ModalHeader title={`Issues in ${file}`} />
       <StyledModalBody noIssues={issues.length === 0}>
         {issues.length === 0 ? (
           <SuccessContainer auto justify="center" align="center">
