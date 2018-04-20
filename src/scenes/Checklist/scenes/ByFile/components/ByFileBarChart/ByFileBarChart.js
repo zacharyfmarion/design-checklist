@@ -17,6 +17,59 @@ type Props = {
   data: Array<Object>,
 };
 
+type AnchorPos = 'start' | 'middle' | 'end';
+
+type TickProps = {
+  fill: string,
+  height: number,
+  index: number,
+  payload: {
+    coordinate: number,
+    value: string,
+    index: number,
+    offset: number,
+    tickCoord: number,
+    isShow: boolean,
+  },
+  stroke: string,
+  textAnchor: AnchorPos,
+  verticalAnchor: AnchorPos,
+  visibleTicksCount: number,
+  width: number,
+  x: number,
+  y: number,
+};
+
+// TODO: custom tick to handle overflow values getting cut off
+const CustomTick = ({
+  x,
+  y,
+  width,
+  height,
+  stroke,
+  payload,
+  textAnchor,
+}: TickProps) => {
+  return (
+    <g class="recharts-layer recharts-cartesian-axis-tick">
+      <text
+        width={width}
+        height={height}
+        x={x}
+        y={y + 8}
+        stroke={stroke}
+        fill="#666"
+        class="recharts-text recharts-cartesian-axis-tick-value"
+        text-anchor={textAnchor}
+      >
+        <tspan x={x} dy="0.71em">
+          {payload.value}
+        </tspan>
+      </text>
+    </g>
+  );
+};
+
 @observer
 class ByFileBarChart extends React.Component<Props> {
   handleClick = (data, index) => {

@@ -122,6 +122,7 @@ class ByFileTreemap extends React.Component<Props> {
           data={data}
           dataKey="size"
           ratio={4 / 3}
+          animationDuration={500}
           stroke="#fff"
           fill={app.primaryColor}
           content={

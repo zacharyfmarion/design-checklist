@@ -126,7 +126,7 @@ class ByFile extends React.Component<Props> {
       case 'treemap':
         return (
           <ByFileTreemap
-            data={store.byFileTreemapData.children}
+            data={store.byFileTreemapData}
             canExpand={store.canExpandTree}
             onExpand={store.changeTreeRoot}
           />

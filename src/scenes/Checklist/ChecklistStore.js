@@ -207,9 +207,9 @@ class ChecklistStore {
 
   // Data for the treemap displayed on the byFile page
   @computed
-  get byFileTreemapData(): Array<Object> {
-    if (!this.byFileData) return [];
-    return this.directoryTreemapBfs(this.treeRoot)[0];
+  get byFileTreemapData(): Object {
+    if (!this.byFileData) return null;
+    return this.directoryTreemapBfs(this.treeRoot)[0].children;
   }
 
   @computed
