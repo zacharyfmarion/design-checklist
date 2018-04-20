@@ -93,8 +93,10 @@ class GraphsStore {
     if (!this.dataByLines) return [];
     // contrived start and end dates until they are added to the API
     let { left, right } = this.dataByLines.bounds;
+    const start = left[Object.keys(left)[0]];
+    const end = right[Object.keys(right)[0]];
     // get a range of dates with each day based on the start and end dates
-    const dateRange = createDateRange(new Date(left), new Date(right));
+    const dateRange = createDateRange(new Date(start), new Date(end));
     const res = [];
     // iterate over each date and append to data
     dateRange.forEach(dateObject => {

@@ -9,7 +9,6 @@ import {
   Cell,
   CartesianGrid,
   Tooltip,
-  Legend,
 } from 'recharts';
 import { colorSeverity } from 'helpers/colors';
 
@@ -55,14 +54,15 @@ const CustomTick = ({
       <text
         width={width}
         height={height}
-        x={x}
-        y={y + 8}
+        x={x - 10}
+        y={y + 15}
         stroke={stroke}
+        transform={`rotate(-45, ${x - 10}, ${y + 15})`}
         fill="#666"
         class="recharts-text recharts-cartesian-axis-tick-value"
         text-anchor={textAnchor}
       >
-        <tspan x={x} dy="0.71em">
+        <tspan x={x - 50} dy="0.71em">
           {payload.value}
         </tspan>
       </text>
