@@ -8,15 +8,39 @@ import GoogleAnalytics from 'helpers/analytics';
 import { shadow } from 'constants/styles';
 
 type Props = {
+  /**
+   * Click handler for the button. If action, label, or value are
+   * supplied as props clicking the button will also send an event
+   * to Google Analytics
+   */
   onClick: Function,
+  /**
+   * Action name for a Google Analytics event. If present an analytics
+   * event will be sent on click
+   */
   action?: string,
+  /**
+   * Label for a Google Analytics event. If present an analytics event
+   * will be sent on click
+   */
   label?: string,
+  /**
+   * Value for a Google Analytics event. If present an analytics event
+   * will be sent on click
+   */
   value?: string,
+  /** Whether or not a drop shadow should be added to the button */
   flat?: boolean,
+  /** Child - should just be a text field */
   children: React.Node,
+  /** App store for access to the app.primaryColor global property */
   app: AppStore,
 };
 
+/**
+ * A simple button component build on top of the antd component
+ * with some styling additions
+ */
 const Button = ({
   onClick,
   action,

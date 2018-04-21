@@ -6,6 +6,10 @@ import Button from 'components/Button';
 
 type Props = {};
 
+/**
+ * A button that when clicked opens the users email client and provides
+ * them with a template for sending feedback on the application
+ */
 class Feedback extends React.Component<Props> {
   handleClick = () => {
     const subject = `Design Checkup feedback`;

@@ -80,6 +80,10 @@
     "src/**/*.{js,jsx,json,css}": [
       "npm run format",
       "git add"
+    ],
+    "src/**/*.{js,jsx}": [
+      "npm run docgen",
+      "git add"
     ]
   },
   "scripts": {
@@ -88,6 +92,7 @@
     "format": "prettier --config .prettierrc --write src/**/*.js",
     "precommit": "lint-staged",
     "start": "node scripts/start.js",
+    "docgen": "node scripts/docs.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "flow": "flow",
