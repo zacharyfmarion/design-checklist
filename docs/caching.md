@@ -1,4 +1,4 @@
-## How to Cache Data
+# How to Cache Data
 
 Some application information is cached in `sessionStorage` and `localStorage`. In order to avoid conflicts with other applications and schema change issues, each key is prefixed with a variable called `applicationPrefix` found in `constants/app.js`. This variable itself contains the application's version. Every time there is a change to the schema of any cached data, the `VERSION` variable in `constants/app.js` should be updated, to ensure that no old cached data in the incorrect format gets used by the application. The caching is used in the following way, assuming the key was `"test"`:
 

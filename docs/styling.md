@@ -1,4 +1,4 @@
-## Styling with styled-components
+# Styling with styled-components
 
 This repository uses [styled-components](https://www.styled-components.com/) for css styling, which is a css-in-js solution that combines the best of both worlds by still using classes and stylesheets as opposed to actually biding to the style attribute of an element. They provide component primitives for all valid html elements, so if you wanted to style a div you could do:
 
