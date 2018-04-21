@@ -1,4 +1,5 @@
 # Components
+> This file describes all the files in the `src/components` directory. These files are reusable components and are mostly design primitives, such as `<Button />` and `<Input />`.
 
 ## Button
 A simple button component build on top of the antd component

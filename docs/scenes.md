@@ -1,4 +1,5 @@
 # Scenes
+> This file describes all the files in the `src/scenes` directory. The top-level components in these directory correspond to application routes. For example the <Statistics /> component is mapped to the "/statistics" route. Note that this mapping happens in `src/scenes/index.js`
 
 ## Checklist
 

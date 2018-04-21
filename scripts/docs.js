@@ -91,8 +91,11 @@ function generateMarkdown(doc) {
  * @param {String} title Title of the markdown file
  * @param {String} filename The name of the file to be saved
  */
-function saveDocs(docs, title, filename) {
+function saveDocs(docs, title, filename, description) {
   let content = `# ${title}\n`;
+  if (description !== '') {
+    content += `> ${description}\n`;
+  }
   docs.forEach(doc => {
     content += `\n${generateMarkdown(doc)}\n`;
   });
@@ -109,11 +112,15 @@ const locations = [
     title: 'Components',
     filename: 'components.md',
     directory: 'src/components',
+    description:
+      'This file describes all the files in the `src/components` directory. These files are reusable components and are mostly design primitives, such as `<Button />` and `<Input />`.',
   },
   {
     title: 'Scenes',
     filename: 'scenes.md',
     directory: 'src/scenes',
+    description:
+      'This file describes all the files in the `src/scenes` directory. The top-level components in these directory correspond to application routes. For example the <Statistics /> component is mapped to the "/statistics" route. Note that this mapping happens in `src/scenes/index.js`',
   },
 ];
 
@@ -133,6 +140,6 @@ fs.writeFile(__dirname + '/../docs/_sidebar.md', sidebarContent, err => {
 locations.forEach(location => {
   docsifyDirectory(location.directory, (err, docs) => {
     if (err) throw err;
-    saveDocs(docs, location.title, location.filename);
+    saveDocs(docs, location.title, location.filename, location.description);
   });
 });
