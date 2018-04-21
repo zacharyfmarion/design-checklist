@@ -31,7 +31,11 @@ class TutorialModal extends React.Component<Props> {
             <i>YOUR_PROJECT_NAME</i> in <Mono>pom.xml</Mono> with the unique
             name of your project. The analysis begins when a commit is pushed to
             the master branch on Gitlab, and can take up to 10 minutes to
-            complete.
+            complete. If you are just exploring this tool and do not have a
+            project, you can use the example project{' '}
+            <Mono>
+              <strong>test</strong>
+            </Mono>.
           </p>
           <CodeTabs defaultActiveKey={'0'}>
             {files.map((file, i) => (
