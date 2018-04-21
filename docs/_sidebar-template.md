@@ -6,5 +6,3 @@
 * [Analytics](analytics.md) 
 * [Testing](testing.md) 
 * [Hosting](hosting.md) 
-* [Components](components.md)
-* [Scenes](scenes.md)
