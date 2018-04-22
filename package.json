@@ -81,7 +81,7 @@
       "npm run format",
       "git add"
     ],
-    "src/**/*.{js,jsx}": [
+    "**/*.{js,jsx}": [
       "npm run docgen",
       "git add"
     ]
