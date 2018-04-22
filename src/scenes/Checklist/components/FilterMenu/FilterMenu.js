@@ -18,11 +18,17 @@ import Switch from 'components/Switch';
 import Text from 'components/Text';
 
 type Props = {
+  /** Ui store for responsivity */
   ui: UiStore,
+  /** App store for global application state */
   app: AppStore,
   className?: string,
 };
 
+/**
+ * Component that allows users to filter issues based on severity level. It
+ * is rendered as a header action in the `<Checklist />` component.
+ */
 @observer
 class FilterMenu extends React.Component<Props> {
   renderMenu = () => {

@@ -29,11 +29,26 @@ import PercentageCard from './components/PercentageCard';
 import ChecklistStore from '../../ChecklistStore';
 
 type Props = {
+  /** Ui store for responsivity */
   ui: UiStore,
+  /** App store for global application state */
   app: AppStore,
+  /**
+   * Checklist store which handles most of the actions and state of
+   * the component. It is passed down from `<Checklist />` (where
+   * it is instantiated) so that both `<ByCategory />` and `<ByFile />`
+   * have access to the same store.
+   */
   store: ChecklistStore,
 };
 
+/**
+ * Component that displays the issues of a repository organized into a set
+ * of defined categories (such as 'Code Smells'). This component is a good
+ * example of the ideal level of component abtraction that should occur in
+ * a scene. If it gets too long, components should be split out and passed
+ * the data that they need.
+ */
 @observer
 class ByCategory extends React.Component<Props> {
   componentWillMount() {
@@ -41,6 +56,7 @@ class ByCategory extends React.Component<Props> {
     store.getIssuesByCategoryIfNotCached();
   }
 
+  /** Render a loading indicator */
   renderLoading = () => {
     return (
       <LoadingWrapper auto justify="center" align="center">
@@ -49,6 +65,14 @@ class ByCategory extends React.Component<Props> {
     );
   };
 
+  /**
+   * Changes the current category of issues to be rendered. Really just
+   * a wrapper for store.changeCategory(), with the additional functionality
+   * of saving a google anayltics event. This is a good example of how to
+   * handle event creation.
+   * @param {String} key The key of the category in the errors object that gets
+   * returned by the API
+   */
   changeCategory = key => {
     const { store } = this.props;
     GoogleAnalytics.event({
@@ -59,6 +83,10 @@ class ByCategory extends React.Component<Props> {
     store.changeCategory(key);
   };
 
+  /**
+   * Function that actually handles the rendering of the content once
+   * the page has loaded.
+   */
   renderErrors = () => {
     const { ui, store } = this.props;
     return (

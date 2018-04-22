@@ -39,6 +39,13 @@ const ModeSelect = inject('app')(
   }),
 );
 
+/**
+ * The default scene of an authed route. It essentially displays two
+ * `<ModeSelect />` links (defined in `Checklist.js`) and allows the
+ * user to either view their issues by file or by category. Depending
+ * on which the user selects it renders a route with the `<ByFile />`
+ * or `<ByCategory />` component
+ */
 @observer
 class Checklist extends React.Component<Props> {
   constructor(props) {

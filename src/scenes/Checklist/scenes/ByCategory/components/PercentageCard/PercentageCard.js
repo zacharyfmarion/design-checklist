@@ -6,6 +6,29 @@ import { Progress, Rate } from 'antd';
 import styled from 'styled-components';
 import { Flex } from 'reflexbox';
 import { colors, shadow } from 'constants/styles';
+import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
+
+type Props = {
+  /** The category string, e.g. "Code Smells" */
+  category: string,
+  /** Number representing how well the user is doing for the category */
+  percent: number,
+  /** Whether or not the category is currently selected */
+  active: boolean,
+  /** Click handler for the function, which should change the active prop to true */
+  onClick: Function,
+  /**
+   * Number of issues, to be displayed in the top right. Note that
+   * this number is updated when a filter is applied from the
+   * `<FilterMenu />` component
+   */
+  numIssues: number,
+  /** Ui store for responsivity */
+  ui: UiStore,
+  /** App store for global application state */
+  app: AppStore,
+};
 
 // Map a percentage to a number stars and color
 const percentMappings = (percent: number) => {
@@ -21,6 +44,12 @@ const percentMappings = (percent: number) => {
   return { stars: 1, color: colors.terrible };
 };
 
+/**
+ * Component to display how well the user is doing for a given category.
+ * Note that originally it displayed the percentage directly but now it
+ * displays a series of 5 stars to display how well the repository is doing
+ * for each category.
+ */
 const PercentageCard = ({
   percent,
   active,
@@ -29,7 +58,7 @@ const PercentageCard = ({
   numIssues,
   ui,
   app,
-}) => {
+}: Props) => {
   const mapping = percentMappings(percent);
   const categoryTitle = (
     <CategoryTitle active={active}>{category}</CategoryTitle>
