@@ -6,6 +6,7 @@ import AppStore from 'stores/AppStore';
 import Text from 'components/Text';
 
 type Props = {
+  /** Message to be displayed below the svg */
   message: ?string,
 };
 
@@ -62,6 +63,9 @@ const SuccessIcon = inject('app')(
   }),
 );
 
+/**
+ * Component that renders an svg indicating success, along with a message
+ */
 const SuccessMessage = ({ message }: Props) => {
   return (
     <Flex column justify="center" align="center">

@@ -13,6 +13,7 @@ import Input from 'components/Input';
 const Option = Select.Option;
 
 type Props = {
+  /** Injected store so that we can access global state */
   app: AppStore,
 };
 
@@ -20,6 +21,13 @@ type State = {
   customHex: string,
 };
 
+/**
+ * Dropdown that is rendered in the `<Header />` which contains global
+ * settings that the user can change. Currently this only consists of
+ * the configuration of the applications current theme. Note that this
+ * is cached in localstorage so that the user does not have to set the
+ * theme each time they reload the page.
+ */
 @observer
 class Settings extends React.Component<Props, State> {
   state = {

@@ -20,10 +20,13 @@ type Issue = {
 };
 
 type Props = {
+  /** Whether or not to include a drop shadow */
   shadowed: boolean,
-  className?: string,
+  /** Ui store for responsivity */
   ui: UiStore,
+  /** Error object */
   error: Issue,
+  className?: string,
 };
 
 const Expand = ({ className }) => (
@@ -43,6 +46,16 @@ const Expand = ({ className }) => (
   </Flex>
 );
 
+/**
+ * Component that handles the rendering of a sonarqube issue. It displays a
+ * collapsable panel with the code described in the error prop. This prop can
+ * contain either an error attribute or a duplications attribute, and depending
+ * on which it contains a different code view is rendered. If the duplication
+ * property is present a side-by-side view of the code is rendered, turning into
+ * a list of tabs if there are too many duplicated blocks or the width of the
+ * screen is too small. Currently there is a log of messy logic in this file which
+ * ideally would be abstracted away into separate mobx stores / components.
+ */
 @observer
 class CodeIssue extends React.Component<Props> {
   // get number of keys of object with most keys from array

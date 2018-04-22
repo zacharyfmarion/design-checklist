@@ -5,10 +5,16 @@ import { shadow } from 'constants/styles';
 import { Flex } from 'reflexbox';
 
 type Props = {
+  /** Children to be displayed in the panel */
   children: React.Node,
+  /** Whether or not to have a background color and large margin */
   fluid: string,
 };
 
+/**
+ * Component for rendering a panel on a page. This is used in most scenes
+ * as the background for whatever content appears on the page
+ */
 const Panel = ({ children, fluid, ...other }: Props) => (
   <Container auto fluid={fluid} {...other}>
     {children}

@@ -10,7 +10,16 @@ import { shadow } from 'constants/styles';
 const Panel = Collapse.Panel;
 
 type Props = {
-  errors: Object,
+  /**
+   * A list of errors that can either by an `Object` or an `Array`. If it is an
+   * object then the keys are the category, and if it an Array then there are
+   * no categories. Either way the format of each individual error is the same
+   */
+  errors: Object | Array<Object>,
+  /**
+   * Category that is currently active. Note that this is tightly coupled with
+   * the `<ByCategory />` view and needs to be refactored
+   */
   category: string,
 };
 
@@ -18,6 +27,11 @@ type State = {
   activeColumns: Array<string>,
 };
 
+/**
+ * A component for rendering a list of errors, most notably used in `<ByCategory />`.
+ * Note that currently the data format is tightly coupled with the API response
+ * format, which is not really ideal for a supposedly reusable component
+ */
 @observer
 class ErrorList extends React.Component<Props, State> {
   state = {

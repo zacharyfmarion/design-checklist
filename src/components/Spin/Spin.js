@@ -2,11 +2,26 @@
 import * as React from 'react';
 import { Spin as AntSpin } from 'antd';
 import { inject, observer } from 'mobx-react';
-import { shadeColor } from 'helpers/colors';
 import styled from 'styled-components';
+import { shadeColor } from 'helpers/colors';
+import AppStore from 'stores/AppStore';
 
-const Spin = ({ app }) => (
-  <StyledAntSpin size="large" primary={app.primaryColor} />
+type Props = {
+  /** Global store inject to handle theme */
+  app: AppStore,
+  className: string,
+};
+
+/**
+ * A loading indicator used throughout the application, usually when waining for
+ * an API call to complete.
+ */
+const Spin = ({ app, className }: Props) => (
+  <StyledAntSpin
+    className={className}
+    size="large"
+    primary={app.primaryColor}
+  />
 );
 
 const StyledAntSpin = styled(AntSpin)`

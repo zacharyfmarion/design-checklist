@@ -1,10 +1,11 @@
 # Scenes
 > This file describes all the files in the `src/scenes` directory. The top-level components in these directory correspond to application routes. For example the <Statistics /> component is mapped to the "/statistics" route. Note that this mapping happens in `src/scenes/index.js`
 
-## Checklist
+## &lt;Checklist /&gt;
 
 
-## FilterMenu
+## &lt;FilterMenu /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -13,7 +14,8 @@
 | className | string | false | No Description |
 
 
-## ByCategory
+## &lt;ByCategory /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -22,10 +24,11 @@
 | store | ChecklistStore | true | No Description |
 
 
-## PercentageCard
+## &lt;PercentageCard /&gt;
 
 
-## ByFile
+## &lt;ByFile /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -34,40 +37,57 @@
 | store | ChecklistStore | true | No Description |
 
 
-## ByFileBarChart
+## &lt;ByFileBarChart /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | data | Array | true | No Description |
+### Type Definitions
+#### data
+```js
+Array<Object>```
 
-
-## ByFilePieChart
+## &lt;ByFilePieChart /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | data | Array | true | No Description |
 | onExpand | Function | true | No Description |
+### Type Definitions
+#### data
+```js
+Array<Object>```
 
-
-## ByFileTreemap
+## &lt;ByFileTreemap /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | data | Array | true | No Description |
 | onExpand | Function | true | No Description |
 | canExpand | Function | true | No Description |
+### Type Definitions
+#### data
+```js
+Array<Object>```
 
-
-## DirectoryIssuesModal
+## &lt;DirectoryIssuesModal /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | file | string | true | No Description |
 | issues | Array | true | No Description |
 | onClose | Function | true | No Description |
+### Type Definitions
+#### issues
+```js
+Array<Object>```
 
-
-## Duplication
+## &lt;Duplication /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -75,24 +95,27 @@
 | app | AppStore | true | No Description |
 
 
-## Graphs
+## &lt;Graphs /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | app | AppStore | true | No Description |
 
 
-## NotFound
+## &lt;NotFound /&gt;
 
 
-## Statistics
+## &lt;Statistics /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | app | AppStore | true | No Description |
 
 
-## Welcome
+## &lt;Welcome /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -101,14 +124,16 @@
 | history | Object | true | No Description |
 
 
-## InfoModal
+## &lt;InfoModal /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | onClose | Function | true | No Description |
 
 
-## TutorialModal
+## &lt;TutorialModal /&gt;
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |

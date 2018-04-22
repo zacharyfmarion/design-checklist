@@ -1,9 +1,10 @@
 # Components
 > This file describes all the files in the `src/components` directory. These files are reusable components and are mostly design primitives, such as `<Button />` and `<Input />`.
 
-## Button
+## &lt;Button /&gt;
 A simple button component build on top of the antd component
 with some styling additions
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -16,100 +17,164 @@ with some styling additions
 | app | AppStore | true | App store for access to the app.primaryColor global property |
 
 
-## CodeIssue
+## &lt;CodeIssue /&gt;
+Component that handles the rendering of a sonarqube issue. It displays a
+collapsable panel with the code described in the error prop. This prop can
+contain either an error attribute or a duplications attribute, and depending
+on which it contains a different code view is rendered. If the duplication
+property is present a side-by-side view of the code is rendered, turning into
+a list of tabs if there are too many duplicated blocks or the width of the
+screen is too small. Currently there is a log of messy logic in this file which
+ideally would be abstracted away into separate mobx stores / components.
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| shadowed | boolean | true | No Description |
+| shadowed | boolean | true | Whether or not to include a drop shadow |
+| ui | UiStore | true | Ui store for responsivity |
+| error | signature | true | Error object |
 | className | string | false | No Description |
-| ui | UiStore | true | No Description |
-| error | signature | true | No Description |
+### Type Definitions
+#### error
+```js
+{
+  duplications?: Array<Array<Object>>,
+  code?: Array<Object>,
+  error?: Array<Object>,
+  message: string,
+  severity: string,
+  path: string,
+}```
 
-
-## ComingSoon
-
-
-## ErrorList
+## &lt;ErrorList /&gt;
+A component for rendering a list of errors, most notably used in `<ByCategory />`.
+Note that currently the data format is tightly coupled with the API response
+format, which is not really ideal for a supposedly reusable component
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| errors | Object | true | No Description |
-| category | string | true | No Description |
+| errors | union | true | A list of errors that can either by an `Object` or an `Array`. If it is anobject then the keys are the category, and if it an Array then there areno categories. Either way the format of each individual error is the same |
+| category | string | true | Category that is currently active. Note that this is tightly coupled withthe `<ByCategory />` view and needs to be refactored |
+### Type Definitions
+#### errors
+```js
+Object | Array<Object>```
 
-
-## ErrorMessage
+## &lt;ErrorMessage /&gt;
+A small component that renders an svg error as well as a title and message
+corresponding to the error
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| title | string | true | No Description |
-| message | string | true | No Description |
+| title | string | true | The title of the error |
+| message | string | true | The message to be displayed underneath the error |
 
 
-## Feedback
+## &lt;Feedback /&gt;
 A button that when clicked opens the users email client and provides
 them with a template for sending feedback on the application
 
 
-## Footer
+## &lt;Footer /&gt;
+Simple footer component that renders links to all of the routes
+defined in `scenes/index.js`
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| location | Object | true | No Description |
+| location | Object | true | The location object passed in by React Router |
 
 
-## Settings
-
-| Prop Name | Type | Required | Description |
-| --- | --- | --- | --- |
-| app | AppStore | true | No Description |
-
-
-## SideMenu
-
-| Prop Name | Type | Required | Description |
-| --- | --- | --- | --- |
-| collapsed | boolean | true | No Description |
-| toggleCollapsed | Function | true | No Description |
-| title | string | true | No Description |
-| ui | UiStore | true | No Description |
-| app | AppStore | true | No Description |
-| location | Object | true | No Description |
-
-
-## ModalHeader
+## &lt;Settings /&gt;
+Dropdown that is rendered in the `<Header />` which contains global
+settings that the user can change. Currently this only consists of
+the configuration of the applications current theme. Note that this
+is cached in localstorage so that the user does not have to set the
+theme each time they reload the page.
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| title | string | true | No Description |
-| onClose | Function | true | No Description |
-| app | AppStore | true | No Description |
+| app | AppStore | true | Injected store so that we can access global state |
 
 
-## Panel
-
-| Prop Name | Type | Required | Description |
-| --- | --- | --- | --- |
-| children | ReactNode | true | No Description |
-| fluid | string | true | No Description |
-
-
-## PrivateRoute
+## &lt;SideMenu /&gt;
+Component that renders the sidebar for the application.
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| component | ReactComponent | true | No Description |
-| authed | boolean | true | No Description |
+| collapsed | boolean | true | Whether or not the sidebar is collapsed to only show icons |
+| toggleCollapsed | Function | true | Function to toggle whether the sidebar is collapsed |
+| title | string | true | Sidebar title |
+| ui | UiStore | true | Global store inject to handle responsivity |
+| app | AppStore | true | Global store inject to handle theme |
+| location | Object | true | Object provided by React router to determine the current active route |
 
 
-## Spin
-
-
-## SuccessMessage
+## &lt;ModalHeader /&gt;
+Header for the modal component. Note that this is actually cloned
+in `<Modal />` and passed the onClose prop. This is a good example of
+handling React Children in case it needs to be done for other components
+### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| message | string | true | No Description |
+| title | string | true | Header title |
+| onClose | Function | true | Function that is called when the modal is closed |
+| app | AppStore | true | Global store inject to handle theme |
 
 
-## Switch
+## &lt;Panel /&gt;
+Component for rendering a panel on a page. This is used in most scenes
+as the background for whatever content appears on the page
+### Props
+
+| Prop Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| children | ReactNode | true | Children to be displayed in the panel |
+| fluid | string | true | Whether or not to have a background color and large margin |
+
+
+## &lt;PrivateRoute /&gt;
+Route that handles authentication. Basically if `authed` is true it functions
+like a normal React Route `<Route />` component but if `authed` is false it
+renders a redirect to the default application path.
+### Props
+
+| Prop Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| component | ReactComponent | true | Component to be rendered by the route |
+| authed | boolean | true | Whether or not the component should be rendered (if authed is false the user is insteadredirected to the default route of the application, as defined in `scenes/index.js`) |
+
+
+## &lt;Spin /&gt;
+A loading indicator used throughout the application, usually when waining for
+an API call to complete.
+### Props
+
+| Prop Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| app | AppStore | true | Global store inject to handle theme |
+| className | string | true | No Description |
+
+
+## &lt;SuccessMessage /&gt;
+Component that renders an svg indicating success, along with a message
+### Props
+
+| Prop Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| message | string | true | Message to be displayed below the svg |
+
+
+## &lt;Switch /&gt;
+Themed wrapper to render an antd Switch component
+### Props
+
+| Prop Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| app | AppStore | true | Global store inject to handle theme |
 

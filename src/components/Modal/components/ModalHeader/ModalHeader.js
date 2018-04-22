@@ -8,37 +8,44 @@ import AppStore from 'stores/AppStore';
 import styled from 'styled-components';
 
 type Props = {
+  /** Header title */
   title: string,
+  /** Function that is called when the modal is closed */
   onClose: Function,
-  app: AppStore
+  /** Global store inject to handle theme */
+  app: AppStore,
 };
 
-const ModalHeader = ({ title, onClose, app }: Props) =>
+/**
+ * Header for the modal component. Note that this is actually cloned
+ * in `<Modal />` and passed the onClose prop. This is a good example of
+ * handling React Children in case it needs to be done for other components
+ */
+const ModalHeader = ({ title, onClose, app }: Props) => (
   <Header primary={app.primaryColor}>
     <Flex auto>
-      <Text size="large">
-        {title}
-      </Text>
+      <Text size="large">{title}</Text>
     </Flex>
     <CloseButton icon="close" onClick={onClose} />
-  </Header>;
+  </Header>
+);
 
 const CloseButton = styled(Button)`
   background: none;
   border: none;
   box-shadow: none;
   color: #fff;
-  &:hover{
+  &:hover {
     background: none;
     border: none;
     box-shadow: none;
   }
-  &:active{
+  &:active {
     background: none;
     border: none;
     box-shadow: none;
   }
-  &:focus{
+  &:focus {
     background: none;
     border: none;
     box-shadow: none;

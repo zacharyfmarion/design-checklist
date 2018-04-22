@@ -8,11 +8,18 @@ import AppStore from 'stores/AppStore';
 import styled from 'styled-components';
 
 type Props = {
+  /** The title of the error */
+  title: string,
+  /** The message to be displayed underneath the error */
+  message: string,
+};
+
+type ServerErrorProps = {
   app: AppStore,
 };
 
 const ServerError = inject('app')(
-  observer(({ app }: Props) => (
+  observer(({ app }: ServerErrorProps) => (
     <Server
       viewBox="-155 247 300 300"
       primaryColor={app.primaryColor}
@@ -238,13 +245,11 @@ const ServerError = inject('app')(
   )),
 );
 
-const ErrorMessage = ({
-  title,
-  message,
-}: {
-  title: string,
-  message: string,
-}) => {
+/**
+ * A small component that renders an svg error as well as a title and message
+ * corresponding to the error
+ */
+const ErrorMessage = ({ title, message }: Props) => {
   return (
     <Flex auto justify="center" align="center" column>
       <ServerError />

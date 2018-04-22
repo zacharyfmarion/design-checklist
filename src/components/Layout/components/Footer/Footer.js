@@ -8,31 +8,35 @@ import styled from 'styled-components';
 import scenes from 'scenes';
 
 type Props = {
-  location: Object
+  /** The location object passed in by React Router */
+  location: Object,
 };
 
+/**
+ * Simple footer component that renders links to all of the routes
+ * defined in `scenes/index.js`
+ */
 const Footer = ({ location }: Props) => {
-  const FooterLink = props =>
+  const FooterLink = props => (
     <StyledLink active={location.pathname === props.to} {...props}>
       {props.children}
-    </StyledLink>;
+    </StyledLink>
+  );
   return (
     <FooterLinks>
       <Breadcrumb>
-        {scenes.map((scene, i) =>
+        {scenes.map((scene, i) => (
           <Breadcrumb.Item key={i}>
-            <FooterLink to={scene.path}>
-              {scene.name}
-            </FooterLink>
+            <FooterLink to={scene.path}>{scene.name}</FooterLink>
           </Breadcrumb.Item>
-        )}
+        ))}
       </Breadcrumb>
     </FooterLinks>
   );
 };
 
 const StyledLink = styled(Link)`
-  ${({ active }) => active && `font-weight: bold;`}
+  ${({ active }) => active && `font-weight: bold;`};
 `;
 
 const FooterLinks = styled(Flex)`

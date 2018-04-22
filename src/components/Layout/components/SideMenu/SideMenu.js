@@ -13,25 +13,25 @@ import styled from 'styled-components';
 import Button from 'components/Button';
 
 type Props = {
+  /** Whether or not the sidebar is collapsed to only show icons */
   collapsed: boolean,
+  /** Function to toggle whether the sidebar is collapsed */
   toggleCollapsed: Function,
-  toggleCollapsed: Function,
+  /** Sidebar title */
   title: string,
+  /** Global store inject to handle responsivity */
   ui: UiStore,
+  /** Global store inject to handle theme */
   app: AppStore,
+  /** Object provided by React router to determine the current active route */
   location: Object,
 };
 
-type State = {
-  collapsed: boolean,
-};
-
+/**
+ * Component that renders the sidebar for the application.
+ */
 @observer
 class SideMenu extends React.Component<Props, State> {
-  state = {
-    collapsed: false,
-  };
-
   getBasePath = () => {
     const pathname = this.props.location.pathname;
     let slashCount = 0,

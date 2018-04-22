@@ -61,11 +61,12 @@ function docsifyDirectory(dir, done) {
  * @param {Object} doc The documentation generated from react-docgen
  */
 function generateMarkdown(doc) {
-  let content = `## ${doc.displayName}\n`;
+  let content = `## &lt;${doc.displayName} /&gt;\n`;
   if (doc.description !== '') {
     content += `${doc.description}\n`;
   }
   if (doc.props) {
+    content += `### Props\n`;
     let table = '| Prop Name | Type | Required | Description |\n';
     table += '| --- | --- | --- | --- |\n';
     Object.keys(doc.props).forEach(prop => {
@@ -79,6 +80,22 @@ function generateMarkdown(doc) {
       } |\n`;
     });
     content += `\n${table}`;
+    // If there are complex proptypes declared in the file we will display
+    // them in the documentation
+    const propDefs = Object.keys(doc.props).filter(prop => {
+      const typeDef = doc.props[prop].flowType;
+      return typeDef.hasOwnProperty('raw') && !/^React\./.test(typeDef.raw);
+    });
+    if (propDefs.length > 0) {
+      let typeDefs = '### Type Definitions\n';
+      typeDefs += propDefs
+        .map(
+          prop =>
+            `#### ${prop}\n\`\`\`js\n${doc.props[prop].flowType.raw}\`\`\``,
+        )
+        .join('\n');
+      content += typeDefs;
+    }
   } else {
     // content += `> No prop data provided.`;
   }
