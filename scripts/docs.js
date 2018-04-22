@@ -146,7 +146,7 @@ fs.readFile(__dirname + '/../docs/_sidebar-template.md', (err, data) => {
   if (err) throw err;
   let sidebarContent = data.toString() + '\n';
   sidebarContent += locations
-    .map(loc => `* [${loc.title}](${loc.filename})`)
+    .map(loc => `  * [${loc.title}](${loc.filename})`)
     .join('\n');
 
   fs.writeFile(__dirname + '/../docs/_sidebar.md', sidebarContent, err => {
