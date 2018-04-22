@@ -16,4 +16,4 @@ const FancyDiv = styled.div`
 export default Example;
 ```
 
-It will also work with any custom component that passes in a className. For an example of this check out the <Input /> component. For more information check out their excellent documentation, or [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) documentation about tagged template literals
+It will also work with any custom component that passes in a className. For an example of this check out the &lt;Input /&gt; component. For more information check out their excellent documentation, or [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) documentation about tagged template literals
