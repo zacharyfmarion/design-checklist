@@ -241,6 +241,7 @@ Array<Object>```
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | app | AppStore | true | No Description |
+| ui | UiStore | true | No Description |
 
 ### Methods
 #### `getAuthors(entry)`

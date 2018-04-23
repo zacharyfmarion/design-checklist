@@ -7,5 +7,6 @@
   * [Analytics](analytics.md) 
   * [Testing](testing.md) 
   * [Hosting](hosting.md) 
+  * [Future Directions](future.md) 
 * **Component Documentation**
   * [Overview](component-overview.md)
