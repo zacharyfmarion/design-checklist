@@ -12,6 +12,11 @@ type Error = {
   message: string,
 };
 
+/**
+ * Store that handles the data related to commits, which is diplayed in
+ * graph format in <Graphs />
+ * @param {AppStore} app The appstore injected by mobx-react
+ */
 class GraphsStore {
   app: AppStore;
   // This is basically a big list of commits for each author, including the files
@@ -49,10 +54,12 @@ class GraphsStore {
   // data is the data to normalize and key is the object key to use as the data item
   normalize = (data: Array<Object>, key: string): Array<Object> => {
     // First we find the largest item in the array
-    const max = Math.max.apply(null, data.map(item => item[key]));
+    const total = data
+      .map(item => item[key])
+      .reduce((total, num) => total + num);
     return data.map(item => ({
       ...item,
-      [key]: (item[key] / max).toFixed(2),
+      [key]: (item[key] / total * 100).toFixed(2),
     }));
   };
 

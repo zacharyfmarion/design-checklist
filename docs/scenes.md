@@ -8,6 +8,13 @@ user to either view their issues by file or by category. Depending
 on which the user selects it renders a route with the `<ByFile />`
 or `<ByCategory />` component
 
+### Methods
+#### `renderHeaderActions()`
+
+Render buttons that will appear in the header on this page. Note that these buttons will also appear in the routes rendered on this page, so this is shared between `<ByFile />` and `<ByCategory />`.
+
+---
+
 
 ## &lt;FilterMenu /&gt;
 Component that allows users to filter issues based on severity level. It
@@ -19,6 +26,13 @@ is rendered as a header action in the `<Checklist />` component.
 | ui | UiStore | true | Ui store for responsivity |
 | app | AppStore | true | App store for global application state |
 | className | string | false | No Description |
+
+### Methods
+#### `renderMenu()`
+
+Render the menu that will be displayed when the user selects the filter menu button. The menu just consists of a series of `<Switch />` components noting whether or not the severity level is currently active
+
+---
 
 
 ## &lt;ByCategory /&gt;
@@ -34,6 +48,25 @@ the data that they need.
 | ui | UiStore | true | Ui store for responsivity |
 | app | AppStore | true | App store for global application state |
 | store | ChecklistStore | true | Checklist store which handles most of the actions and state ofthe component. It is passed down from `<Checklist />` (whereit is instantiated) so that both `<ByCategory />` and `<ByFile />`have access to the same store. |
+
+### Methods
+#### `renderLoading()`
+
+Render a loading indicator
+
+#### `changeCategory(key)`
+
+Changes the current category of issues to be rendered. Really just a wrapper for store.changeCategory(), with the additional functionality of saving a google anayltics event. This is a good example of how to handle event creation.
+
+| Name | Type | Description |
+| --- | --- | --- |
+| key | String | The key of the category in the errors object that gets returned by the API |
+
+#### `renderErrors()`
+
+Function that actually handles the rendering of the content once the page has loaded.
+
+---
 
 
 ## &lt;PercentageCard /&gt;
@@ -53,6 +86,8 @@ for each category.
 | ui | UiStore | true | Ui store for responsivity |
 | app | AppStore | true | App store for global application state |
 
+---
+
 
 ## &lt;ByFile /&gt;
 ### Props
@@ -62,6 +97,45 @@ for each category.
 | app | AppStore | true | No Description |
 | ui | UiStore | true | No Description |
 | store | ChecklistStore | true | No Description |
+
+### Methods
+#### `renderLoading()`
+
+
+
+#### `renderHelp()`
+
+
+
+#### `renderCollapse(data)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| data | Object | No description |
+
+#### `renderDirectories()`
+
+
+
+#### `renderHeaderActions()`
+
+
+
+#### `renderChart()`
+
+
+
+#### `handleGraphTypeChange(e)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| e | Event | No description |
+
+---
 
 
 ## &lt;ByFileBarChart /&gt;
@@ -74,6 +148,18 @@ for each category.
 #### data
 ```js
 Array<Object>```
+### Methods
+#### `handleClick(data, index)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| data | No type | No description |
+| index | No type | No description |
+
+---
+
 
 ## &lt;ByFilePieChart /&gt;
 ### Props
@@ -86,6 +172,18 @@ Array<Object>```
 #### data
 ```js
 Array<Object>```
+### Methods
+#### `handleClick(data, index)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| data | No type | No description |
+| index | No type | No description |
+
+---
+
 
 ## &lt;ByFileTreemap /&gt;
 ### Props
@@ -99,6 +197,8 @@ Array<Object>```
 #### data
 ```js
 Array<Object>```
+---
+
 
 ## &lt;DirectoryIssuesModal /&gt;
 ### Props
@@ -112,6 +212,8 @@ Array<Object>```
 #### issues
 ```js
 Array<Object>```
+---
+
 
 ## &lt;Duplication /&gt;
 ### Props
@@ -121,6 +223,17 @@ Array<Object>```
 | ui | UiStore | true | No Description |
 | app | AppStore | true | No Description |
 
+### Methods
+#### `renderHeaderActions()`
+
+
+
+#### `renderDuplications()`
+
+
+
+---
+
 
 ## &lt;Graphs /&gt;
 ### Props
@@ -129,8 +242,37 @@ Array<Object>```
 | --- | --- | --- | --- |
 | app | AppStore | true | No Description |
 
+### Methods
+#### `getAuthors(entry)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| entry | No type | No description |
+
+#### `renderNormalizedChart()`
+
+
+
+#### `renderStatsByDateChart()`
+
+
+
+#### `renderGraph()`
+
+
+
+#### `renderHeaderActions()`
+
+
+
+---
+
 
 ## &lt;NotFound /&gt;
+
+---
 
 
 ## &lt;Statistics /&gt;
@@ -139,6 +281,13 @@ Array<Object>```
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | app | AppStore | true | No Description |
+
+### Methods
+#### `renderStatistics()`
+
+
+
+---
 
 
 ## &lt;Welcome /&gt;
@@ -150,6 +299,13 @@ Array<Object>```
 | app | AppStore | true | No Description |
 | history | Object | true | No Description |
 
+### Methods
+#### `confirmProject()`
+
+
+
+---
+
 
 ## &lt;InfoModal /&gt;
 ### Props
@@ -157,6 +313,8 @@ Array<Object>```
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | onClose | Function | true | No Description |
+
+---
 
 
 ## &lt;TutorialModal /&gt;
@@ -166,4 +324,6 @@ Array<Object>```
 | --- | --- | --- | --- |
 | onClose | Function | true | No Description |
 | fromError | boolean | false | No Description |
+
+---
 

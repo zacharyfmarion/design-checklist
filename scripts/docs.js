@@ -4,6 +4,7 @@
  */
 const reactDocs = require('react-docgen');
 const fs = require('fs');
+var documentation = require('documentation');
 
 /**
  * Traverse all files in a directory
@@ -44,15 +45,22 @@ function walk(dir, done) {
  */
 function docsifyDirectory(dir, done) {
   let docs = [];
+  let javascriptFiles = [];
   walk(__dirname + '/../' + dir, (err, files) => {
     if (err) done(err);
     files.forEach(file => {
       try {
         const fileText = fs.readFileSync(file);
         docs.push(reactDocs.parse(fileText));
-      } catch (err) {}
+      } catch (err) {
+        const lastIndex = file.lastIndexOf('/');
+        // ignore index files as they are just for import convenience
+        if (file.substring(lastIndex + 1).includes('Store.js')) {
+          javascriptFiles.push(file);
+        }
+      }
     });
-    done(null, docs);
+    done(null, docs, javascriptFiles);
   });
 }
 
@@ -96,10 +104,37 @@ function generateMarkdown(doc) {
         .join('\n');
       content += typeDefs;
     }
-  } else {
-    // content += `> No prop data provided.`;
   }
-  return content;
+  if (doc.methods && doc.methods.length > 0) {
+    content += `\n### Methods\n`;
+    content += doc.methods
+      .map(method => {
+        const paramList = method.params
+          ? method.params.map(param => param.name).join(', ')
+          : '';
+        let methodContent = `#### \`${method.name}(${paramList})\`\n\n`;
+        methodContent += `${
+          method.description ? method.description.split('\n').join(' ') : ''
+        }\n`;
+        if (method.params.length > 0) {
+          let table = `| Name | Type | Description |\n`;
+          table += `| --- | --- | --- |\n`;
+          method.params.forEach(param => {
+            table += `| ${param.name} | ${
+              param.type ? param.type.name : 'No type'
+            } | ${
+              param.description
+                ? param.description.split('\n').join(' ')
+                : 'No description'
+            } |\n`;
+          });
+          methodContent += `\n${table}`;
+        }
+        return methodContent;
+      })
+      .join('\n');
+  }
+  return content + '\n---\n';
 }
 
 /**
@@ -121,6 +156,24 @@ function saveDocs(docs, title, filename, description) {
       console.log(`Error saving file`);
     }
   });
+}
+
+/**
+ * Document the regular js files (the ones that are not react components)
+ * @param {Array<string>} files Array of files to document
+ * @param {Function} done Callback for when the files have been documented
+ */
+function documentJs(files, done) {
+  documentation
+    .build(files, {})
+    .then(documentation.formats.md)
+    .then(res => {
+      // res is the markdown generated for the code
+      done(null, res);
+    })
+    .catch(err => {
+      done(err);
+    });
 }
 
 // Locations that we are going to traverse
@@ -158,8 +211,23 @@ fs.readFile(__dirname + '/../docs/_sidebar-template.md', (err, data) => {
 
 // Process the docs and then save them as md files in the docs/ directory
 locations.forEach(location => {
-  docsifyDirectory(location.directory, (err, docs) => {
+  docsifyDirectory(location.directory, (err, docs, javascriptFiles) => {
     if (err) throw err;
     saveDocs(docs, location.title, location.filename, location.description);
+    documentJs(javascriptFiles, (err, markdown) => {
+      if (err) throw err;
+      // Check to make sure the file is not empty before saving it
+      if (markdown.split('\n').length > 2) {
+        fs.writeFile(
+          __dirname + `/../docs/${location.title.toLowerCase()}_stores.md`,
+          markdown,
+          err => {
+            if (err) {
+              console.log(err);
+            }
+          },
+        );
+      }
+    });
   });
 });

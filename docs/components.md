@@ -16,6 +16,8 @@ with some styling additions
 | children | ReactNode | true | Child - should just be a text field |
 | app | AppStore | true | App store for access to the app.primaryColor global property |
 
+---
+
 
 ## &lt;CodeIssue /&gt;
 Component that handles the rendering of a sonarqube issue. It displays a
@@ -45,6 +47,116 @@ ideally would be abstracted away into separate mobx stores / components.
   severity: string,
   path: string,
 }```
+### Methods
+#### `getLongestCodeLength(duplication)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| duplication | Array | No description |
+
+#### `getLastTabIndex(line)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| line | string | No description |
+
+#### `getDupLeastWhitespace(code)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| code | Array | No description |
+
+#### `getLeastWhitespace(code)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| code | Array | No description |
+
+#### `getMaxLineNumbers(duplications)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| duplications | No type | No description |
+
+#### `processDuplications(duplications)`
+
+Change the duplications from [[], []] to pairs of lines
+
+| Name | Type | Description |
+| --- | --- | --- |
+| duplications | Array | No description |
+
+#### `processDuplication(duplication)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| duplication | No type | No description |
+
+#### `stripFilename(path)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| path | string | No description |
+
+#### `stripFilenameMobile(path)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| path | string | No description |
+
+#### `renderDuplication(dup, maxLines, dupNumber)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| dup | No type | No description |
+| maxLines | No type | No description |
+| dupNumber | No type | No description |
+
+#### `renderMobileDuplication(fileIndex, maxLine)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fileIndex | number | No description |
+| maxLine | number | No description |
+
+#### `renderMobileDuplications(maxLines)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| maxLines | Array | No description |
+
+#### `renderDuplications()`
+
+
+
+#### `renderCode()`
+
+
+
+---
+
 
 ## &lt;ErrorList /&gt;
 A component for rendering a list of errors, most notably used in `<ByCategory />`.
@@ -60,6 +172,30 @@ format, which is not really ideal for a supposedly reusable component
 #### errors
 ```js
 Object | Array<Object>```
+### Methods
+#### `renderSubcategories(subcategory, i)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| subcategory | string | No description |
+| i | number | No description |
+
+#### `renderCategory()`
+
+
+
+#### `handleCollapseChange(activeColumns)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| activeColumns | Array | No description |
+
+---
+
 
 ## &lt;ErrorMessage /&gt;
 A small component that renders an svg error as well as a title and message
@@ -71,10 +207,19 @@ corresponding to the error
 | title | string | true | The title of the error |
 | message | string | true | The message to be displayed underneath the error |
 
+---
+
 
 ## &lt;Feedback /&gt;
 A button that when clicked opens the users email client and provides
 them with a template for sending feedback on the application
+
+### Methods
+#### `handleClick()`
+
+
+
+---
 
 
 ## &lt;Footer /&gt;
@@ -85,6 +230,8 @@ defined in `scenes/index.js`
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | location | Object | true | The location object passed in by React Router |
+
+---
 
 
 ## &lt;Settings /&gt;
@@ -98,6 +245,21 @@ theme each time they reload the page.
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | app | AppStore | true | Injected store so that we can access global state |
+
+### Methods
+#### `handleCustomHexChange(value)`
+
+
+
+| Name | Type | Description |
+| --- | --- | --- |
+| value | string | No description |
+
+#### `renderContent()`
+
+
+
+---
 
 
 ## &lt;SideMenu /&gt;
@@ -113,6 +275,17 @@ Component that renders the sidebar for the application.
 | app | AppStore | true | Global store inject to handle theme |
 | location | Object | true | Object provided by React router to determine the current active route |
 
+### Methods
+#### `getBasePath()`
+
+
+
+#### `handleItemClick()`
+
+
+
+---
+
 
 ## &lt;ModalHeader /&gt;
 Header for the modal component. Note that this is actually cloned
@@ -126,6 +299,8 @@ handling React Children in case it needs to be done for other components
 | onClose | Function | true | Function that is called when the modal is closed |
 | app | AppStore | true | Global store inject to handle theme |
 
+---
+
 
 ## &lt;Panel /&gt;
 Component for rendering a panel on a page. This is used in most scenes
@@ -136,6 +311,8 @@ as the background for whatever content appears on the page
 | --- | --- | --- | --- |
 | children | ReactNode | true | Children to be displayed in the panel |
 | fluid | string | true | Whether or not to have a background color and large margin |
+
+---
 
 
 ## &lt;PrivateRoute /&gt;
@@ -149,6 +326,8 @@ renders a redirect to the default application path.
 | component | ReactComponent | true | Component to be rendered by the route |
 | authed | boolean | true | Whether or not the component should be rendered (if authed is false the user is insteadredirected to the default route of the application, as defined in `scenes/index.js`) |
 
+---
+
 
 ## &lt;Spin /&gt;
 A loading indicator used throughout the application, usually when waining for
@@ -160,6 +339,8 @@ an API call to complete.
 | app | AppStore | true | Global store inject to handle theme |
 | className | string | true | No Description |
 
+---
+
 
 ## &lt;SuccessMessage /&gt;
 Component that renders an svg indicating success, along with a message
@@ -169,6 +350,8 @@ Component that renders an svg indicating success, along with a message
 | --- | --- | --- | --- |
 | message | string | true | Message to be displayed below the svg |
 
+---
+
 
 ## &lt;Switch /&gt;
 Themed wrapper to render an antd Switch component
@@ -177,4 +360,6 @@ Themed wrapper to render an antd Switch component
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | app | AppStore | true | Global store inject to handle theme |
+
+---
 

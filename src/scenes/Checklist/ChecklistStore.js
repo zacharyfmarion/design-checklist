@@ -14,6 +14,11 @@ type ByCategoryData = {
 
 type GraphType = 'treemap' | 'barchart' | 'piechart';
 
+/**
+ * The store that holds all the data and methods for both the
+ * `<ByFile />` and `<ByCategory />` components
+ * @param {AppStore} app The AppStore singleton passed in through mobx-react
+ */
 class ChecklistStore {
   app: AppStore;
 
@@ -178,7 +183,11 @@ class ChecklistStore {
     return [res, total];
   };
 
-  // Data for the bar chart displayed on the byFile page
+  /**
+   * Data for the bar chart displayed on the byFile page
+   * @returns {Array} Array containing objects with a name and a
+   * number of issues
+   */
   @computed
   get byFileGraphData(): Array<Object> {
     if (!this.byFileData) return [];

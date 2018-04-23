@@ -31,6 +31,11 @@ type Props = {
  */
 @observer
 class FilterMenu extends React.Component<Props> {
+  /**
+   * Render the menu that will be displayed when the user selects the filter
+   * menu button. The menu just consists of a series of `<Switch />` components
+   * noting whether or not the severity level is currently active
+   */
   renderMenu = () => {
     const { app } = this.props;
     return (

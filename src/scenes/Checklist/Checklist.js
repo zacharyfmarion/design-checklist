@@ -53,6 +53,11 @@ class Checklist extends React.Component<Props> {
     this.store = new ChecklistStore(props.app);
   }
 
+  /**
+   * Render buttons that will appear in the header on this page. Note that
+   * these buttons will also appear in the routes rendered on this page,
+   * so this is shared between `<ByFile />` and `<ByCategory />`.
+   */
   renderHeaderActions = () => {
     const { history } = this.props;
     const goBack = () => history.push('/checklist');

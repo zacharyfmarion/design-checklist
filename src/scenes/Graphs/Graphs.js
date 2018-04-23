@@ -54,12 +54,13 @@ class Graphs extends React.Component<Props> {
 
   renderNormalizedChart = () => {
     const { app } = this.props;
+    const formatter = (value, name, props) => value.toString() + '%';
     return (
       <StyledBarChart width={600} height={400} data={this.store.normalizedData}>
         <XAxis dataKey="name" />
         <YAxis />
         <CartesianGrid strokeDasharray="3 3" />
-        <ChartTooltip />
+        <ChartTooltip formatter={formatter} />
         <Legend />
         <Bar
           name="Average lines changed per commit"
