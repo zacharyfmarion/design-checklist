@@ -30,6 +30,7 @@ class GraphsStore {
   @observable
   statistics: Array<Statistic> = ['insertions', 'deletions', 'files changed'];
   @observable error: Error;
+  @observable showWeekends: boolean = false;
 
   // Defines authors that we ignore because they are not actually valid
   invalidAuthor = (author: string): boolean => {
@@ -161,6 +162,11 @@ class GraphsStore {
       normalizedNumberOfCommits,
     );
   }
+
+  @action
+  toggleWeekends = () => {
+    this.showWeekends = !this.showWeekends;
+  };
 
   @action
   changeActiveStatistic = (

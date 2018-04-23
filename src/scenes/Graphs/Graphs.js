@@ -7,6 +7,8 @@ import { Tooltip, Radio } from 'antd';
 import { Flex } from 'reflexbox';
 import Spin from 'components/Spin';
 import Panel from 'components/Panel';
+import Text from 'components/Text';
+import Switch from 'components/Switch';
 import Button from 'components/Button';
 import ErrorMessage from 'components/ErrorMessage';
 import {
@@ -14,6 +16,7 @@ import {
   BarChart,
   Bar,
   AreaChart,
+  ReferenceLine,
   Tooltip as ChartTooltip,
   Area,
   XAxis,
@@ -23,6 +26,7 @@ import {
 } from 'recharts';
 import { shadeColor } from 'helpers/colors';
 import AppStore from 'stores/AppStore';
+import UiStore from 'stores/UiStore';
 import GraphsStore from './GraphsStore';
 
 const RadioButton = Radio.Button;
@@ -30,6 +34,7 @@ const RadioGroup = Radio.Group;
 
 type Props = {
   app: AppStore,
+  ui: UiStore,
 };
 
 @observer
@@ -81,6 +86,12 @@ class Graphs extends React.Component<Props> {
   renderStatsByDateChart = () => {
     const { app } = this.props;
     const authors = this.getAuthors(this.store.processedDataByLines[0]);
+    const weekends = this.store.processedDataByLines
+      .map(entry => entry.date)
+      .filter(date => {
+        const day = new Date(date).getDay();
+        return day === 6 || day === 1;
+      });
     return (
       <StyledAreaChart
         width={600}
@@ -90,6 +101,10 @@ class Graphs extends React.Component<Props> {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
         <YAxis />
+        {this.store.showWeekends &&
+          weekends.map(date => {
+            return <ReferenceLine x={date} stroke="red" />;
+          })}
         <ChartTooltip />
         <Legend />
         {authors.map((author, i) => {
@@ -110,7 +125,7 @@ class Graphs extends React.Component<Props> {
   };
 
   renderGraph = () => {
-    const { app } = this.props;
+    const { app, ui } = this.props;
     const { error } = this.store;
     if (error) {
       return <ErrorMessage title={error.title} message={error.message} />;
@@ -122,17 +137,30 @@ class Graphs extends React.Component<Props> {
             <ChartTitle color={app.primaryColor}>
               Group Statistics by Date
             </ChartTitle>
-            <StyledRadioGroup
-              onChange={this.store.changeActiveStatistic}
-              value={this.store.activeStatistic}
-              primaryColor={app.primaryColor}
+            <ToolsContainer
+              column={ui.isMobile}
+              align="center"
+              justify={ui.isMobile ? 'center' : 'space-between'}
             >
-              {this.store.statistics.map(stat => (
-                <RadioButton key={stat} value={stat}>
-                  {stat}
-                </RadioButton>
-              ))}
-            </StyledRadioGroup>
+              <StyledRadioGroup
+                onChange={this.store.changeActiveStatistic}
+                value={this.store.activeStatistic}
+                primaryColor={app.primaryColor}
+              >
+                {this.store.statistics.map(stat => (
+                  <RadioButton key={stat} value={stat}>
+                    {stat}
+                  </RadioButton>
+                ))}
+              </StyledRadioGroup>
+              <Flex>
+                <SwitchLabel>Show Weekends</SwitchLabel>
+                <Switch
+                  checked={this.store.showWeekends}
+                  onChange={this.store.toggleWeekends}
+                />
+              </Flex>
+            </ToolsContainer>
             <ResponsiveContainer>
               {this.renderStatsByDateChart()}
             </ResponsiveContainer>
@@ -182,9 +210,17 @@ class Graphs extends React.Component<Props> {
   }
 }
 
+const SwitchLabel = styled(Text)`
+  margin-right: 5px;
+`;
+
+const ToolsContainer = styled(Flex)`
+  width: 100%;
+  margin-bottom: 15px;
+`;
+
 const StyledRadioGroup = styled(RadioGroup)`
   ${({ primaryColor }) => `
-    margin-bottom: 15px;
     .ant-radio-button-wrapper:hover, .ant-radio-button-wrapper-focused {
       color: ${primaryColor};
     }
@@ -226,4 +262,4 @@ const LoadingContainer = styled(Flex)`
   margin-top: 30px;
 `;
 
-export default inject('app')(Graphs);
+export default inject('app', 'ui')(Graphs);
