@@ -5,10 +5,11 @@ import { colorSeverity } from 'helpers/colors';
 import styled from 'styled-components';
 
 type Props = {
+  /** Data to be displayed in the graph */
   data: Array<Object>,
-  // change the data when the user expands a section
+  /** change the data when the user expands a section */
   onExpand: Function,
-  // Function determining whether the user can expand further
+  /** Function determining whether the user can expand further */
   canExpand: Function,
 };
 
@@ -82,17 +83,6 @@ const CustomizedContent = ({
       ) : null}
       {depth === 1 ? (
         <g>
-          {canExpand(name) && (
-            <ExpandSvg
-              x={x + 4}
-              y={y + 18}
-              fill="#fff"
-              fontSize={14}
-              fillOpacity={0.9}
-            >
-              +
-            </ExpandSvg>
-          )}
           <text
             x={x + (canExpand(name) ? 25 : 4)}
             y={y + 18}
@@ -108,6 +98,10 @@ const CustomizedContent = ({
   );
 };
 
+/**
+ * Pie chart that displays the number of errors in the files or
+ * subfolders inside a directory
+ */
 @observer
 class ByFileTreemap extends React.Component<Props> {
   render() {
@@ -140,10 +134,6 @@ class ByFileTreemap extends React.Component<Props> {
 }
 
 const NameText = styled.text`
-  cursor: pointer;
-`;
-
-const ExpandSvg = styled.text`
   cursor: pointer;
 `;
 

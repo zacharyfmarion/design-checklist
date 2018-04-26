@@ -33,10 +33,17 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 type Props = {
+  /** App store for global application state */
   app: AppStore,
+  /** Ui store for responsivity */
   ui: UiStore,
 };
 
+/**
+ * Toplevel scene to render a series of graphs related to the user's code.
+ * Note that in the future this page might be broken up into separate
+ * pages that each focus on a certain aspect of the code.
+ */
 @observer
 class Graphs extends React.Component<Props> {
   store: GraphsStore;
@@ -46,17 +53,24 @@ class Graphs extends React.Component<Props> {
     this.store = new GraphsStore(props.app);
   }
 
+  /** Get the data from the server if it is not cached */
   componentDidMount() {
     this.store.getDataIfNotCached();
   }
 
-  // Remove the date key so just the authors are left
-  getAuthors = entry => {
+  /**
+   * Remove the "date" key from the API response object so just
+   * the authors are left
+   */
+  getAuthors = (entry: Object) => {
     const copy = { ...entry };
     delete copy.date;
     return Object.keys(copy);
   };
 
+  /**
+   * Render a chart of normalized statistics about the user's code
+   */
   renderNormalizedChart = () => {
     const { app } = this.props;
     const formatter = (value, name, props) => value.toString() + '%';
@@ -83,6 +97,10 @@ class Graphs extends React.Component<Props> {
     );
   };
 
+  /**
+   * Render a stacked area chart where the x axis is the date where each
+   * commit was made.
+   */
   renderStatsByDateChart = () => {
     const { app } = this.props;
     const authors = this.getAuthors(this.store.processedDataByLines[0]);
@@ -124,7 +142,11 @@ class Graphs extends React.Component<Props> {
     );
   };
 
-  renderGraph = () => {
+  /**
+   * Render all of the graphs for the page. This is broken out into a separate
+   * method so that the render method does not get too cluttered
+   */
+  renderGraphs = () => {
     const { app, ui } = this.props;
     const { error } = this.store;
     if (error) {
@@ -179,6 +201,7 @@ class Graphs extends React.Component<Props> {
     );
   };
 
+  /** Render the header buttons for the page */
   renderHeaderActions = () => {
     return (
       <Tooltip placement="bottom" title="Refresh">
@@ -202,7 +225,7 @@ class Graphs extends React.Component<Props> {
               <Spin />
             </LoadingContainer>
           ) : (
-            this.renderGraph()
+            this.renderGraphs()
           )}
         </Panel>
       </Layout>

@@ -11,4 +11,7 @@
 * **Component Documentation**
   * [Overview](component-overview.md)
   * [Components](components.md)
+  * [Components Stores](components_stores.md)
+
   * [Scenes](scenes.md)
+  * [Scenes Stores](scenes_stores.md)

@@ -5,9 +5,14 @@ import Text from 'components/Text';
 import Modal, { ModalHeader, ModalBody } from 'components/Modal';
 
 type Props = {
+  /** Function handler for when the modal is closed */
   onClose: Function,
 };
 
+/**
+ * Modal that displays basic information about the application and is
+ * visible from the `<Welcome />` page
+ */
 class InfoModal extends React.Component<Props> {
   render() {
     const { onClose } = this.props;

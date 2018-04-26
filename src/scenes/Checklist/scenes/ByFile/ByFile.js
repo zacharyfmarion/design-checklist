@@ -17,18 +17,33 @@ import ChecklistStore from '../../ChecklistStore';
 import ByFileTreemap from './components/ByFileTreemap';
 import ByFileBarChart from './components/ByFileBarChart';
 import ByFilePieChart from './components/ByFilePieChart';
-import DirectoryIssuesModal from './components/DirectoryIssuesModal';
+import FileIssuesModal from './components/FileIssuesModal';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const CollapsePanel = Collapse.Panel;
 
 type Props = {
-  app: AppStore,
+  /** App store for global application state */
   ui: UiStore,
+  /** Ui store for responsivity */
+  app: AppStore,
+  /**
+   * Checklist store which handles most of the actions and state of
+   * the component. It is passed down from `<Checklist />` (where
+   * it is instantiated) so that both `<ByCategory />` and `<ByFile />`
+   * have access to the same store.
+   */
   store: ChecklistStore,
 };
 
+/**
+ * Component that displays the issues of a repository organized by the file
+ * structure of the repository itself. The top of the page displays a series
+ * of graphs visualizing the number of issues for a given package. The bottom
+ * displays a nested list of Collapse Panels containing the issues in the
+ * files contained in the denoted folder
+ */
 @observer
 class ByFile extends React.Component<Props> {
   componentDidMount() {
@@ -36,6 +51,10 @@ class ByFile extends React.Component<Props> {
     store.getIssuesByFileIfNotCached();
   }
 
+  /**
+   * Render a loading indicator
+   * @return {React.Node} The rendered loading indicator
+   */
   renderLoading = () => {
     return (
       <LoadingContainer auto justify="center">
@@ -44,6 +63,12 @@ class ByFile extends React.Component<Props> {
     );
   };
 
+  /**
+   * Renders a message intended to help the user understand how the
+   * graphs work on the page. This is displayed in a popover when the
+   * user clicks the Help button in <Controls /> segement of render()
+   * @return {React.Node} The rendered help content
+   */
   renderHelp = () => {
     return (
       <HelpPopoverContent>
@@ -54,10 +79,21 @@ class ByFile extends React.Component<Props> {
     );
   };
 
+  /**
+   * Recursive function to render a series of nested <Collapse />
+   * components until we reach a folder that doesn't contain any
+   * directories. NOTE: This needs to be updated as there are files
+   * with issues in directories that also have subdirectories. Right
+   * now they are not displayed in this portion (although they are
+   * shown in the graphs part)
+   * @param {Object} data The directory data currently being traversed.
+   * This data is originally derived from store.processedIssuesByFile
+   * @return {React.Node} The rendered collapse panels
+   */
   renderCollapse = (data: Object) => {
     const { store } = this.props;
     if (store.isEmptyObject(data.directories)) {
-      const allIssues = store.getAllIssues(data.files);
+      const allIssues = store.flattenIssues(data.files);
       return allIssues.length > 0 ? (
         <Flex auto column>
           {allIssues.map(issue => {
@@ -94,12 +130,24 @@ class ByFile extends React.Component<Props> {
     );
   };
 
+  /**
+   * Render all the collapse panels for the bottom portion of the page.
+   * Calls this.renderCollapse which recursively traverses all of the
+   * directories of the project and renders the errors in these folders
+   * @returns {?React.Node} The Collapse panels, or null if the data has
+   * not been loaded yet
+   */
   renderDirectories = () => {
     const { store } = this.props;
     if (!store.processedIssuesByFile) return null;
     return <Flex auto>{this.renderCollapse(store.processedIssuesByFile)}</Flex>;
   };
 
+  /**
+   * Render all of the header actions for the <Layout /> component
+   * on the page
+   * @returns {React.Node} A container of <Buttons />
+   */
   renderHeaderActions = () => {
     const { ui, store } = this.props;
     return (
@@ -119,6 +167,12 @@ class ByFile extends React.Component<Props> {
     );
   };
 
+  /**
+   * Render the chart that appears in the top of the page. Based on the
+   * value of store.byFileGraphType it renders either a treemap, a bar
+   * chart or a pie chart
+   * @returns {React.Node} A recharts graph
+   */
   renderChart = () => {
     const { store } = this.props;
     if (!store.byFileData) return null;
@@ -152,6 +206,10 @@ class ByFile extends React.Component<Props> {
     }
   };
 
+  /**
+   * Handle when a radio button is changed
+   * @param {Event} e The radio button event
+   */
   handleGraphTypeChange = (e: Event) => {
     const { store } = this.props;
     store.changeByFileGraphType(e.target.value);
@@ -164,7 +222,7 @@ class ByFile extends React.Component<Props> {
     ) : (
       <Flex auto column>
         {store.issuesModalOpen && (
-          <DirectoryIssuesModal
+          <FileIssuesModal
             file={store.issuesModalFile}
             issues={store.modalIssues}
             onClose={store.closeIssuesModal}

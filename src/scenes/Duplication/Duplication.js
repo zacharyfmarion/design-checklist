@@ -15,10 +15,18 @@ import AppStore from 'stores/AppStore';
 import DuplicationStore from './DuplicationStore';
 
 type Props = {
+  /** Ui store for responsivity */
   ui: UiStore,
+  /** App store for global application state */
   app: AppStore,
 };
 
+/**
+ * Toplevel scene that shows the user all of the errors related to
+ * duplications in their files. Note that this does not necessarily
+ * mean that all the issues are about duplicated code. Note that ideally
+ * the `<ErrorList />` component would be refactored and used here.
+ */
 @observer
 class Duplication extends React.Component<Props> {
   store: DuplicationStore;
@@ -28,10 +36,15 @@ class Duplication extends React.Component<Props> {
     this.store = new DuplicationStore(props.app);
   }
 
+  /** Get the duplications from the API when the component mounts */
   componentDidMount() {
     this.store.getDuplications();
   }
 
+  /**
+   * Render all of the buttons in the header of the page
+   * @returns {React.Node} The rendered buttons
+   */
   renderHeaderActions = () => {
     return (
       !this.store.loading && (
@@ -50,6 +63,9 @@ class Duplication extends React.Component<Props> {
     );
   };
 
+  /**
+   * Render all of the duplications associated with the project.
+   */
   renderDuplications = () => {
     const { error } = this.store;
     if (error) {

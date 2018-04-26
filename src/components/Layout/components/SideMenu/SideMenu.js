@@ -31,7 +31,7 @@ type Props = {
  * Component that renders the sidebar for the application.
  */
 @observer
-class SideMenu extends React.Component<Props, State> {
+class SideMenu extends React.Component<Props> {
   getBasePath = () => {
     const pathname = this.props.location.pathname;
     let slashCount = 0,

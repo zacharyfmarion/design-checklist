@@ -90,109 +90,119 @@ for each category.
 
 
 ## &lt;ByFile /&gt;
+Component that displays the issues of a repository organized by the file
+structure of the repository itself. The top of the page displays a series
+of graphs visualizing the number of issues for a given package. The bottom
+displays a nested list of Collapse Panels containing the issues in the
+files contained in the denoted folder
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| app | AppStore | true | No Description |
-| ui | UiStore | true | No Description |
-| store | ChecklistStore | true | No Description |
+| ui | UiStore | true | App store for global application state |
+| app | AppStore | true | Ui store for responsivity |
+| store | ChecklistStore | true | Checklist store which handles most of the actions and state ofthe component. It is passed down from `<Checklist />` (whereit is instantiated) so that both `<ByCategory />` and `<ByFile />`have access to the same store. |
 
 ### Methods
 #### `renderLoading()`
 
-
+Render a loading indicator
 
 #### `renderHelp()`
 
-
+Renders a message intended to help the user understand how the graphs work on the page. This is displayed in a popover when the user clicks the Help button in <Controls /> segement of render()
 
 #### `renderCollapse(data)`
 
-
+Recursive function to render a series of nested <Collapse /> components until we reach a folder that doesn't contain any directories. NOTE: This needs to be updated as there are files with issues in directories that also have subdirectories. Right now they are not displayed in this portion (although they are shown in the graphs part)
 
 | Name | Type | Description |
 | --- | --- | --- |
-| data | Object | No description |
+| data | Object | The directory data currently being traversed. This data is originally derived from store.processedIssuesByFile |
 
 #### `renderDirectories()`
 
-
+Render all the collapse panels for the bottom portion of the page. Calls this.renderCollapse which recursively traverses all of the directories of the project and renders the errors in these folders
 
 #### `renderHeaderActions()`
 
-
+Render all of the header actions for the <Layout /> component on the page
 
 #### `renderChart()`
 
-
+Render the chart that appears in the top of the page. Based on the value of store.byFileGraphType it renders either a treemap, a bar chart or a pie chart
 
 #### `handleGraphTypeChange(e)`
 
-
+Handle when a radio button is changed
 
 | Name | Type | Description |
 | --- | --- | --- |
-| e | Event | No description |
+| e | Event | The radio button event |
 
 ---
 
 
 ## &lt;ByFileBarChart /&gt;
+Bar chart that displays the number of errors in the files or
+subfolders inside a directory
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| data | Array | true | No Description |
+| data | Array | true | Data to be displayed in the graph |
+| onExpand | Function | true | Function to handle when the user clicks on a a file/directory |
 ### Type Definitions
 #### data
 ```js
-Array<Object>```
+Array<ChartDataItem>```
 ### Methods
-#### `handleClick(data, index)`
+#### `handleClick(data)`
 
-
+Handle a bar being clicked by the user
 
 | Name | Type | Description |
 | --- | --- | --- |
-| data | No type | No description |
-| index | No type | No description |
+| data | signature | The data item corresponding to the bar that was clicked |
 
 ---
 
 
 ## &lt;ByFilePieChart /&gt;
+Pie chart that displays the number of errors in the files or
+subfolders inside a directory
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| data | Array | true | No Description |
-| onExpand | Function | true | No Description |
+| data | Array | true | Data to be displayed in the graph |
+| onExpand | Function | true | Function to handle when the user clicks on a a file/directory |
 ### Type Definitions
 #### data
 ```js
-Array<Object>```
+Array<ChartDataItem>```
 ### Methods
-#### `handleClick(data, index)`
+#### `handleClick(data)`
 
-
+Handle a bar being clicked by the user
 
 | Name | Type | Description |
 | --- | --- | --- |
-| data | No type | No description |
-| index | No type | No description |
+| data | signature | The data item corresponding to the bar that was clicked |
 
 ---
 
 
 ## &lt;ByFileTreemap /&gt;
+Pie chart that displays the number of errors in the files or
+subfolders inside a directory
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| data | Array | true | No Description |
-| onExpand | Function | true | No Description |
-| canExpand | Function | true | No Description |
+| data | Array | true | Data to be displayed in the graph |
+| onExpand | Function | true | change the data when the user expands a section |
+| canExpand | Function | true | Function determining whether the user can expand further |
 ### Type Definitions
 #### data
 ```js
@@ -200,14 +210,18 @@ Array<Object>```
 ---
 
 
-## &lt;DirectoryIssuesModal /&gt;
+## &lt;FileIssuesModal /&gt;
+Modal that displays all of the issues related to a given file in the
+project. Note that we use the same `<CodeIssue />` component that is
+used in the `<ByCategory />` page. Note that ideally the `<ErrorList />`
+component would be refactored and used here.
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| file | string | true | No Description |
-| issues | Array | true | No Description |
-| onClose | Function | true | No Description |
+| file | string | true | The filename |
+| issues | Array | true | The array of issues associated with that file |
+| onClose | Function | true | Function handler for when the tutorial is closed |
 ### Type Definitions
 #### issues
 ```js
@@ -216,115 +230,132 @@ Array<Object>```
 
 
 ## &lt;Duplication /&gt;
+Toplevel scene that shows the user all of the errors related to
+duplications in their files. Note that this does not necessarily
+mean that all the issues are about duplicated code. Note that ideally
+the `<ErrorList />` component would be refactored and used here.
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| ui | UiStore | true | No Description |
-| app | AppStore | true | No Description |
+| ui | UiStore | true | Ui store for responsivity |
+| app | AppStore | true | App store for global application state |
 
 ### Methods
 #### `renderHeaderActions()`
 
-
+Render all of the buttons in the header of the page
 
 #### `renderDuplications()`
 
-
+Render all of the duplications associated with the project.
 
 ---
 
 
 ## &lt;Graphs /&gt;
+Toplevel scene to render a series of graphs related to the user's code.
+Note that in the future this page might be broken up into separate
+pages that each focus on a certain aspect of the code.
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| app | AppStore | true | No Description |
-| ui | UiStore | true | No Description |
+| app | AppStore | true | App store for global application state |
+| ui | UiStore | true | Ui store for responsivity |
 
 ### Methods
 #### `getAuthors(entry)`
 
-
+Remove the "date" key from the API response object so just the authors are left
 
 | Name | Type | Description |
 | --- | --- | --- |
-| entry | No type | No description |
+| entry | Object | No description |
 
 #### `renderNormalizedChart()`
 
-
+Render a chart of normalized statistics about the user's code
 
 #### `renderStatsByDateChart()`
 
+Render a stacked area chart where the x axis is the date where each commit was made.
 
+#### `renderGraphs()`
 
-#### `renderGraph()`
-
-
+Render all of the graphs for the page. This is broken out into a separate method so that the render method does not get too cluttered
 
 #### `renderHeaderActions()`
 
-
+Render the header buttons for the page
 
 ---
 
 
 ## &lt;NotFound /&gt;
+Page that is rendered when the application hits a route that
+is not mapped to any other component
 
 ---
 
 
 ## &lt;Statistics /&gt;
+Toplevel scene the displays stats about the project, such as
+how many packages they have and how many lines of code
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| app | AppStore | true | No Description |
+| app | AppStore | true | App store for global application state |
 
 ### Methods
 #### `renderStatistics()`
 
-
+What is rendered if the API call has been completed successfully
 
 ---
 
 
 ## &lt;Welcome /&gt;
+The first scene that is shown when the user goes to the app's URL. It
+displays an input that asks for the project name, and once this input
+is entered the application redirects to the `<Checklist />` page
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| ui | UiStore | true | No Description |
-| app | AppStore | true | No Description |
-| history | Object | true | No Description |
+| ui | UiStore | true | Ui store for responsivity |
+| app | AppStore | true | App store for global application state |
+| history | Object | true | The history object passed in by React Router |
 
 ### Methods
 #### `confirmProject()`
 
-
+Wrapper for the stores confirmProject method that also sends analytics data to Google Analytics
 
 ---
 
 
 ## &lt;InfoModal /&gt;
+Modal that displays basic information about the application and is
+visible from the `<Welcome />` page
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| onClose | Function | true | No Description |
+| onClose | Function | true | Function handler for when the modal is closed |
 
 ---
 
 
 ## &lt;TutorialModal /&gt;
+Modal that displays a tutorial about how to use the application
 ### Props
 
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
-| onClose | Function | true | No Description |
-| fromError | boolean | false | No Description |
+| onClose | Function | true | Function handler for when the modal is closed |
+| fromError | boolean | false | Error didn't |
 
 ---
 

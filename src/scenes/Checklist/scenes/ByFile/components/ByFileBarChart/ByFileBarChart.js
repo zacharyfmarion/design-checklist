@@ -12,8 +12,16 @@ import {
 } from 'recharts';
 import { colorSeverity } from 'helpers/colors';
 
+type ChartDataItem = {
+  name: string,
+  numIssues: number,
+};
+
 type Props = {
-  data: Array<Object>,
+  /** Data to be displayed in the graph */
+  data: Array<ChartDataItem>,
+  /** Function to handle when the user clicks on a a file/directory */
+  onExpand: Function,
 };
 
 type AnchorPos = 'start' | 'middle' | 'end';
@@ -70,9 +78,18 @@ const CustomTick = ({
   );
 };
 
+/**
+ * Bar chart that displays the number of errors in the files or
+ * subfolders inside a directory
+ */
 @observer
 class ByFileBarChart extends React.Component<Props> {
-  handleClick = (data, index) => {
+  /**
+   * Handle a bar being clicked by the user
+   * @param {ChartDataItem} data The data item corresponding to the bar that
+   * was clicked
+   */
+  handleClick = (data: ChartDataItem) => {
     const { onExpand } = this.props;
     onExpand(data.name);
   };

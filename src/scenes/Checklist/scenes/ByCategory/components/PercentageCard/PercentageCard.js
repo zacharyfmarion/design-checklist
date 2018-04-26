@@ -90,9 +90,10 @@ const PercentageCard = ({
               color={mapping.color}
             />
           )}
-        {ui.isDesktop > 0 && (
-          <NumIssues borderColor={app.primaryColor}>{numIssues}</NumIssues>
-        )}
+        {ui.isDesktop &&
+          numIssues > 0 && (
+            <NumIssues borderColor={app.primaryColor}>{numIssues}</NumIssues>
+          )}
       </ProgressWrapper>
       {ui.isDesktop && categoryTitle}
     </PercentContainer>

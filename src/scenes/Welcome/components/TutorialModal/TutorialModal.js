@@ -12,10 +12,15 @@ import files from './files';
 const TabPane = Tabs.TabPane;
 
 type Props = {
+  /** Function handler for when the modal is closed */
   onClose: Function,
+  /** Error didn't */
   fromError?: boolean,
 };
 
+/**
+ * Modal that displays a tutorial about how to use the application
+ */
 class TutorialModal extends React.Component<Props> {
   render() {
     const { onClose, fromError } = this.props;

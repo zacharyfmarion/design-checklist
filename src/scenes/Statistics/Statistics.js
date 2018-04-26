@@ -12,6 +12,7 @@ import Panel from 'components/Panel';
 import StatisticsStore from './StatisticsStore';
 
 type Props = {
+  /** App store for global application state */
   app: AppStore,
 };
 
@@ -46,6 +47,10 @@ const longestMethodsColumns = [
   },
 ];
 
+/**
+ * Toplevel scene the displays stats about the project, such as
+ * how many packages they have and how many lines of code
+ */
 @observer
 class Statistics extends React.Component<Props> {
   store: StatisticsStore;
@@ -55,10 +60,17 @@ class Statistics extends React.Component<Props> {
     this.store = new StatisticsStore(props.app);
   }
 
+  /**
+   * Call the API to get the project stats. Note that this endpoint is
+   * so small that it is currently not cached
+   */
   componentDidMount() {
     this.store.getStatistics();
   }
 
+  /**
+   * What is rendered if the API call has been completed successfully
+   */
   renderStatistics() {
     const { app } = this.props;
     const { error } = this.store;

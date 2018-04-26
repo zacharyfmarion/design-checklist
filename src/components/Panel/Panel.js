@@ -8,7 +8,7 @@ type Props = {
   /** Children to be displayed in the panel */
   children: React.Node,
   /** Whether or not to have a background color and large margin */
-  fluid: string,
+  fluid?: boolean,
 };
 
 /**

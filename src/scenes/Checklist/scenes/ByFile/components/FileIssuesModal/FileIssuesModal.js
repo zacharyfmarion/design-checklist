@@ -6,12 +6,21 @@ import CodeIssue from 'components/CodeIssue';
 import SuccessMessage from 'components/SuccessMessage';
 
 type Props = {
+  /** The filename */
   file: string,
+  /** The array of issues associated with that file */
   issues: Array<Object>,
+  /** Function handler for when the tutorial is closed */
   onClose: Function,
 };
 
-const DirectoryIssuesModal = ({ issues, file, onClose }: Props) => {
+/**
+ * Modal that displays all of the issues related to a given file in the
+ * project. Note that we use the same `<CodeIssue />` component that is
+ * used in the `<ByCategory />` page. Note that ideally the `<ErrorList />`
+ * component would be refactored and used here.
+ */
+const FileIssuesModal = ({ issues, file, onClose }: Props) => {
   if (!issues) return null;
   return (
     <Modal onClose={onClose}>
@@ -48,4 +57,4 @@ const StyledCodeIssue = styled(CodeIssue)`
   margin-bottom: 10px;
 `;
 
-export default DirectoryIssuesModal;
+export default FileIssuesModal;

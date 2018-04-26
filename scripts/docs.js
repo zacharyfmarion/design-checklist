@@ -199,7 +199,12 @@ fs.readFile(__dirname + '/../docs/_sidebar-template.md', (err, data) => {
   if (err) throw err;
   let sidebarContent = data.toString() + '\n';
   sidebarContent += locations
-    .map(loc => `  * [${loc.title}](${loc.filename})`)
+    .map(
+      loc =>
+        `  * [${loc.title}](${loc.filename})\n  * [${
+          loc.title
+        } Stores](${loc.title.toLowerCase() + '_stores.md'})\n`,
+    )
     .join('\n');
 
   fs.writeFile(__dirname + '/../docs/_sidebar.md', sidebarContent, err => {
@@ -217,17 +222,18 @@ locations.forEach(location => {
     documentJs(javascriptFiles, (err, markdown) => {
       if (err) throw err;
       // Check to make sure the file is not empty before saving it
-      if (markdown.split('\n').length > 2) {
-        fs.writeFile(
-          __dirname + `/../docs/${location.title.toLowerCase()}_stores.md`,
-          markdown,
-          err => {
-            if (err) {
-              console.log(err);
-            }
-          },
-        );
+      if (markdown.split('\n').length <= 2) {
+        markdown += '\n No stores found.';
       }
+      fs.writeFile(
+        __dirname + `/../docs/${location.title.toLowerCase()}_stores.md`,
+        markdown,
+        err => {
+          if (err) {
+            console.log(err);
+          }
+        },
+      );
     });
   });
 });
