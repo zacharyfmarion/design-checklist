@@ -42,6 +42,10 @@ Linting for the project is integrated with eslint, and should show up in the con
 
 You can run `yarn analyze` to get a visualization of your bundle and a better idea of how much certain packages are affecting the applications performance. Currently it has not been optimized very much, but in the future code splitting and other perf techniques might be a good idea. You can run it with `yarn analyze`, but note that you need to run `yarn build` first to generate a production build. One dependency that really should go is `brace`, which provides a code editor that is only used in the `TutorialModal` but takes up 15% of the bundle.
 
+## Mobx React Devtools
+
+When running the project in development mode a menu will appear in the bottom right of the screen. This is the `<DevTools />` component provided by [Mobx React Devtools](https://github.com/mobxjs/mobx-react-devtools). See their documentation for details on how to use it.
+
 ## Documentation
 
 Documentation is generated using [Docsify](https://docsify.js.org/#/). Basically you just edit the static markdown files in the `docs/` folder of the repo and it is deployed through github pages. Documentation for individual React components is also generated using [React-docgen](https://github.com/reactjs/react-docgen). You can run the command `yarn docgen` in order to document all of the components. The file `scripts/docs.js` handles this process.
