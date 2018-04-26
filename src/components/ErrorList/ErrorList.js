@@ -50,7 +50,7 @@ class ErrorList extends React.Component<Props, State> {
           <span>
             {errors[subcategory]['category description']}
             <HeaderTag color={subErrors.length > 0 ? 'red' : 'green'}>
-              {subErrors.length} {subErrors.length === 1 ? 'error' : 'errors'}
+              {subErrors.length} {subErrors.length === 1 ? 'issue' : 'issues'}
             </HeaderTag>
           </span>
         }
@@ -79,7 +79,7 @@ class ErrorList extends React.Component<Props, State> {
             <span>All Issues</span>
             <HeaderTag color={categoryErrors.length > 0 ? 'red' : 'green'}>
               {categoryErrors.length}{' '}
-              {categoryErrors.length === 1 ? 'error' : 'errors'}
+              {categoryErrors.length === 1 ? 'issue' : 'issues'}
             </HeaderTag>
           </div>
         }

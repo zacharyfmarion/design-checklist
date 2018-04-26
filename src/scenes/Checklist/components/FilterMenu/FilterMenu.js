@@ -1,8 +1,8 @@
 // @flow
 
 /**
- * Menu that allows the user to filter errors by their level of severity. This
- * lets users ignore small errors and focus on the most critical fixes without
+ * Menu that allows the user to filter issues by their level of severity. This
+ * lets users ignore small issues and focus on the most critical fixes without
  * the distraction
  */
 

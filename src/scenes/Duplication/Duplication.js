@@ -22,7 +22,7 @@ type Props = {
 };
 
 /**
- * Toplevel scene that shows the user all of the errors related to
+ * Toplevel scene that shows the user all of the issues related to
  * duplications in their files. Note that this does not necessarily
  * mean that all the issues are about duplicated code. Note that ideally
  * the `<ErrorList />` component would be refactored and used here.

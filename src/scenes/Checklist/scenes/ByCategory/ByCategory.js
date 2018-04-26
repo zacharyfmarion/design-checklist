@@ -3,7 +3,7 @@
 /**
  * <Checklist /> contains the code for the first application scene. The user is
  * first presented with the <WelcomePage /> component and once they enter a
- * projectName they go the actual checklist which displays offending errors in
+ * projectName they go the actual checklist which displays offending issues in
  * their code in an attractive and readable format. Note that in the future the
  * <WelcomePage /> component should proabably just become it's own scene and this
  * would make more sense.
@@ -70,7 +70,7 @@ class ByCategory extends React.Component<Props> {
    * a wrapper for store.changeCategory(), with the additional functionality
    * of saving a google anayltics event. This is a good example of how to
    * handle event creation.
-   * @param {String} key The key of the category in the errors object that gets
+   * @param {String} key The key of the category in the issues object that gets
    * returned by the API
    */
   changeCategory = key => {

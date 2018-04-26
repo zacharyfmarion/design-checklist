@@ -17,7 +17,7 @@ type Props = {
 };
 
 /**
- * Pie chart that displays the number of errors in the files or
+ * Pie chart that displays the number of issues in the files or
  * subfolders inside a directory
  */
 @observer

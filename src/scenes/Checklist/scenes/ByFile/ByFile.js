@@ -73,7 +73,7 @@ class ByFile extends React.Component<Props> {
     return (
       <HelpPopoverContent>
         Click on a region of the graph to expand it. If the directory has no
-        child directories a modal will be opened containing the errors
+        child directories a modal will be opened containing the issues
         corresponding to the files in the directory that was selected.
       </HelpPopoverContent>
     );
@@ -116,7 +116,7 @@ class ByFile extends React.Component<Props> {
                 <span>
                   {dir}
                   <HeaderTag color={numIssues > 0 ? 'red' : 'green'}>
-                    {numIssues} {numIssues === 1 ? 'error' : 'errors'}
+                    {numIssues} {numIssues === 1 ? 'issue' : 'issues'}
                   </HeaderTag>{' '}
                 </span>
               }
@@ -133,7 +133,7 @@ class ByFile extends React.Component<Props> {
   /**
    * Render all the collapse panels for the bottom portion of the page.
    * Calls this.renderCollapse which recursively traverses all of the
-   * directories of the project and renders the errors in these folders
+   * directories of the project and renders the issues in these folders
    * @returns {?React.Node} The Collapse panels, or null if the data has
    * not been loaded yet
    */
