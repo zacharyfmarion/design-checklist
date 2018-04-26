@@ -16,6 +16,7 @@ import GoogleAnalytics from 'helpers/analytics';
 import registerServiceWorker from './registerServiceWorker';
 import StoreProvider from 'stores';
 import { LocaleProvider } from 'antd';
+import DevTools from 'mobx-react-devtools';
 import enUS from 'antd/lib/locale-provider/en_US';
 import { analyticsId } from 'constants/app';
 import scenes, { defaultRoute } from 'scenes';
@@ -50,6 +51,9 @@ const App = inject('app')(
   observer(({ app }) => (
     <Router history={history}>
       <div>
+        {process.env.NODE_ENV === 'development' && (
+          <DevTools position={{ bottom: 10, right: 100 }} />
+        )}
         <Switch>
           <Route
             exact

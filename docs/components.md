@@ -310,7 +310,7 @@ as the background for whatever content appears on the page
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | children | ReactNode | true | Children to be displayed in the panel |
-| fluid | string | true | Whether or not to have a background color and large margin |
+| fluid | boolean | false | Whether or not to have a background color and large margin |
 
 ---
 

@@ -204,10 +204,6 @@ Change the current active category on the `<ByCategory />` page.
 
 ## action
 
-Clear the stores error
-
-## action
-
 Show a notification displaying an error
 
 **Parameters**
