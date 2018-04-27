@@ -202,7 +202,6 @@ subfolders inside a directory
 | --- | --- | --- | --- |
 | data | Array | true | Data to be displayed in the graph |
 | onExpand | Function | true | change the data when the user expands a section |
-| canExpand | Function | true | Function determining whether the user can expand further |
 ### Type Definitions
 #### data
 ```js
@@ -245,6 +244,15 @@ the `<ErrorList />` component would be refactored and used here.
 #### `renderHeaderActions()`
 
 Render all of the buttons in the header of the page
+
+#### `renderIssues(issues, type)`
+
+Render issues into a list of CodeIssue components
+
+| Name | Type | Description |
+| --- | --- | --- |
+| issues | Array | The array of issues |
+| type | union | Whether the issues are DRY issues are duplications |
 
 #### `renderDuplications()`
 

@@ -73,7 +73,7 @@ class FilterMenu extends React.Component<Props> {
 
 const Menu = styled(Flex)`
   ${({ theme }) => `
-    color: ${theme.color};
+    // color: ${theme.color};
   `};
 `;
 

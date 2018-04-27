@@ -210,7 +210,10 @@ class CodeIssue extends React.Component<Props> {
                 </LineWrapper>
               ))}
               {i < duplications.length - 1 && (
-                <DuplicationSeparator themeName={app.themeName}>
+                <DuplicationSeparator
+                  themeName={app.themeName}
+                  theme={app.theme}
+                >
                   <PaddedExpand width={maxLine.toString.length * 5 + 30} />
                   <SeparatorMessage>Collapsed lines...</SeparatorMessage>
                 </DuplicationSeparator>
@@ -260,7 +263,10 @@ class CodeIssue extends React.Component<Props> {
                 {this.renderDuplication(duplication, maxLines, i)}
               </Duplication>
               {i < processedDups.length - 1 && (
-                <DuplicationSeparator themeName={app.themeName}>
+                <DuplicationSeparator
+                  themeName={app.themeName}
+                  theme={app.theme}
+                >
                   <PaddedExpand width={maxLines[0].toString.length * 5 + 30} />
                   <SeparatorMessage>Collapsed lines...</SeparatorMessage>
                 </DuplicationSeparator>
@@ -302,7 +308,7 @@ class CodeIssue extends React.Component<Props> {
           {i + 1 < code.length &&
             code[i + 1].textRange.startLine !==
               code[i].textRange.startLine + 1 && (
-              <DuplicationSeparator themeName={app.themeName}>
+              <DuplicationSeparator themeName={app.themeName} theme={app.theme}>
                 <PaddedExpand width={maxLine.toString().length * 5 + 30} />
                 <SeparatorMessage>Collapsed lines...</SeparatorMessage>
               </DuplicationSeparator>
@@ -444,9 +450,11 @@ const LineWrapper = styled(Flex)`
 `;
 
 const DuplicationSeparator = styled(Flex)`
-  height: 20px;
-  background: ${({ themeName }) =>
-    themeName === 'light' ? '#f1f8ff' : '#2b2e31'};
+  ${({ themeName, theme }) => `
+    height: 20px;
+    background: ${themeName === 'light' ? '#f1f8ff' : '#2b2e31'};
+    color: ${theme.colorSecondary};
+  `};
 `;
 
 const Duplication = styled(Flex)``;

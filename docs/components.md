@@ -158,6 +158,11 @@ Change the duplications from [[], []] to pairs of lines
 ---
 
 
+## &lt;undefined /&gt;
+
+---
+
+
 ## &lt;ErrorList /&gt;
 A component for rendering a list of errors, most notably used in `<ByCategory />`.
 Note that currently the data format is tightly coupled with the API response
@@ -230,6 +235,7 @@ defined in `scenes/index.js`
 | Prop Name | Type | Required | Description |
 | --- | --- | --- | --- |
 | location | Object | true | The location object passed in by React Router |
+| app | AppStore | true | Global app state |
 
 ---
 
@@ -315,6 +321,18 @@ as the background for whatever content appears on the page
 ---
 
 
+## &lt;Popover /&gt;
+Themed wrapper to render an antd Popover component. Currently I can't figure
+out a way to actually theme it
+### Props
+
+| Prop Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| app | AppStore | true | Global store inject to handle theme |
+
+---
+
+
 ## &lt;PrivateRoute /&gt;
 Route that handles authentication. Basically if `authed` is true it functions
 like a normal React Route `<Route />` component but if `authed` is false it
@@ -325,6 +343,16 @@ renders a redirect to the default application path.
 | --- | --- | --- | --- |
 | component | ReactComponent | true | Component to be rendered by the route |
 | authed | boolean | true | Whether or not the component should be rendered (if authed is false the user is insteadredirected to the default route of the application, as defined in `scenes/index.js`) |
+
+---
+
+
+## &lt;undefined /&gt;
+### Props
+
+| Prop Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| app | AppStore | true | No Description |
 
 ---
 

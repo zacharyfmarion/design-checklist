@@ -55,6 +55,7 @@ class SideMenu extends React.Component<Props> {
 
   render() {
     const { collapsed, app, title, ui, toggleCollapsed } = this.props;
+    const basePath = this.getBasePath();
     return (
       <SidebarContainer column collapsed={collapsed} isDesktop={ui.isDesktop}>
         <SidebarHeader
@@ -69,7 +70,7 @@ class SideMenu extends React.Component<Props> {
         <Flex auto>
           <StyledMenu
             defaultSelectedKeys={[this.props.location.pathname]}
-            defaultOpenKeys={[]}
+            defaultOpenKeys={basePath === '/checklist' ? ['/checklist'] : []}
             mode="inline"
             theme={app.themeName}
             isDesktop={ui.isDesktop}
