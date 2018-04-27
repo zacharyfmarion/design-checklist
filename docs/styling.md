@@ -38,7 +38,7 @@ type Props = {
   app: AppStore,
 };
 
-const Example = ({app}) => (
+const Example = ({app}: Props) => (
   <FancyDiv primaryColor={app.primaryColor}>Hello</FancyDiv>
 );
 
