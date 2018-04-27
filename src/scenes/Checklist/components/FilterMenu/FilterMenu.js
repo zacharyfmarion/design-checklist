@@ -7,13 +7,14 @@
  */
 
 import * as React from 'react';
-import { Popover, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import Button from 'components/Button';
+import Popover from 'components/Popover';
 import Switch from 'components/Switch';
 import Text from 'components/Text';
 
@@ -39,7 +40,7 @@ class FilterMenu extends React.Component<Props> {
   renderMenu = () => {
     const { app } = this.props;
     return (
-      <Flex column>
+      <Menu column theme={app.theme}>
         {Object.keys(app.filters).map((severity, i) => {
           const handleChange = checked => app.changeFilter(severity, checked);
           return (
@@ -49,7 +50,7 @@ class FilterMenu extends React.Component<Props> {
             </OptionRow>
           );
         })}
-      </Flex>
+      </Menu>
     );
   };
 
@@ -69,6 +70,12 @@ class FilterMenu extends React.Component<Props> {
     );
   }
 }
+
+const Menu = styled(Flex)`
+  ${({ theme }) => `
+    color: ${theme.color};
+  `};
+`;
 
 const OptionRow = styled(Flex)`
   margin: 4px 0;

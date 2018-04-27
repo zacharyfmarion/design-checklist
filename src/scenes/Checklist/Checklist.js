@@ -9,7 +9,6 @@ import Layout from 'components/Layout';
 import Button from 'components/Button';
 import ChecklistStore from './ChecklistStore';
 import FilterMenu from './components/FilterMenu';
-import { shadow } from 'constants/styles';
 import { shadeColor } from 'helpers/colors';
 import AppStore from 'stores/AppStore';
 
@@ -29,10 +28,10 @@ type ModeSelectProps = {
 const ModeSelect = inject('app')(
   observer(({ app, path, title, icon }: ModeSelectProps) => {
     return (
-      <ModeLink to={path}>
+      <ModeLink to={path} theme={app.theme}>
         <Flex auto column justify="center" align="center">
           <ModeIcon type={icon} color={shadeColor(app.primaryColor, 0.5)} />
-          <ModeTitle>{title}</ModeTitle>
+          <ModeTitle theme={app.theme}>{title}</ModeTitle>
         </Flex>
       </ModeLink>
     );
@@ -119,6 +118,7 @@ const PaddedLayout = styled(Layout)`
 
 const ModeTitle = styled.h1`
   text-transform: uppercase;
+  color: ${({ theme }) => theme.color};
   margin-top: 25px;
 `;
 
@@ -128,13 +128,16 @@ const ModeIcon = styled(Icon)`
 `;
 
 const ModeLink = styled(Link)`
-  display: flex;
-  flex: 1;
-  height: 250px;
-  background: #fff;
-  border-radius: 3px;
-  margin: 20px;
-  box-shadow: ${shadow};
+  ${({ theme }) => `
+    display: flex;
+    flex: 1;
+    height: 250px;
+    background: #fff;
+    border-radius: 3px;
+    margin: 20px;
+    background: ${theme.background};
+    box-shadow: ${theme.shadow};
+  `};
 `;
 
 const HeaderButton = styled(Button)`

@@ -13,8 +13,6 @@
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/2.13.4/antd.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/codemirror.min.css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/theme/monokai.min.css" />
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -28,6 +26,14 @@
   <style>
     body {
       font-family: Roboto, Open Sans, Segoe UI, sans-serif !important;
+    }
+
+    .ant-menu.ant-menu-dark .ant-menu-item-selected {
+      background-color: #212121;
+    }
+
+    .ant-menu-dark .ant-menu-inline.ant-menu-sub {
+      background-color: #404040;
     }
   </style>
 </head>

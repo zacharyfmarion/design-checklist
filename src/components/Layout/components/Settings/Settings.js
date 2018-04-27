@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { Select, Popover, Tooltip } from 'antd';
 import { observer, inject } from 'mobx-react';
-import { themeColors } from 'constants/styles';
+import { primaryColors, themes } from 'constants/styles';
 import { validHex } from 'helpers/colors';
 import { Flex } from 'reflexbox';
 import AppStore from 'stores/AppStore';
@@ -42,21 +42,36 @@ class Settings extends React.Component<Props, State> {
 
   renderContent = () => {
     const { app } = this.props;
-    const activeColor = themeColors.find(
-      theme => theme.color === app.primaryColor,
+    const activeColor = primaryColors.find(
+      primaryColor => primaryColor.color === app.primaryColor,
     );
-    const changeCustom = () => app.changeTheme(this.state.customHex);
+    const changeCustom = () => app.changePrimaryColor(this.state.customHex);
     return (
       <Flex column>
         <Header primary={app.primaryColor}>Theme</Header>
+        <ThemeSelect value={app.themeName} onChange={app.changeTheme}>
+          {Object.keys(themes).map((theme, i) => (
+            <Option value={theme} key={i}>
+              <ColorSwab color={themes[theme].background} />
+              <span>{theme}</span>
+            </Option>
+          ))}
+          {!activeColor && (
+            <Option value="custom" key={100}>
+              <ColorSwab color={app.primaryColor} />
+              <span>Custom</span>
+            </Option>
+          )}
+        </ThemeSelect>
+        <Header primary={app.primaryColor}>Primary Color</Header>
         <ThemeSelect
           value={activeColor ? activeColor.color : 'custom'}
-          onChange={app.changeTheme}
+          onChange={app.changePrimaryColor}
         >
-          {themeColors.map((theme, i) => (
-            <Option value={theme.color} key={i}>
-              <ColorSwab color={theme.color} />
-              <span>{theme.title}</span>
+          {primaryColors.map((primaryColor, i) => (
+            <Option value={primaryColor.color} key={i}>
+              <ColorSwab color={primaryColor.color} />
+              <span>{primaryColor.title}</span>
             </Option>
           ))}
           {!activeColor && (

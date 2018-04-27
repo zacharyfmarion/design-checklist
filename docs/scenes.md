@@ -60,7 +60,7 @@ Changes the current category of issues to be rendered. Really just a wrapper for
 
 | Name | Type | Description |
 | --- | --- | --- |
-| key | String | The key of the category in the errors object that gets returned by the API |
+| key | String | The key of the category in the issues object that gets returned by the API |
 
 #### `renderErrors()`
 
@@ -122,7 +122,7 @@ Recursive function to render a series of nested <Collapse /> components until we
 
 #### `renderDirectories()`
 
-Render all the collapse panels for the bottom portion of the page. Calls this.renderCollapse which recursively traverses all of the directories of the project and renders the errors in these folders
+Render all the collapse panels for the bottom portion of the page. Calls this.renderCollapse which recursively traverses all of the directories of the project and renders the issues in these folders
 
 #### `renderHeaderActions()`
 
@@ -144,7 +144,7 @@ Handle when a radio button is changed
 
 
 ## &lt;ByFileBarChart /&gt;
-Bar chart that displays the number of errors in the files or
+Bar chart that displays the number of issues in the files or
 subfolders inside a directory
 ### Props
 
@@ -169,7 +169,7 @@ Handle a bar being clicked by the user
 
 
 ## &lt;ByFilePieChart /&gt;
-Pie chart that displays the number of errors in the files or
+Pie chart that displays the number of issues in the files or
 subfolders inside a directory
 ### Props
 
@@ -194,7 +194,7 @@ Handle a bar being clicked by the user
 
 
 ## &lt;ByFileTreemap /&gt;
-Pie chart that displays the number of errors in the files or
+Pie chart that displays the number of issues in the files or
 subfolders inside a directory
 ### Props
 
@@ -230,7 +230,7 @@ Array<Object>```
 
 
 ## &lt;Duplication /&gt;
-Toplevel scene that shows the user all of the errors related to
+Toplevel scene that shows the user all of the issues related to
 duplications in their files. Note that this does not necessarily
 mean that all the issues are about duplicated code. Note that ideally
 the `<ErrorList />` component would be refactored and used here.
@@ -295,6 +295,13 @@ Render the header buttons for the page
 ## &lt;NotFound /&gt;
 Page that is rendered when the application hits a route that
 is not mapped to any other component
+
+---
+
+
+## &lt;Playground /&gt;
+This is a place to experiment with anything. Note that this route is only
+added in dev mode so you don't have to worry about it showing up in prod
 
 ---
 

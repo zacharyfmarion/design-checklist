@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import UiStore from 'stores/UiStore';
+import AppStore from 'stores/AppStore';
 import ReactModal from 'react-modal';
 import ModalHeader from './components/ModalHeader';
 
@@ -9,9 +10,10 @@ type Props = {
   children: React.Node,
   onClose: Function,
   ui: UiStore,
+  app: AppStore,
 };
 
-const modalStyles = (isMobile: boolean) => ({
+const modalStyles = (isMobile: boolean, theme: Object) => ({
   overlay: {
     position: 'fixed',
     display: 'flex',
@@ -29,7 +31,8 @@ const modalStyles = (isMobile: boolean) => ({
     margin: 'auto',
     border: 'none',
     boxShadow: 'rgba(0, 0, 0, 0.05) 0px 0px 36px 14px',
-    background: '#fff',
+    color: theme.color,
+    background: theme.background,
     WebkitOverflowScrolling: 'touch',
     borderRadius: '4px',
     outline: 'none',
@@ -37,8 +40,8 @@ const modalStyles = (isMobile: boolean) => ({
   },
 });
 
-const Modal = ({ children, onClose, ui, ...otherProps }: Props) => {
-  const style = modalStyles(ui.isMobile);
+const Modal = ({ children, onClose, ui, app, ...otherProps }: Props) => {
+  const style = modalStyles(ui.isMobile, app.theme);
   return (
     <ReactModal
       isOpen
@@ -60,4 +63,4 @@ const Modal = ({ children, onClose, ui, ...otherProps }: Props) => {
 };
 
 export { Modal };
-export default inject('ui')(observer(Modal));
+export default inject('ui', 'app')(observer(Modal));

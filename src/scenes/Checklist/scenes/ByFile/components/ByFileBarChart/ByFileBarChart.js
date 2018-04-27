@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { colorSeverity } from 'helpers/colors';
+import { formatName } from 'helpers/files';
 
 type ChartDataItem = {
   name: string,
@@ -101,7 +102,7 @@ class ByFileBarChart extends React.Component<Props> {
       <ResponsiveContainer>
         <BarChart width={600} height={300} data={data}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="name" tickFormatter={formatName} />
           <YAxis />
           <Tooltip />
           <Bar

@@ -1,5 +1,12 @@
 // @flow
 
+import { observable, computed, action } from 'mobx';
+import { colors, themes } from 'constants/styles';
+import { severities } from 'constants/general';
+import { applicationPrefix } from 'constants/app';
+
+type Theme = 'light' | 'dark';
+
 /**
  * App store. Code here deals with global application state (use with disgression!). It
  * should be noted that some of the things that are currently in here should maybe be
@@ -7,23 +14,23 @@
  * that all the global application state should go here I just threw in in the same
  * place as everything else
  */
-
-import { observable, action } from 'mobx';
-import { colors } from 'constants/styles';
-import { severities } from 'constants/general';
-import { applicationPrefix } from 'constants/app';
-
 class AppStore {
   @observable projectName: ?string;
   @observable projectConfirmed = false;
   @observable sidebarCollapsed: boolean = false;
   @observable primaryColor: string = colors.primary;
+  @observable themeName: Theme = 'light';
   // we have a hardcoded backup severity list, but this should be updated
   // as soon as we call the main API endpoint and get the on the backend uses
   @observable severityList: Array<string> = severities;
   @observable filters: Object;
   // For mobile, where sidebar is either displayed or not displayed
   @observable sidebarVisible: boolean = false;
+
+  @computed
+  get theme(): Object {
+    return themes[this.themeName];
+  }
 
   @action
   formatDefaultFilters() {
@@ -65,8 +72,14 @@ class AppStore {
   };
 
   @action
-  changeTheme = (color: string) => {
+  changePrimaryColor = (color: string) => {
     this.primaryColor = color;
+    this.updateCache();
+  };
+
+  @action
+  changeTheme = (theme: Theme) => {
+    this.themeName = theme;
     this.updateCache();
   };
 
@@ -75,6 +88,7 @@ class AppStore {
     localStorage.setItem(
       `${applicationPrefix}_settings`,
       JSON.stringify({
+        theme: this.themeName,
         primary: this.primaryColor,
       }),
     );
@@ -108,8 +122,9 @@ class AppStore {
     );
     const app = localStorage.getItem(`${applicationPrefix}_settings`);
     if (app) {
-      const { primary } = JSON.parse(app);
+      const { primary, theme } = JSON.parse(app);
       this.primaryColor = primary;
+      this.themeName = theme;
     }
     if (projectName) {
       this.projectName = projectName;

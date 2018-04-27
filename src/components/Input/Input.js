@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { Icon } from 'antd';
 import styled from 'styled-components';
+import { inject, observer } from 'mobx-react';
 import { Flex } from 'reflexbox';
-import { shadow } from 'constants/styles';
 
 type Props = {
   onChange: Function,
@@ -21,6 +21,7 @@ const fontSizes = {
   large: '20px',
 };
 
+@observer
 class Input extends React.Component<Props> {
   handleChange = (event: SyntheticEvent<*>) => {
     const { target } = event;
@@ -40,6 +41,7 @@ class Input extends React.Component<Props> {
       icon,
       action,
       placeholder,
+      app,
       size = 'normal',
       className,
     } = this.props;
@@ -56,6 +58,7 @@ class Input extends React.Component<Props> {
           size={size}
           onKeyPress={this.handleKeyPress}
           value={value}
+          shadow={app.theme.shadow}
           placeholder={placeholder}
           onChange={this.handleChange}
           className="input-instance"
@@ -86,6 +89,7 @@ const InputContainer = styled.div`
 
 const StyledIcon = styled(Icon)`
   font-size: 19px;
+  color: gray;
   padding: ${({ size }) => (size === 'large' ? '0 10px' : '0 5px')};
 `;
 
@@ -94,11 +98,12 @@ const StyledInput = styled.input`
   padding: 10px;
   border: none;
   font-family: Roboto;
+  color: black;
   font-size: ${({ size }) => fontSizes[size]};
-  box-shadow: ${shadow};
+  box-shadow: ${({ shadow }) => shadow};
   ${({ hasIcon, size }) =>
     hasIcon &&
     (size === 'large' ? `padding-left: 40px;` : `padding-left: 30px;`)};
 `;
 
-export default Input;
+export default inject('app')(Input);

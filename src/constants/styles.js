@@ -3,7 +3,7 @@
 export type FontSize = 'tiny' | 'small' | 'normal' | 'large' | 'huge';
 export type Color = 'teal' | 'lightgray' | 'white' | 'black';
 
-const themeColors = [
+const primaryColors = [
   {
     title: 'Green',
     color: '#25b47d',
@@ -48,14 +48,30 @@ const fontSizes = {
 };
 
 const colors = {
-  primary: themeColors[0].color,
+  primary: primaryColors[0].color,
   good: '#25b47d',
   average: '#fdd75f',
   bad: '#f57c00',
   terrible: '#e63e3e',
 };
 
-const shadow = '0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07)';
+const themes = {
+  light: {
+    background: '#fff',
+    backgroundSecondary: '#fff',
+    color: '#000',
+    colorSecondary: 'gray',
+    shadow: '0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07)',
+  },
+  dark: {
+    background: '#212121',
+    // light background color
+    backgroundSecondary: '#404040',
+    color: '#fff',
+    colorSecondary: 'lightgray',
+    shadow: '0 15px 27px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07)',
+  },
+};
 
 const breakpoints = {
   desktop: 992,
@@ -63,4 +79,4 @@ const breakpoints = {
   mobile: 0,
 };
 
-export { themeColors, colors, fontSizes, shadow, breakpoints };
+export { primaryColors, colors, themes, fontSizes, breakpoints };

@@ -7,7 +7,6 @@ import { Flex } from 'reflexbox';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import styled from 'styled-components';
-import { shadow } from 'constants/styles';
 import { title, shortTitle } from 'constants/app';
 import logo from 'assets/logo.png';
 import Button from 'components/Button';
@@ -89,6 +88,7 @@ class Header extends React.Component<Props, State> {
         isDesktop={ui.isDesktop}
         sidebarVisible={sidebarVisible}
         primary={app.primaryColor}
+        shadow={app.theme.shadow}
       >
         <Flex align="center">
           {ui.isDesktop || !sidebarVisible ? (
@@ -179,7 +179,7 @@ const HeaderWrapper = styled(Flex)`
   padding: 0 30px;
   height: 75px;
   z-index: 2;
-  ${({ topAligned }) =>
+  ${({ topAligned, shadow }) =>
     !topAligned &&
     `
     box-shadow: ${shadow} !important;

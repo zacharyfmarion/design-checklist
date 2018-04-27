@@ -1,13 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Collapse, Tag, Icon } from 'antd';
+import { Tag, Icon } from 'antd';
 import styled from 'styled-components';
 import GoogleAnalytics from 'helpers/analytics';
 import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import CodeIssue from 'components/CodeIssue';
-import { shadow } from 'constants/styles';
-const Panel = Collapse.Panel;
+import { Collapse, Panel } from 'components/Collapse';
 
 type Props = {
   /**
@@ -119,13 +118,14 @@ class ErrorList extends React.Component<Props, State> {
   };
 
   render() {
-    const { errors } = this.props;
+    const { errors, app } = this.props;
     const noSubcategories = errors instanceof Array;
     return (
       <Flex column>
         <StyledCollapse
           defaultActiveKey={[]}
           onChange={this.handleCollapseChange}
+          shadow={app.theme.shadow}
         >
           {noSubcategories
             ? this.renderCategory()
@@ -147,7 +147,7 @@ const HeaderTag = styled(Tag)`
 `;
 
 const StyledCollapse = styled(Collapse)`
-  box-shadow: ${shadow} !important;
+  box-shadow: ${({ shadow }) => shadow} !important;
   margin: 0 10px;
 `;
 

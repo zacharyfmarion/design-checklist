@@ -5,7 +5,6 @@ import { observer, inject } from 'mobx-react';
 import styled from 'styled-components';
 import AppStore from 'stores/AppStore';
 import GoogleAnalytics from 'helpers/analytics';
-import { shadow } from 'constants/styles';
 
 type Props = {
   /**
@@ -69,6 +68,7 @@ const Button = ({
       onClick={handleClick}
       primaryColor={app.primaryColor}
       flat={flat}
+      theme={app.theme}
       {...other}
     >
       {children}
@@ -81,14 +81,16 @@ const StyledButton = styled(AntButton)`
   padding: 0 20px;
   text-transform: uppercase;
   font-size: 14px;
-  ${({ primary, flat, primaryColor }) =>
+  ${({ primary, flat, theme, primaryColor }) =>
     `
+    background-color: ${theme.background};
+    color: ${theme.color};
     ${primary &&
       `
       background-color: ${primaryColor}; 
       color: #fff;
     `}
-    ${!flat && `box-shadow: ${shadow}`};
+    ${!flat && `box-shadow: ${theme.shadow}`};
     &:hover {
       border-color: ${primaryColor};
       color: ${primaryColor};

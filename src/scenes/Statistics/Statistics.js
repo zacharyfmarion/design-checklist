@@ -84,6 +84,7 @@ class Statistics extends React.Component<Props> {
         </SectionHeader>
         <StyledTable
           dataSource={this.store.statistics}
+          theme={app.theme}
           bordered
           columns={columns}
           pagination={false}
@@ -92,6 +93,7 @@ class Statistics extends React.Component<Props> {
           Longest Methods
         </SectionHeader>
         <StyledTable
+          theme={app.theme}
           dataSource={this.store.longestMethods}
           columns={longestMethodsColumns}
           bordered
@@ -129,11 +131,23 @@ const LoadingContainer = styled(Flex)`
 `;
 
 const StyledTable = styled(Table)`
-  ${({ monospace }) =>
-    monospace &&
-    `
+  ${({ monospace, theme }) => `
     .ant-table-row td {
-      font-family: monospace;
+      ${monospace && `font-family: monospace;`}
+    }
+    .ant-table-thead > tr > th {
+      background: ${theme.backgroundSecondary};
+      color: ${theme.color} !important;
+    }
+    .ant-table {
+      color: ${theme.color} !important;
+    }
+    .ant-table-placeholder {
+      background: ${theme.background};
+      color: ${theme.color} !important;
+    }
+    .ant-table-tbody > tr:hover > td {
+      background: ${theme.backgroundSecondary};
     }
   `};
 `;

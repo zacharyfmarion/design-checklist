@@ -1,27 +1,26 @@
 // @flow
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Popover, Collapse, Radio, Icon, Tag } from 'antd';
+import { Popover, Icon, Tag } from 'antd';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 import Panel from 'components/Panel';
 import Button from 'components/Button';
+import { RadioGroup, RadioButton } from 'components/Radio';
+import { Collapse, Panel as CollapsePanel } from 'components/Collapse';
 import ErrorMessage from 'components/ErrorMessage';
 import CodeIssue from 'components/CodeIssue';
 import Spin from 'components/Spin';
 import AppStore from 'stores/AppStore';
 import UiStore from 'stores/UiStore';
 import ChecklistStore from '../../ChecklistStore';
+import { stripSrc } from 'helpers/files';
 
 // local components
 import ByFileTreemap from './components/ByFileTreemap';
 import ByFileBarChart from './components/ByFileBarChart';
 import ByFilePieChart from './components/ByFilePieChart';
 import FileIssuesModal from './components/FileIssuesModal';
-
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-const CollapsePanel = Collapse.Panel;
 
 type Props = {
   /** App store for global application state */
@@ -114,7 +113,7 @@ class ByFile extends React.Component<Props> {
             <CollapsePanel
               header={
                 <span>
-                  {dir}
+                  {stripSrc(dir)}
                   <HeaderTag color={numIssues > 0 ? 'red' : 'green'}>
                     {numIssues} {numIssues === 1 ? 'issue' : 'issues'}
                   </HeaderTag>{' '}
@@ -181,7 +180,6 @@ class ByFile extends React.Component<Props> {
         return (
           <ByFileTreemap
             data={store.byFileTreemapData}
-            canExpand={store.canExpandTree}
             onExpand={store.changeTreeRoot}
           />
         );
@@ -189,7 +187,6 @@ class ByFile extends React.Component<Props> {
         return (
           <ByFileBarChart
             data={store.byFileGraphData}
-            canExpand={store.canExpandTree}
             onExpand={store.changeTreeRoot}
           />
         );
@@ -197,7 +194,6 @@ class ByFile extends React.Component<Props> {
         return (
           <ByFilePieChart
             data={store.byFileGraphData}
-            canExpand={store.canExpandTree}
             onExpand={store.changeTreeRoot}
           />
         );
@@ -247,7 +243,6 @@ class ByFile extends React.Component<Props> {
               <StyledRadioGroup
                 onChange={this.handleGraphTypeChange}
                 defaultValue={store.byFileGraphType}
-                primaryColor={app.primaryColor}
                 isMobile={ui.isMobile}
               >
                 <StyledRadioButton value="treemap">Treemap</StyledRadioButton>
@@ -307,19 +302,8 @@ const HeaderTag = styled(Tag)`
 `;
 
 const StyledRadioGroup = styled(RadioGroup)`
-  ${({ primaryColor, isMobile }) => `
+  ${({ isMobile }) => `
     ${isMobile && `margin-bottom: 10px;`}
-    .ant-radio-button-wrapper:hover, .ant-radio-button-wrapper-focused {
-      color: ${primaryColor};
-    }
-    .ant-radio-button-wrapper-checked {
-      border-color: ${primaryColor};
-      color: ${primaryColor};
-      box-shadow: -1px 0 0 0 ${primaryColor};
-    }
-    .ant-radio-button-wrapper-checked:first-child {
-      border-color: ${primaryColor};
-    }
   `};
 `;
 

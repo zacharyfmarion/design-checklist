@@ -64,20 +64,46 @@ class Duplication extends React.Component<Props> {
   };
 
   /**
+   * Render issues into a list of CodeIssue components
+   * @param {Array} issues The array of issues
+   * @param {String} type Whether the issues are DRY issues are duplications
+   */
+  renderIssues = (issues: Array<Object>, type: 'issues' | 'duplications') => {
+    const { app } = this.props;
+    return issues.length > 0 ? (
+      issues.map(issue => <StyledError error={issue} shadowed />)
+    ) : (
+      <Flex auto align="center" justify="center">
+        <Title theme={app.theme}>
+          {type === 'duplications' ? 'No duplications' : 'No Issues'}
+        </Title>
+      </Flex>
+    );
+  };
+
+  /**
    * Render all of the duplications associated with the project.
    */
   renderDuplications = () => {
     const { error } = this.store;
+    const { app } = this.props;
     if (error) {
       return <ErrorMessage title={error.title} message={error.message} />;
     }
-    return this.store.duplications.length > 0 ? (
-      this.store.duplications.map(error => (
-        <StyledError error={error} shadowed />
-      ))
-    ) : (
-      <Flex auto align="center" justify="center">
-        <Title>No duplications</Title>
+    return (
+      <Flex column>
+        <SectionHeader primary={app.primaryColor}>DRY Issues</SectionHeader>
+        {this.renderIssues(
+          this.store.duplications.filter(error =>
+            error.hasOwnProperty('error'),
+          ),
+        )}
+        <SectionHeader primary={app.primaryColor}>Duplications</SectionHeader>
+        {this.renderIssues(
+          this.store.duplications.filter(error =>
+            error.hasOwnProperty('duplications'),
+          ),
+        )}
       </Flex>
     );
   };
@@ -101,12 +127,16 @@ class Duplication extends React.Component<Props> {
   }
 }
 
+const SectionHeader = styled.h3`
+  color: ${({ primary }) => primary};
+`;
+
 const Duplications = styled(Flex)`
   padding: 30px;
 `;
 
 const Title = styled.h1`
-  color: gray;
+  color: ${({ theme }) => theme.colorSecondary};
   text-transform: uppercase;
 `;
 

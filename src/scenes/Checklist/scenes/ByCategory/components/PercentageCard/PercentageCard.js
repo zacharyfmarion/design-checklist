@@ -5,7 +5,7 @@ import { shadeColor } from 'helpers/colors';
 import { Progress, Rate } from 'antd';
 import styled from 'styled-components';
 import { Flex } from 'reflexbox';
-import { colors, shadow } from 'constants/styles';
+import { colors } from 'constants/styles';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 
@@ -61,7 +61,9 @@ const PercentageCard = ({
 }: Props) => {
   const mapping = percentMappings(percent);
   const categoryTitle = (
-    <CategoryTitle active={active}>{category}</CategoryTitle>
+    <CategoryTitle active={active} theme={app.theme}>
+      {category}
+    </CategoryTitle>
   );
   return (
     <PercentContainer
@@ -73,6 +75,7 @@ const PercentageCard = ({
       align={ui.isDesktop ? 'center' : 'flex-start'}
       onClick={onClick}
       activeColor={shadeColor(app.primaryColor, 0.5)}
+      theme={app.theme}
     >
       {!ui.isDesktop && categoryTitle}
       <ProgressWrapper column justify="center" align="center">
@@ -142,16 +145,18 @@ const StyledProgress = styled(Progress)`
 
 const CategoryTitle = styled.h2`
   margin-top: 5px;
+  color: ${({ theme }) => theme.color};
 `;
 
 const PercentContainer = styled(Flex)`
   cursor: pointer;
-  ${({ isDesktop, active, activeColor }) =>
+  ${({ isDesktop, active, theme, activeColor }) =>
     isDesktop
       ? `
-  background: #fff;
+  background: ${theme.background};
+  color: ${theme.color};
   border-radius: 5px;
-  box-shadow: ${shadow};
+  box-shadow: ${theme.shadow};
   margin: 0 10px;
   padding: 15px 0;
   ${active &&

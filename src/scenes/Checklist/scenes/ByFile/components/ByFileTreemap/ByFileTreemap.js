@@ -3,14 +3,13 @@ import { observer, inject } from 'mobx-react';
 import { Treemap, ResponsiveContainer } from 'recharts';
 import { colorSeverity } from 'helpers/colors';
 import styled from 'styled-components';
+import { formatName } from 'helpers/files';
 
 type Props = {
   /** Data to be displayed in the graph */
   data: Array<Object>,
   /** change the data when the user expands a section */
   onExpand: Function,
-  /** Function determining whether the user can expand further */
-  canExpand: Function,
 };
 
 type CustomizedContentProps = {
@@ -27,13 +26,6 @@ type CustomizedContentProps = {
   name: string,
   data: Array<Object>,
   onExpand: Function,
-  canExpand: Function,
-};
-
-// helper function to get filename
-const getFilename = (name: string): string => {
-  const shortName = /[^/]*$/.exec(name)[0];
-  return shortName.indexOf('.') > -1 ? shortName : shortName + '/';
 };
 
 const CustomizedContent = ({
@@ -50,7 +42,6 @@ const CustomizedContent = ({
   name,
   data,
   onExpand,
-  canExpand,
 }: CustomizedContentProps) => {
   const handleExpand = () => onExpand(name);
   return (
@@ -78,13 +69,13 @@ const CustomizedContent = ({
           fontSize={14}
           onClick={handleExpand}
         >
-          {getFilename(name)}
+          {formatName(name)}
         </NameText>
       ) : null}
       {depth === 1 ? (
         <g>
           <text
-            x={x + (canExpand(name) ? 25 : 4)}
+            x={x + 4}
             y={y + 18}
             fill="#fff"
             fontSize={16}
@@ -105,7 +96,7 @@ const CustomizedContent = ({
 @observer
 class ByFileTreemap extends React.Component<Props> {
   render() {
-    const { app, onExpand, canExpand, data } = this.props;
+    const { app, onExpand, data } = this.props;
     if (!data || data.constructor !== Array) return null;
     const colors = colorSeverity(data.map(item => item.size));
     return (
@@ -124,7 +115,6 @@ class ByFileTreemap extends React.Component<Props> {
               colors={colors}
               data={data}
               onExpand={onExpand}
-              canExpand={canExpand}
             />
           }
         />

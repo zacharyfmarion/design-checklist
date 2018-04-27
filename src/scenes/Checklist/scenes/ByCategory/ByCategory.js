@@ -17,7 +17,6 @@ import GoogleAnalytics from 'helpers/analytics';
 import UiStore from 'stores/UiStore';
 import AppStore from 'stores/AppStore';
 import { Flex } from 'reflexbox';
-import { shadow } from 'constants/styles';
 import { categories } from 'constants/general';
 import ErrorList from 'components/ErrorList';
 import Spin from 'components/Spin';
@@ -88,10 +87,14 @@ class ByCategory extends React.Component<Props> {
    * the page has loaded.
    */
   renderErrors = () => {
-    const { ui, store } = this.props;
+    const { ui, app, store } = this.props;
     return (
       <Container auto column>
-        <PercentageRow column={!ui.isDesktop} isDesktop={ui.isDesktop}>
+        <PercentageRow
+          column={!ui.isDesktop}
+          isDesktop={ui.isDesktop}
+          shadow={app.theme.shadow}
+        >
           {store.byCategoryData &&
             categories.map((key, i) => {
               const handleCategoryChange = () => this.changeCategory(key);
@@ -136,7 +139,7 @@ const PercentageRow = styled(Flex)`
     `
     background: #fff;
     border-radius: 5px;
-    box-shadow: ${shadow};
+    box-shadow: ${({ shadow }) => shadow};
     margin: 0 10px 20px 10px;
     padding: 8px 0;
   `};

@@ -18,7 +18,7 @@ type Props = {
   actions?: React.Node,
   showSidebar?: boolean,
   ui: UiStore,
-  app: AppStore
+  app: AppStore,
 };
 
 @observer
@@ -32,26 +32,29 @@ class Layout extends React.Component<Props> {
       onTabClick,
       actions,
       showSidebar = true,
-      className
+      className,
     } = this.props;
     return (
       <Background>
         {showSidebar &&
-          (ui.isDesktop || app.sidebarVisible) &&
-          <SideMenu
-            collapsed={app.sidebarCollapsed}
-            toggleCollapsed={app.toggleSidebar}
-            title={app.projectName || 'not_found'}
-          />}
+          (ui.isDesktop || app.sidebarVisible) && (
+            <SideMenu
+              collapsed={app.sidebarCollapsed}
+              toggleCollapsed={app.toggleSidebar}
+              title={app.projectName || 'not_found'}
+            />
+          )}
         {!ui.isDesktop &&
-          app.sidebarVisible &&
-          <Overlay onClick={app.toggleSidebarVisibility} />}
+          app.sidebarVisible && (
+            <Overlay onClick={app.toggleSidebarVisibility} />
+          )}
         <Content
           auto
           column
           collapsed={app.sidebarCollapsed}
           showSidebar={showSidebar}
           isDesktop={ui.isDesktop}
+          theme={app.theme}
         >
           <Header
             subheader={subheader}
@@ -67,6 +70,7 @@ class Layout extends React.Component<Props> {
             mobile={ui.isMobile}
             primary={app.primaryColor}
             className={className}
+            theme={app.theme}
           >
             {children}
           </Panel>
@@ -89,8 +93,13 @@ const Overlay = styled.div`
 `;
 
 const Content = styled(Flex)`
-  padding-left: ${({ collapsed, showSidebar, isDesktop }) =>
-    showSidebar && isDesktop ? (collapsed ? '64px' : '256px') : '0'};
+  ${({ collapsed, showSidebar, isDesktop, theme }) => `
+    padding-left: ${
+      showSidebar && isDesktop ? (collapsed ? '64px' : '256px') : '0'
+    };
+    background: ${theme.background};
+    color: ${theme.color};
+  `};
 `;
 
 const Background = styled(Flex)`
@@ -100,11 +109,11 @@ const Background = styled(Flex)`
 
 const Panel = styled(Flex)`
   margin: 75px 0 0;
-  background: #fff;
+  background: ${({ theme }) => theme.background};
   border-radius: 5px;
   position: relative;
   z-index: 1;
-  
+
   &:before {
     background: ${({ primary }) => primary};
     content: '';
@@ -119,7 +128,6 @@ const Panel = styled(Flex)`
     transform: skewY(-5.5deg);
     transform-origin: 100% 0;
   }
-
 `;
 
 export { Layout };

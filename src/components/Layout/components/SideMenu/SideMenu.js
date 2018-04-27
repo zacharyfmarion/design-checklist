@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Menu, Icon } from 'antd';
 import { Flex } from 'reflexbox';
 import { inject, observer } from 'mobx-react';
-import { shadow } from 'constants/styles';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import UiStore from 'stores/UiStore';
@@ -59,21 +58,24 @@ class SideMenu extends React.Component<Props> {
     return (
       <SidebarContainer column collapsed={collapsed} isDesktop={ui.isDesktop}>
         <SidebarHeader
+          theme={app.theme}
           align="center"
           justify={collapsed ? 'center' : 'flex-start'}
           collapsed={collapsed}
         >
           <HeaderIcon type="code-o" collapsed={collapsed} />
-          {!collapsed && <ProjectTitle>{title}</ProjectTitle>}
+          {!collapsed && <ProjectTitle theme={app.theme}>{title}</ProjectTitle>}
         </SidebarHeader>
         <Flex auto>
           <StyledMenu
             defaultSelectedKeys={[this.props.location.pathname]}
-            defaultOpenKeys={['/checklist']}
+            defaultOpenKeys={[]}
             mode="inline"
+            theme={app.themeName}
             isDesktop={ui.isDesktop}
             inlineCollapsed={ui.isDesktop ? collapsed : false}
             primary={app.primaryColor}
+            appTheme={app.theme}
           >
             {scenes.map((scene, i) => {
               if (scene.scenes.length > 0) {
@@ -94,7 +96,11 @@ class SideMenu extends React.Component<Props> {
                     }
                   >
                     {scene.scenes.map((subscene, j) => (
-                      <SubmenuItem key={subscene.path} collapsed={collapsed}>
+                      <SubmenuItem
+                        key={subscene.path}
+                        collapsed={collapsed}
+                        theme={app.theme}
+                      >
                         <SubmenuItemLink
                           to={subscene.path}
                           onClick={this.handleItemClick}
@@ -136,8 +142,10 @@ class SideMenu extends React.Component<Props> {
 const StyledSubmenu = styled(Menu.SubMenu)``;
 
 const SubmenuItem = styled(Menu.Item)`
-  background: #fff;
-  ${({ collapsed }) => collapsed && `width: 200px`};
+  ${({ collapsed, theme }) => `
+    ${collapsed && `width: 200px;`}
+    background: ${theme.title === 'light' ? '#fff' : '#404040'};
+  `};
 `;
 
 const SubmenuItemLink = styled(Link)`
@@ -152,6 +160,7 @@ const ProjectTitle = styled.h2`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  color: ${({ theme }) => theme.color};
 `;
 
 const HeaderIcon = styled(Icon)`
@@ -164,49 +173,48 @@ const HeaderIcon = styled(Icon)`
 `;
 
 const SidebarHeader = styled(Flex)`
-  height: 75px;
-  z-index: 2;
-  background: white;
-  box-shadow: ${shadow};
-  ${({ collapsed }) =>
-    !collapsed &&
-    `
-    padding: 0 15px;
+  ${({ collapsed, theme }) => `
+    height: 75px;
+    z-index: 2;
+    box-shadow: ${theme.shadow};
+    background: ${theme.background};
+    color: ${theme.color};
+    ${!collapsed && `padding: 0 15px;`}
   `};
 `;
 
 const CollapseButton = styled(Button)`
   ${({ primaryColor }) => `
-  height: 50px;
-  border-radius: 0;
-  box-shadow: none;
-  border-top: 1px solid #bfbfbf;
-  &:hover {
-    border-color: ${primaryColor};
-    color: ${primaryColor};
-  }
-  &:active {
-    border-color: ${primaryColor};
-    color: ${primaryColor};
-  }
-  &:focus {
-    border-color: ${primaryColor};
-    color: ${primaryColor};
-  }
-  &:visited {
-    border-color: ${primaryColor};
-    color: ${primaryColor};
-  }
+    height: 50px;
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 1px solid #bfbfbf;
+    &:hover {
+      border-color: ${primaryColor};
+      color: ${primaryColor};
+    }
+    &:active {
+      border-color: ${primaryColor};
+      color: ${primaryColor};
+    }
+    &:focus {
+      border-color: ${primaryColor};
+      color: ${primaryColor};
+    }
+    &:visited {
+      border-color: ${primaryColor};
+      color: ${primaryColor};
+    }
   `};
 `;
 
 const StyledMenu = styled(Menu)`
-  ${({ primary, isDesktop }) => `
+  ${({ primary, appTheme, isDesktop }) => `
     .ant-menu-item:hover, .ant-menu-item > a:hover, .ant-menu-item-selected, .ant-menu-item-selected > a {
       color: ${primary};
     }
-    .ant-menu-sub.ant-menu-inline {
-      border-right: 1px solid #e9e9e9;
+    .ant-menu-dark .ant-menu-item-selected {
+      background-color: ${appTheme.background} !important;
     }
     .ant-menu-item:after {
       border-right: 3px solid ${primary} !important;

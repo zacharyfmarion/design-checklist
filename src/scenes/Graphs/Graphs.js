@@ -3,13 +3,14 @@ import * as React from 'react';
 import Layout from 'components/Layout';
 import styled from 'styled-components';
 import { observer, inject } from 'mobx-react';
-import { Tooltip, Radio } from 'antd';
+import { Tooltip } from 'antd';
 import { Flex } from 'reflexbox';
 import Spin from 'components/Spin';
 import Panel from 'components/Panel';
 import Text from 'components/Text';
 import Switch from 'components/Switch';
 import Button from 'components/Button';
+import { RadioGroup, RadioButton } from 'components/Radio';
 import ErrorMessage from 'components/ErrorMessage';
 import {
   ResponsiveContainer,
@@ -28,9 +29,6 @@ import { shadeColor } from 'helpers/colors';
 import AppStore from 'stores/AppStore';
 import UiStore from 'stores/UiStore';
 import GraphsStore from './GraphsStore';
-
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 
 type Props = {
   /** App store for global application state */
@@ -75,7 +73,13 @@ class Graphs extends React.Component<Props> {
     const { app } = this.props;
     const formatter = (value, name, props) => value.toString() + '%';
     return (
-      <StyledBarChart width={600} height={400} data={this.store.normalizedData}>
+      <StyledBarChart
+        width={600}
+        height={400}
+        data={this.store.normalizedData}
+        theme={app.theme}
+        themeName={app.themeName}
+      >
         <XAxis dataKey="name" />
         <YAxis />
         <CartesianGrid strokeDasharray="3 3" />
@@ -114,6 +118,8 @@ class Graphs extends React.Component<Props> {
       <StyledAreaChart
         width={600}
         height={400}
+        theme={app.theme}
+        themeName={app.themeName}
         data={this.store.processedDataByLines}
       >
         <CartesianGrid strokeDasharray="3 3" />
@@ -156,7 +162,7 @@ class Graphs extends React.Component<Props> {
       this.store.dataByCommits && (
         <Flex column align="center">
           <ChartBounds column justify="center" align="center" height={700}>
-            <ChartTitle color={app.primaryColor}>
+            <ChartTitle color={app.primaryColor} theme={app.theme}>
               Group Statistics by Date
             </ChartTitle>
             <ToolsContainer
@@ -164,7 +170,7 @@ class Graphs extends React.Component<Props> {
               align="center"
               justify={ui.isMobile ? 'center' : 'space-between'}
             >
-              <StyledRadioGroup
+              <RadioGroup
                 onChange={this.store.changeActiveStatistic}
                 value={this.store.activeStatistic}
                 primaryColor={app.primaryColor}
@@ -174,7 +180,7 @@ class Graphs extends React.Component<Props> {
                     {stat}
                   </RadioButton>
                 ))}
-              </StyledRadioGroup>
+              </RadioGroup>
               <Flex>
                 <SwitchLabel>Show Weekends</SwitchLabel>
                 <Switch
@@ -189,7 +195,7 @@ class Graphs extends React.Component<Props> {
           </ChartBounds>
           <HorizontalLine />
           <ChartBounds column justify="center" align="center">
-            <ChartTitle color={app.primaryColor}>
+            <ChartTitle color={app.primaryColor} theme={app.theme}>
               Normalized Statistics
             </ChartTitle>
             <ResponsiveContainer>
@@ -242,32 +248,19 @@ const ToolsContainer = styled(Flex)`
   margin-bottom: 15px;
 `;
 
-const StyledRadioGroup = styled(RadioGroup)`
-  ${({ primaryColor }) => `
-    .ant-radio-button-wrapper:hover, .ant-radio-button-wrapper-focused {
-      color: ${primaryColor};
-    }
-    .ant-radio-button-wrapper-checked {
-      border-color: ${primaryColor};
-      color: ${primaryColor};
-      box-shadow: -1px 0 0 0 ${primaryColor};
-    }
-    .ant-radio-button-wrapper-checked:first-child {
-      border-color: ${primaryColor};
-    }
-  `};
-`;
-
 const StyledBarChart = styled(BarChart)`
-  background: #ececec;
+  background: ${({ theme, themeName }) =>
+    themeName === 'light' ? `#ececec` : theme.backgroundSecondary};
 `;
 
 const StyledAreaChart = styled(AreaChart)`
-  background: #ececec;
+  background: ${({ theme, themeName }) =>
+    themeName === 'light' ? `#ececec` : theme.backgroundSecondary};
 `;
 
 const ChartTitle = styled.h2`
   margin-bottom: 15px;
+  color: ${({ theme }) => theme.color};
 `;
 
 const ChartBounds = styled(Flex)`
