@@ -46,7 +46,7 @@ const Example = ({app}: Props) => (
 // component that we pass in!!!
 const FancyDiv = styled.div`
   background: ${({primaryColor}) => primaryColor};
-`
+`;
 
 // We inject the app store into the component
 export default inject('app')(observer(Example));
@@ -56,7 +56,7 @@ Make sure that whatever new component / scene is added, it looks good and functi
 
 ### Primary color
 
-The primary color of the application can be changed by the user. `constants/styles.js` defines an array called `primaryColors` which contains a predefined set of colors. The `<Settings />` component allows the user to select one of these, which is stored in the global app store defined in `stores/AppStore.js` under the property `primaryColor`.
+The primary color of the application can be changed by the user. The file `constants/styles.js` defines an array called `primaryColors` which contains a predefined set of colors. The `<Settings />` component allows the user to select one of these, which is stored in the global app store defined in `stores/AppStore.js` under the property `primaryColor`.
 
 
 ### Theme

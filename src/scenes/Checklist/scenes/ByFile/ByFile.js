@@ -233,6 +233,9 @@ class ByFile extends React.Component<Props> {
           </Panel>
         ) : (
           <GraphPanel fluid={ui.isMobile} column>
+            <CurrentDirectory theme={app.theme}>
+              {store.treeRoot}
+            </CurrentDirectory>
             {this.renderChart()}
             <Controls
               align="center"
@@ -295,6 +298,11 @@ const GraphPanel = styled(Panel)`
     border: 1px solid lightslategray;
   `
       : `margin-bottom: 0px`};
+`;
+
+const CurrentDirectory = styled.h3`
+  font-family: monospace;
+  color: ${({ theme }) => theme.color};
 `;
 
 const HeaderTag = styled(Tag)`

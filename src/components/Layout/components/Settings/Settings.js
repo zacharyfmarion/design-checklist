@@ -52,16 +52,10 @@ class Settings extends React.Component<Props, State> {
         <ThemeSelect value={app.themeName} onChange={app.changeTheme}>
           {Object.keys(themes).map((theme, i) => (
             <Option value={theme} key={i}>
-              <ColorSwab color={themes[theme].background} />
+              <ColorSwab bordered color={themes[theme].background} />
               <span>{theme}</span>
             </Option>
           ))}
-          {!activeColor && (
-            <Option value="custom" key={100}>
-              <ColorSwab color={app.primaryColor} />
-              <span>Custom</span>
-            </Option>
-          )}
         </ThemeSelect>
         <Header primary={app.primaryColor}>Primary Color</Header>
         <ThemeSelect
@@ -137,6 +131,7 @@ const ColorSwab = styled.div`
   width: 10px;
   height: 10px;
   margin-right: 10px;
+  border: ${({ bordered }) => (bordered ? '1px solid #000' : 'none')};
   background: ${({ color }) => color};
 `;
 

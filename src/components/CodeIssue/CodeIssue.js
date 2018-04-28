@@ -382,17 +382,8 @@ class CodeIssue extends React.Component<Props> {
 const CodeCollapse = styled(Collapse)`
   ${({ desktop, shadowed, themeName, theme }) => `
     ${!desktop && shadowed ? `box-shadow: ${theme.shadow};` : ''} 
-    .ant-collapse-header {
-      background: ${
-        themeName === 'light' ? '#f7f7f7' : theme.backgroundSecondary
-      };
-      color: ${theme.color} !important;
-    }
     .ant-collapse-item:last-child > .ant-collapse-header {
-      border-radius: 4px 4px 0 0 !important;
-    }
-    .ant-collapse-item > .ant-collapse-header .arrow {
-      color: ${theme.color} !important;
+      border-radius: 2px 2px 0 0 !important;
     }
   `};
 `;
