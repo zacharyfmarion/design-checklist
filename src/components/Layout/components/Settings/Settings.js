@@ -75,7 +75,7 @@ class Settings extends React.Component<Props, State> {
             </Option>
           )}
         </ThemeSelect>
-        <Header primary={app.primaryColor}>Custom Theme</Header>
+        <Header primary={app.primaryColor}>Custom Primary Color</Header>
         <HexInput
           placeholder="Hex string"
           onChange={this.handleCustomHexChange}

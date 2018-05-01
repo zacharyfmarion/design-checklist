@@ -46,7 +46,6 @@ const StyledAntCollapse = styled(AntCollapse)`
       background: ${theme.background};
       color: ${theme.color};
       border-top: 1px solid ${themeName === 'light' ? '#d9d9d9' : '#505050'};
-      // padding: 0;
     }
     .ant-collapse-item {
       border-color: ${themeName === 'light' ? '#d9d9d9' : '#505050'};
