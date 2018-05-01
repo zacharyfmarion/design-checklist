@@ -376,6 +376,9 @@ class CodeIssue extends React.Component<Props> {
 }
 
 const StyledPanel = styled(Panel)`
+  .ant-collapse-content {
+    padding: 0;
+  }
   .ant-collapse-content-box {
     padding: 0;
   }

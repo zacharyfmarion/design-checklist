@@ -159,6 +159,15 @@ Change the duplications from [[], []] to pairs of lines
 
 
 ## &lt;undefined /&gt;
+A themed wrappper for the antd Collapse component
+### Props
+
+| Prop Name | Type | Required | Description |
+| --- | --- | --- | --- |
+| app | AppStore | true | No Description |
+| className | string | true | No Description |
+| shadowed | boolean | true | Whether or not to add a box shadow to the Collapse |
+| children | ReactNode | true | No Description |
 
 ---
 
