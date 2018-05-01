@@ -38,7 +38,6 @@ class DuplicationStore {
         }
       }
     }
-    console.log(res);
     return res;
   }
 

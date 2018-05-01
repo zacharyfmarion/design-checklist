@@ -17,7 +17,7 @@ const modalStyles = (isMobile: boolean, theme: Object) => ({
   overlay: {
     position: 'fixed',
     display: 'flex',
-    zIndex: 2,
+    zIndex: 20,
     top: 0,
     left: 0,
     right: 0,

@@ -232,7 +232,7 @@ class ByFile extends React.Component<Props> {
             />
           </Panel>
         ) : (
-          <GraphPanel fluid={ui.isMobile} column>
+          <GraphPanel fluid={ui.isMobile} theme={app.theme} column>
             <CurrentDirectory theme={app.theme}>
               {store.treeRoot}
             </CurrentDirectory>
@@ -291,6 +291,8 @@ const GraphPanel = styled(Panel)`
   height: ${graphPanelHeight}px;
   min-height: ${graphPanelHeight}px;
   max-height: ${graphPanelHeight}px;
+  background: ${({ theme }) => theme.background};
+  color: ${theme => theme.color};
   ${({ fluid }) =>
     fluid
       ? `

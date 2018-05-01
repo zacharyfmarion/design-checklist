@@ -4,39 +4,38 @@ import { inject, observer } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
 
-const Panel = AntCollapse.Panel;
+type Props = {
+  app: AppStore,
+  className: string,
+  /** Whether or not to add a box shadow to the Collapse */
+  shadowed: boolean,
+  children: React.Node,
+};
 
+/**
+ * A themed wrappper for the antd Collapse component
+ */
 const Collapse = inject('app')(
-  observer(({ app, children, ...props }) => {
+  observer(({ app, className, shadowed, children, ...props }: Props) => {
     return (
-      <CollapseWrapper auto themeName={app.themeName} theme={app.theme}>
-        <StyledAntCollapse
-          themeName={app.themeName}
-          theme={app.theme}
-          {...props}
-        >
-          {children}
-        </StyledAntCollapse>
-      </CollapseWrapper>
+      <StyledAntCollapse
+        themeName={app.themeName}
+        theme={app.theme}
+        className={className}
+        {...props}
+      >
+        {children}
+      </StyledAntCollapse>
     );
   }),
 );
 
-const CollapseWrapper = styled(Flex)`
-  ${({ themeName, theme }) => `
-    .ant-collapse {
-      background-color: ${theme.background} !important;
-      border-color: ${themeName === 'light' ? '#d9d9d9' : '#505050'};
-    }
-    .ant-collapse > .ant-collapse-item {
-      border-color: ${themeName === 'light' ? '#d9d9d9' : '#505050'};
-    }
-  `};
-`;
-
 const StyledAntCollapse = styled(AntCollapse)`
   flex: 1 1 auto;
   ${({ theme, themeName }) => `
+    background-color: ${theme.background} !important;
+    border-color: ${themeName === 'light' ? '#d9d9d9' : '#505050'};
+    box-shadow: ${theme.shadow};
     .ant-collapse-header {
       background: ${
         themeName === 'light' ? '#f7f7f7' : theme.backgroundSecondary
@@ -46,12 +45,19 @@ const StyledAntCollapse = styled(AntCollapse)`
     .ant-collapse-content {
       background: ${theme.background};
       color: ${theme.color};
+      border-top: 1px solid ${themeName === 'light' ? '#d9d9d9' : '#505050'};
+      padding: 0;
+    }
+    .ant-collapse-item {
       border-color: ${themeName === 'light' ? '#d9d9d9' : '#505050'};
     }
     .ant-collapse-item > .ant-collapse-header .arrow {
       color: ${theme.color} !important;
     }
+    .ant-collapse-item:last-child > .ant-collapse-header {
+      border-radius: 2px 2px 0 0 !important;
+    }
   `};
 `;
 
-export { Collapse, Panel };
+export default Collapse;

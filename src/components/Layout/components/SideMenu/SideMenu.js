@@ -244,7 +244,7 @@ const SidebarContainer = styled(Flex)`
   width: ${({ collapsed, isDesktop }) =>
     isDesktop ? (collapsed ? '64px' : '256px') : '300px;'};
   overflow: hidden;
-  z-index: 2;
+  z-index: 20;
   position: fixed;
   left: 0;
   top: 0;

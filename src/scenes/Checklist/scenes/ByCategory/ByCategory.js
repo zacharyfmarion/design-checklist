@@ -89,11 +89,11 @@ class ByCategory extends React.Component<Props> {
   renderErrors = () => {
     const { ui, app, store } = this.props;
     return (
-      <Container auto column>
+      <Container auto column isMobile={ui.isMobile}>
         <PercentageRow
           column={!ui.isDesktop}
           isDesktop={ui.isDesktop}
-          shadow={app.theme.shadow}
+          theme={app.theme}
         >
           {store.byCategoryData &&
             categories.map((key, i) => {
@@ -129,17 +129,18 @@ class ByCategory extends React.Component<Props> {
 }
 
 const Container = styled(Flex)`
-  margin: 10px 20px;
+  margin: ${({ isMobile }) => (isMobile ? '0px' : '10px 20px')};
 `;
 
 const PercentageRow = styled(Flex)`
   margin-bottom: 25px;
-  ${({ isDesktop }) =>
+  ${({ isDesktop, theme }) =>
     !isDesktop &&
     `
-    background: #fff;
+    background: ${theme.background};
+    color: ${theme.color};
     border-radius: 5px;
-    box-shadow: ${({ shadow }) => shadow};
+    box-shadow: ${({ theme }) => theme.shadow};
     margin: 0 10px 20px 10px;
     padding: 8px 0;
   `};

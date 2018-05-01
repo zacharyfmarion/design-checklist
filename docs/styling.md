@@ -20,6 +20,42 @@ export default Example;
 
 It will also work with any custom component that passes in a className. For an example of this check out the `<Input />` component. For more information check out their excellent documentation, or [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) documentation about tagged template literals.
 
+## Flexbox
+
+This app uses [reflexbox](https://github.com/jxnblk/reflexbox), which is a simple React flexbox grid system. Really the only component that is used is the `<Flex />` component, which is essentially a wrapper on a regular div element that provides a lot of useful props that are shortcuts for flexbox css properties. For example, `<Flex column></Flex>` will basically display a div with the css attributes `display: flex` and `flex-direction: column`.
+
+## Responsivity
+
+Everything in the site should be designed to be responsive. From analytics it looks like <5% of traffic is on mobile but it is still a good practice. `UiStore.js` provides a series of computed properties (`isDesktop`, `isTablet`, `isMobile`) that help determine how to display the page. For example, if you wanted to display two horizontal containers on a desktop view but make them vertical on tablet and mobile, you could do something like this (note that we also change the background color on mobile to show how this can be used with `styled-components`):
+
+
+```js
+import styled from 'styled-components';
+import { Flex } from 'reflexbox';
+import UiStore from 'stores/UiStore';
+
+type Props = {
+  ui: UiStore,
+};
+
+const ResponsiveExample = ({ ui }: Props) => {
+  return (
+    <Container column={!ui.isDesktop} isMobile={ui.isMobile}>
+      <Flex auto>Container 1</Flex> 
+      <Flex auto>Container 2</Flex> 
+    </Container>
+  );
+};
+
+const Container = styled(Flex)`
+  background: ${({ isMobile }) => isMobile ? `red` : `yellow`};
+`;
+
+// Need to inject the UiStore in order to get the computed properties
+export default inject('ui')(observer(ResponsiveExample));
+
+```
+
 ## Theming
 
 Because we are using css-in-js theming is quite easy to do. For example, if we wanted to style the above div, but instead with the application's current primary color, we could so something like this:

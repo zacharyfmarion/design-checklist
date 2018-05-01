@@ -75,6 +75,7 @@ const PercentageCard = ({
       align={ui.isDesktop ? 'center' : 'flex-start'}
       onClick={onClick}
       activeColor={shadeColor(app.primaryColor, 0.5)}
+      themeName={app.themeName}
       theme={app.theme}
     >
       {!ui.isDesktop && categoryTitle}
@@ -150,7 +151,7 @@ const CategoryTitle = styled.h2`
 
 const PercentContainer = styled(Flex)`
   cursor: pointer;
-  ${({ isDesktop, active, theme, activeColor }) =>
+  ${({ isDesktop, active, theme, themeName, activeColor }) =>
     isDesktop
       ? `
   background: ${theme.background};
@@ -170,7 +171,9 @@ const PercentContainer = styled(Flex)`
     padding: 0 10px 5px 10px;
     ${active &&
       `
-      background: #e8e8e8;
+      background: ${
+        themeName === 'light' ? '#e8e8e8' : theme.backgroundSecondary
+      };
     `}
   `};
 `;

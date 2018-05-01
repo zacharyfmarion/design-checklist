@@ -46,7 +46,10 @@ class Layout extends React.Component<Props> {
           )}
         {!ui.isDesktop &&
           app.sidebarVisible && (
-            <Overlay onClick={app.toggleSidebarVisibility} />
+            <Overlay
+              isDesktop={ui.isDesktop}
+              onClick={app.toggleSidebarVisibility}
+            />
           )}
         <Content
           auto
@@ -84,7 +87,7 @@ class Layout extends React.Component<Props> {
 
 const Overlay = styled.div`
   position: fixed;
-  z-index: 10;
+  z-index: ${({ isDesktop }) => (isDesktop ? 30 : 10)};
   left: 0;
   right: 0;
   top: 0;

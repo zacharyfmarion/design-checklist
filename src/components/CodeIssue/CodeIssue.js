@@ -3,12 +3,12 @@ import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { Flex } from 'reflexbox';
 import styled from 'styled-components';
-import { Tabs, Collapse } from 'antd';
+import { Tabs } from 'antd';
 import { stripSrc } from 'helpers/files';
 import UiStore from 'stores/UiStore';
+import { Collapse, Panel } from 'components/Collapse';
 
 const TabPane = Tabs.TabPane;
-const Panel = Collapse.Panel;
 
 type Issue = {
   duplications?: Array<Array<Object>>,
@@ -323,20 +323,16 @@ class CodeIssue extends React.Component<Props> {
       error: { path, severity, message, code, duplications },
       shadowed,
       className,
-      app,
       ui,
     } = this.props;
     const moreThanThreeDups =
       duplications && duplications.length > 0 && duplications[0].length > 3;
     const fileName = stripSrc(this.stripFilename(path));
     return (
-      <CodeCollapse
+      <Collapse
         defaultActiveKey={'0'}
         className={className}
-        desktop={ui.isDesktop}
-        shadowed={shadowed}
-        themeName={app.themeName}
-        theme={app.theme}
+        shadowed={!ui.Desktop && shadowed}
       >
         <StyledPanel
           key="0"
@@ -374,25 +370,12 @@ class CodeIssue extends React.Component<Props> {
           {code && this.renderCode()}
           {duplications && this.renderDuplications()}
         </StyledPanel>
-      </CodeCollapse>
+      </Collapse>
     );
   }
 }
 
-const CodeCollapse = styled(Collapse)`
-  ${({ desktop, shadowed, themeName, theme }) => `
-    ${!desktop && shadowed ? `box-shadow: ${theme.shadow};` : ''} 
-    .ant-collapse-item:last-child > .ant-collapse-header {
-      border-radius: 2px 2px 0 0 !important;
-    }
-  `};
-`;
-
 const StyledPanel = styled(Panel)`
-  .ant-collapse-content {
-    padding: 0;
-    border-top: 1px solid rgb(216, 216, 216);
-  }
   .ant-collapse-content-box {
     padding: 0;
   }
