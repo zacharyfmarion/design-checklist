@@ -285,6 +285,10 @@ Remove the "date" key from the API response object so just the authors are left
 
 Render a chart of normalized statistics about the user's code
 
+#### `renderPieCharts()`
+
+Render the pie charts displayed at the bottom of the page
+
 #### `renderStatsByDateChart()`
 
 Render a stacked area chart where the x axis is the date where each commit was made.

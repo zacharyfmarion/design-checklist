@@ -16,6 +16,9 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
+  PieChart,
+  Pie,
+  Cell,
   AreaChart,
   ReferenceLine,
   Tooltip as ChartTooltip,
@@ -25,7 +28,7 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { shadeColor } from 'helpers/colors';
+import { shadeColor, colorRange } from 'helpers/colors';
 import AppStore from 'stores/AppStore';
 import UiStore from 'stores/UiStore';
 import GraphsStore from './GraphsStore';
@@ -99,6 +102,70 @@ class Graphs extends React.Component<Props> {
         />
       </StyledBarChart>
     );
+  };
+
+  /**
+   * Render the pie charts displayed at the bottom of the page
+   */
+  renderPieCharts = () => {
+    const { app } = this.props;
+
+    const RADIAN = Math.PI / 180;
+    const CustomLabel = ({
+      cx,
+      cy,
+      midAngle,
+      innerRadius,
+      outerRadius,
+      percent,
+      index,
+    }) => {
+      const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+      return (
+        <text
+          x={x}
+          y={y}
+          fill="white"
+          textAnchor={x > cx ? 'start' : 'end'}
+          dominantBaseline="central"
+        >
+          {`${(percent * 100).toFixed(0)}%`}
+        </text>
+      );
+    };
+
+    return this.store.pieChartData.map(({ data, title, key }, i) => {
+      const colors = colorRange(app.primaryColor, data.map(item => item[key]));
+      return (
+        <PieContainer auto column align="center">
+          <ChartTitle color={app.primaryColor} theme={app.theme}>
+            {title}
+          </ChartTitle>
+          <ResponsiveContainer key={i}>
+            <StyledPieChart
+              width={800}
+              height={400}
+              theme={app.theme}
+              themeName={app.themeName}
+            >
+              <Pie
+                data={data}
+                dataKey={key}
+                fill={app.primaryColor}
+                labelLine={false}
+                label={CustomLabel}
+              >
+                {data.map((entry, index) => <Cell fill={colors[index]} />)}
+              </Pie>
+              <ChartTooltip />
+            </StyledPieChart>
+          </ResponsiveContainer>
+        </PieContainer>
+      );
+    });
   };
 
   /**
@@ -195,12 +262,7 @@ class Graphs extends React.Component<Props> {
           </ChartBounds>
           <HorizontalLine />
           <ChartBounds column justify="center" align="center">
-            <ChartTitle color={app.primaryColor} theme={app.theme}>
-              Normalized Statistics
-            </ChartTitle>
-            <ResponsiveContainer>
-              {this.renderNormalizedChart()}
-            </ResponsiveContainer>
+            <PieWrapper auto>{this.renderPieCharts()}</PieWrapper>
           </ChartBounds>
         </Flex>
       )
@@ -239,6 +301,15 @@ class Graphs extends React.Component<Props> {
   }
 }
 
+const PieWrapper = styled(Flex)`
+  width: 100%;
+  height: 100%;
+`;
+
+const PieContainer = styled(Flex)`
+  height: 100%;
+`;
+
 const SwitchLabel = styled(Text)`
   margin-right: 5px;
 `;
@@ -249,6 +320,11 @@ const ToolsContainer = styled(Flex)`
 `;
 
 const StyledBarChart = styled(BarChart)`
+  background: ${({ theme, themeName }) =>
+    themeName === 'light' ? `#ececec` : theme.backgroundSecondary};
+`;
+
+const StyledPieChart = styled(PieChart)`
   background: ${({ theme, themeName }) =>
     themeName === 'light' ? `#ececec` : theme.backgroundSecondary};
 `;

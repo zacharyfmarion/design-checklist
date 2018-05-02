@@ -1,5 +1,6 @@
 * **General Documentation**
   * [Overview](/) 
+  * [Architecture](architecture.md) 
   * [Tooling](tooling.md) 
   * [Layout](layout.md) 
   * [Styling](styling.md) 

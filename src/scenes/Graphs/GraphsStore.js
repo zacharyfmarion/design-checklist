@@ -54,13 +54,14 @@ class GraphsStore {
   // normalize data so everything is between 0 and 1
   // data is the data to normalize and key is the object key to use as the data item
   normalize = (data: Array<Object>, key: string): Array<Object> => {
-    // First we find the largest item in the array
+    // First we find the total number
+    console.log(data);
     const total = data
       .map(item => item[key])
       .reduce((total, num) => total + num);
     return data.map(item => ({
       ...item,
-      [key]: (item[key] / total * 100).toFixed(2),
+      [key]: item[key] / total * 100,
     }));
   };
 
@@ -145,21 +146,39 @@ class GraphsStore {
     return res;
   }
 
+  @computed
+  get normalizedAverageLinesChanged(): Array<Object> {
+    return this.normalize(this.averageNumberOfLinesPerCommit, 'average');
+  }
+
+  @computed
+  get normalizedNumberOfCommits(): Array<Object> {
+    return this.normalize(this.processedDataByCommits, 'commits');
+  }
+
+  @computed
+  get pieChartData(): Array<Object> {
+    return [
+      {
+        title: 'Number of Commits',
+        key: 'commits',
+        data: this.normalizedNumberOfCommits,
+      },
+      {
+        title: 'Average Lines Changed Per Commit',
+        key: 'average',
+        data: this.normalizedAverageLinesChanged,
+      },
+    ];
+  }
+
   // Data for a stacked bar chart that compares normalized data for the average number
   // of lines changed per commit and the number of commits
   @computed
   get normalizedData(): Array<Object> {
-    const normalizedAverageLinesChanged = this.normalize(
-      this.averageNumberOfLinesPerCommit,
-      'average',
-    );
-    const normalizedNumberOfCommits = this.normalize(
-      this.processedDataByCommits,
-      'commits',
-    );
     return this.stitch(
-      normalizedAverageLinesChanged,
-      normalizedNumberOfCommits,
+      this.normalizedAverageLinesChanged,
+      this.normalizedNumberOfCommits,
     );
   }
 

@@ -39,8 +39,8 @@ class ByFilePieChart extends React.Component<Props> {
       <ResponsiveContainer>
         <StyledPieChart width={800} height={400}>
           <Pie
-            isAnimationActive={false}
             data={data}
+            animationDuration={500}
             dataKey="numIssues"
             onClick={this.handleClick}
             fill={app.primaryColor}
