@@ -119,6 +119,7 @@ class Graphs extends React.Component<Props> {
       outerRadius,
       percent,
       index,
+      data,
     }) => {
       const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
       const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -132,7 +133,7 @@ class Graphs extends React.Component<Props> {
           textAnchor={x > cx ? 'start' : 'end'}
           dominantBaseline="central"
         >
-          {`${(percent * 100).toFixed(0)}%`}
+          {data[index].name}
         </text>
       );
     };
@@ -156,7 +157,7 @@ class Graphs extends React.Component<Props> {
                 dataKey={key}
                 fill={app.primaryColor}
                 labelLine={false}
-                label={CustomLabel}
+                label={<CustomLabel data={data} />}
               >
                 {data.map((entry, index) => <Cell fill={colors[index]} />)}
               </Pie>

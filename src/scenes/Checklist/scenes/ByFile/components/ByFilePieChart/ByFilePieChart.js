@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import styled from 'styled-components';
 import { colorSeverity } from 'helpers/colors';
+import { formatName } from 'helpers/files';
 
 type ChartDataItem = {
   name: string,
@@ -14,6 +15,33 @@ type Props = {
   data: Array<ChartDataItem>,
   /** Function to handle when the user clicks on a a file/directory */
   onExpand: Function,
+};
+
+const RADIAN = Math.PI / 180;
+const CustomLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+  index,
+  data,
+}) => {
+  const radius = outerRadius + 25;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="black"
+      textAnchor={x > cx ? 'start' : 'end'}
+      dominantBaseline="central"
+    >
+      {formatName(data[index].name)}
+    </text>
+  );
 };
 
 /**
@@ -40,11 +68,11 @@ class ByFilePieChart extends React.Component<Props> {
         <StyledPieChart width={800} height={400}>
           <Pie
             data={data}
-            animationDuration={500}
+            isAnimationActive={false}
             dataKey="numIssues"
             onClick={this.handleClick}
             fill={app.primaryColor}
-            label
+            label={<CustomLabel data={data} />}
           >
             {data.map((entry, index) => <Cell fill={colors[index]} />)}
           </Pie>

@@ -251,7 +251,7 @@ class CodeIssue extends React.Component<Props> {
     if (!duplications) return null;
     const processedDups = this.processDuplications(duplications);
     const maxLines = this.getMaxLineNumbers(duplications);
-    if (!ui.isDesktop || duplications[0].length > 3) {
+    if (!ui.isDesktop || duplications[0].length > 2) {
       return this.renderMobileDuplications(maxLines);
     }
     return (
@@ -325,8 +325,8 @@ class CodeIssue extends React.Component<Props> {
       className,
       ui,
     } = this.props;
-    const moreThanThreeDups =
-      duplications && duplications.length > 0 && duplications[0].length > 3;
+    const moreThanTwoDups =
+      duplications && duplications.length > 0 && duplications[0].length > 2;
     const fileName = stripSrc(this.stripFilename(path));
     return (
       <Collapse
@@ -340,11 +340,11 @@ class CodeIssue extends React.Component<Props> {
             <RuleHeader column>
               <Pathname>
                 {duplications ? (
-                  <Flex column={!ui.isDesktop || moreThanThreeDups}>
+                  <Flex column={!ui.isDesktop || moreThanTwoDups}>
                     {duplications[0].map(file => (
                       <PathTitle
                         numFiles={
-                          ui.isDesktop && !moreThanThreeDups
+                          ui.isDesktop && !moreThanTwoDups
                             ? duplications[0].length
                             : 1
                         }

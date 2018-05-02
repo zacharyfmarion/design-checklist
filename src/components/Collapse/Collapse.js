@@ -22,6 +22,7 @@ const Collapse = inject('app')(
         themeName={app.themeName}
         theme={app.theme}
         className={className}
+        shadowed={shadowed}
         {...props}
       >
         {children}
@@ -32,10 +33,10 @@ const Collapse = inject('app')(
 
 const StyledAntCollapse = styled(AntCollapse)`
   flex: 1 1 auto;
-  ${({ theme, themeName }) => `
+  ${({ shadowed, theme, themeName }) => `
     background-color: ${theme.background} !important;
     border-color: ${themeName === 'light' ? '#d9d9d9' : '#505050'};
-    box-shadow: ${theme.shadow};
+    box-shadow: ${shadowed ? theme.shadow : 'none'};
     .ant-collapse-header {
       background: ${
         themeName === 'light' ? '#f7f7f7' : theme.backgroundSecondary
