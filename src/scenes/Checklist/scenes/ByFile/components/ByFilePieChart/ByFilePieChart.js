@@ -27,6 +27,7 @@ const CustomLabel = ({
   percent,
   index,
   data,
+  theme,
 }) => {
   const radius = outerRadius + 25;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -35,7 +36,7 @@ const CustomLabel = ({
     <text
       x={x}
       y={y}
-      fill="black"
+      fill={theme.color}
       textAnchor={x > cx ? 'start' : 'end'}
       dominantBaseline="central"
     >
@@ -72,7 +73,7 @@ class ByFilePieChart extends React.Component<Props> {
             dataKey="numIssues"
             onClick={this.handleClick}
             fill={app.primaryColor}
-            label={<CustomLabel data={data} />}
+            label={<CustomLabel data={data} theme={app.theme} />}
           >
             {data.map((entry, index) => <Cell fill={colors[index]} />)}
           </Pie>
